@@ -35,5 +35,6 @@
   },
   "devDependencies": {
     "morgan": "^1.9.1"
-  }
+  },
+  "proxy": "http://localhost:4000"
 }
