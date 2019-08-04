@@ -2,13 +2,12 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan");
 
-const PORT = 4000;
+if(process.env.NODE_ENV !== 'test') {
+  app.use(morgan('dev'));
+}
 
-app.use(morgan("dev"));
-
-app.listen(PORT, () => {
-  console.log(`< SERVER - ON / PORT=${PORT}`);
-  console.log();
-});
+app.get('/', (req, res) => {
+  res.send();
+})
 
 module.exports = app;
