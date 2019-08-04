@@ -34,7 +34,10 @@
     ]
   },
   "devDependencies": {
-    "morgan": "^1.9.1"
+    "mocha": "^6.2.0",
+    "morgan": "^1.9.1",
+    "should": "^13.2.3",
+    "supertest": "^4.0.2"
   },
   "proxy": "http://localhost:4000"
 }
