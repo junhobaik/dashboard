@@ -1,21 +1,19 @@
 import React from 'react';
+import { ApolloProvider } from 'react-apollo';
+
+import client from './apolloClient';
 import './App.scss';
 
 export interface AppProps {}
-export interface AppStates {
-  foo: boolean;
-}
+export interface AppStates {}
 
 class App extends React.Component<AppProps, AppStates> {
-  constructor(props: object) {
-    super(props);
-    this.state = {
-      foo: true
-    };
-  }
-
   render() {
-    return <div id="App"/>;
+    return (
+      <ApolloProvider client={client}>
+        <div id="App">App</div>
+      </ApolloProvider>
+    );
   }
 }
 
