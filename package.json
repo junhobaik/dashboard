@@ -5,7 +5,7 @@
   "scripts": {
     "start": "npm-run-all --parallel start:**",
     "start:client": "react-scripts start",
-    "start:server": "nodemon server/www",
+    "start:server": "nodemon --exec babel-node server/www",
     "build": "react-scripts build",
     "test": "NODE_ENV=test mocha server/app.spec.js",
     "eject": "react-scripts eject"
@@ -13,7 +13,13 @@
   "eslintConfig": {
     "extends": [
       "react-app",
-      "airbnb"
+      "airbnb",
+      "prettier"
+    ]
+  },
+  "babel": {
+    "presets": [
+      "env"
     ]
   },
   "browserslist": {
@@ -42,7 +48,10 @@
     "morgan": "^1.9.1"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
     "eslint-config-airbnb": "^17.1.1",
+    "eslint-config-prettier": "^6.0.0",
     "mocha": "^6.2.0",
     "nodemon": "^1.19.1",
     "npm-run-all": "^4.1.5",
