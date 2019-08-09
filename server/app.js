@@ -1,14 +1,10 @@
-import express from 'express';
-import morgan from 'morgan';
+/* eslint-disable no-console */
+import { GraphQLServer } from "graphql-yoga";
+import resolvers from "./graphql/resolvers";
 
-const app = express();
-
-if (process.env.NODE_ENV !== 'test') {
-  app.use(morgan('dev'));
-}
-
-app.get('/', (req, res) => {
-  res.send();
+const server = new GraphQLServer({
+  typeDefs: `server/graphql/schema.graphql`,
+  resolvers
 });
 
-export default app;
+server.start(() => console.log("Server is running on localhost:4000"));
