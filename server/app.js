@@ -1,13 +1,14 @@
-const express = require("express");
-const app = express();
-const morgan = require("morgan");
+import express from 'express';
+import morgan from 'morgan';
 
-if(process.env.NODE_ENV !== 'test') {
+const app = express();
+
+if (process.env.NODE_ENV !== 'test') {
   app.use(morgan('dev'));
 }
 
 app.get('/', (req, res) => {
   res.send();
-})
+});
 
-module.exports = app;
+export default app;

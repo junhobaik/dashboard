@@ -1,4 +1,5 @@
-const app = require("./app");
+/* eslint-disable no-console */
+import app from './app';
 
 const PORT = 4000;
 
