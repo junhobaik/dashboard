@@ -7,7 +7,6 @@
     "start:client": "react-scripts start",
     "start:server": "nodemon --exec babel-node server/app",
     "build": "react-scripts build",
-    "test": "NODE_ENV=test mocha server/app.spec.js",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -35,11 +34,9 @@
     ]
   },
   "dependencies": {
-    "apollo-boost": "^0.4.3",
+    "apollo-server-express": "^2.8.1",
     "express": "^4.17.1",
     "graphql": "^14.4.2",
-    "graphql-tag": "^2.10.1",
-    "graphql-yoga": "^1.18.1",
     "morgan": "^1.9.1",
     "node-sass": "^4.12.0",
     "react": "^16.8.6",

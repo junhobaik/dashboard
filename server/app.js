@@ -1,10 +1,18 @@
 /* eslint-disable no-console */
-import { GraphQLServer } from "graphql-yoga";
-import resolvers from "./graphql/resolvers";
+import express from 'express';
 
-const server = new GraphQLServer({
-  typeDefs: `server/graphql/schema.graphql`,
+const app = express();
+
+const { ApolloServer } = require('apollo-server-express');
+const { typeDefs, resolvers } = require('./schema');
+
+const server = new ApolloServer({
+  typeDefs,
   resolvers
 });
 
-server.start(() => console.log("Server is running on localhost:4000"));
+server.applyMiddleware({ app });
+
+app.listen({ port: 4000 }, () =>
+  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
+);
