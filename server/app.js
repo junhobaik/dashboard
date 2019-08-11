@@ -1,10 +1,22 @@
 /* eslint-disable no-console */
 import express from 'express';
+import mongoose from 'mongoose';
 
-const app = express();
+require('dotenv').config();
 
 const { ApolloServer } = require('apollo-server-express');
 const { typeDefs, resolvers } = require('./schema');
+
+const app = express();
+
+mongoose
+  .connect(process.env.MONGO_URI, { useNewUrlParser: true })
+  .then(() => {
+    console.log('Mongoose ready');
+  })
+  .catch(err => {
+    console.log('Mongoose connect error', err);
+  });
 
 const server = new ApolloServer({
   typeDefs,
