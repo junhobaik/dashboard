@@ -1,8 +1,16 @@
-import gql from "graphql-tag";
+import gql from 'graphql-tag';
 
-export const HOME_PAGE = gql`
+export const USER_DATA = gql`
+  query getUserData($userId: Int!) {
+    user(id: $userId) {
+      name
+    }
+  }
+`;
+
+export const ADMIN = gql`
   {
-    user(id: 1) {
+    users {
       name
     }
   }
