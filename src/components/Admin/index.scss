@@ -1,0 +1,15 @@
+p {
+  margin: 0;
+}
+ul {
+  padding: 0;
+}
+div#Admin > ul > li {
+  list-style-type: none;
+  margin: 1rem 0;
+  padding: 1rem;
+  border-bottom: 1px solid gray;
+  li {
+    margin-left: 1rem;
+  }
+}

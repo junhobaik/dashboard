@@ -11,7 +11,12 @@ export const USER_DATA = gql`
 export const ADMIN = gql`
   {
     users {
+      _id
       name
+      feeds {
+        _id
+        title
+      }
     }
   }
 `;
