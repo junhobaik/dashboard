@@ -14,7 +14,7 @@ export default class User extends Component<iProps, iStates> {
     const { userId } = match.params;
 
     return (
-      <Query query={USER_DATA} variables={{ userId: parseInt(userId, 10) }}>
+      <Query query={USER_DATA} variables={{ userId }}>
         {({ loading, data, error }: any) => {
           if (loading) return <span>loading</span>;
           if (error) return <span>error</span>;
