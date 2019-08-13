@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import uuidv4 from 'uuid/v4';
 
 export default {
@@ -6,8 +5,8 @@ export default {
     messages: (parent, args, { models }) => {
       return Object.values(models.messages);
     },
-    message: (parent, { id }, { models }) => {
-      return models.messages[id];
+    message: (parent, { _id }, { models }) => {
+      return models.messages[_id];
     }
   },
 
@@ -21,19 +20,19 @@ export default {
     createMessage: (parent, { text }, { me, models }) => {
       const id = uuidv4();
       const message = {
-        id,
+        _id: id,
         text,
-        userId: me.id
+        userId: me._id
       };
 
       models.messages[id] = message;
-      models.users[me.id].messageIds.push(id);
+      models.users[me._id].messageIds.push(id);
 
       return message;
     },
 
-    deleteMessage: (parent, { id }, { models }) => {
-      const { [id]: message, ...otherMessages } = models.messages;
+    deleteMessage: (parent, { _id }, { models }) => {
+      const { [_id]: message, ...otherMessages } = models.messages;
 
       if (!message) {
         return false;

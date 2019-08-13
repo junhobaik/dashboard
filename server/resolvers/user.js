@@ -3,8 +3,8 @@ export default {
     users: (parent, args, { models }) => {
       return Object.values(models.users);
     },
-    user: (parent, { id }, { models }) => {
-      return models.users[id];
+    user: (parent, { _id }, { models }) => {
+      return models.users[_id];
     },
     me: (parent, args, { me }) => {
       return me;
@@ -14,7 +14,7 @@ export default {
   User: {
     messages: (user, args, { models }) => {
       return Object.values(models.messages).filter(
-        message => message.userId === user.id,
+        message => message.userId === user._id,
       );
     },
   },

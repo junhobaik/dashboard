@@ -3,17 +3,18 @@ import { gql } from 'apollo-server-express';
 export default gql`
   extend type Query {
     messages: [Message!]!
-    message(id: ID!): Message!
+    message(_id: ID!): Message!
   }
 
   extend type Mutation {
     createMessage(text: String!): Message!
-    deleteMessage(id: ID!): Boolean!
+    deleteMessage(_id: ID!): Boolean!
   }
 
   type Message {
-    id: ID!
+    _id: ID!
     text: String!
     user: User!
+    userId: ID!
   }
 `;
