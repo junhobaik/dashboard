@@ -3,16 +3,16 @@ import { gql } from 'apollo-server-express';
 export default gql`
   extend type Query {
     feeds: [Feed!]!
-    feed(_id: ID!): Feed!
+    feed(_id: String!): Feed!
   }
 
   extend type Mutation {
     createFeed(title: String!): Feed!
-    deleteFeed(_id: ID!): Boolean!
+    deleteFeed(_id: String!): Boolean!
   }
 
   type Feed {
-    _id: ID!
+    _id: String!
     title: String!
     users: [User]
     feed: Feed!
