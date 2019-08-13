@@ -1,15 +1,13 @@
+/* eslint-disable no-return-await */
 import _ from 'lodash';
 
 export default {
   Query: {
-    users: (parent, args, { models }) => {
-      return Object.values(models.users);
+    users: async (parent, args, { userModel }) => {
+      return await userModel.find({}, (err, users) => users);
     },
-    user: (parent, { _id }, { models }) => {
-      return models.users[_id];
-    },
-    admin: (parent, args, { admin }) => {
-      return admin;
+    user: async (parent, { _id }, { userModel }) => {
+      return await userModel.findOne({ _id });
     }
   },
 

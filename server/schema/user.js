@@ -4,7 +4,6 @@ export default gql`
   extend type Query {
     users: [User!]
     user(_id: ID!): User
-    admin: User
   }
 
   type User {
