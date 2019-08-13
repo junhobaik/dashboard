@@ -13,12 +13,8 @@ require('dotenv').config();
 const app = express();
 app.use(cors());
 
-const DB_NAME = 'dashboard';
-const { MONGO_USERNAME, MONGO_PASSWORD } = process.env;
-
-const uri = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@cluster0-tsis4.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`;
 mongoose.Promise = global.Promise;
-mongoose.connect(uri, { useNewUrlParser: true });
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true });
 
 const db = mongoose.connection;
 db.on('error', console.error);
