@@ -4,12 +4,12 @@ export default gql`
   extend type Query {
     users: [User!]
     user(_id: ID!): User
-    me: User
+    admin: User
   }
 
   type User {
     _id: ID!
-    username: String!
+    name: String!
     messages: [Message!]
   }
 `;

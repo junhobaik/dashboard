@@ -17,16 +17,16 @@ export default {
   },
 
   Mutation: {
-    createMessage: (parent, { text }, { me, models }) => {
+    createMessage: (parent, { text }, { admin, models }) => {
       const id = uuidv4();
       const message = {
         _id: id,
         text,
-        userId: me._id
+        userId: admin._id
       };
 
       models.messages[id] = message;
-      models.users[me._id].messageIds.push(id);
+      models.users[admin._id].messageIds.push(id);
 
       return message;
     },

@@ -2,12 +2,12 @@
 let users = {
   1: {
     _id: '1',
-    username: 'Robin Wieruch',
+    name: 'Junho Baik',
     messageIds: [1],
   },
   2: {
     _id: '2',
-    username: 'Dave Davids',
+    name: 'Dave Davids',
     messageIds: [2],
   },
 };

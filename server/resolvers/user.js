@@ -6,8 +6,8 @@ export default {
     user: (parent, { _id }, { models }) => {
       return models.users[_id];
     },
-    me: (parent, args, { me }) => {
-      return me;
+    admin: (parent, args, { admin }) => {
+      return admin;
     },
   },
 
