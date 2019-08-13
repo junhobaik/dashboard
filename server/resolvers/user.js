@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export default {
   Query: {
     users: (parent, args, { models }) => {
@@ -8,14 +10,12 @@ export default {
     },
     admin: (parent, args, { admin }) => {
       return admin;
-    },
+    }
   },
 
   User: {
-    messages: (user, args, { models }) => {
-      return Object.values(models.messages).filter(
-        message => message.userId === user._id,
-      );
-    },
-  },
+    feeds: (user, args, { models }) => {
+      return _.filter(models.feeds, feed => _.indexOf(user.feedIds, feed._id) > -1);
+    }
+  }
 };

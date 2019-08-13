@@ -3,29 +3,31 @@ let users = {
   1: {
     _id: '1',
     name: 'Junho Baik',
-    messageIds: [1],
+    feedIds: ['1', '3']
   },
   2: {
     _id: '2',
     name: 'Dave Davids',
-    messageIds: [2],
-  },
+    feedIds: ['2', '3']
+  }
 };
 
-let messages = {
+let feeds = {
   1: {
     _id: '1',
-    text: 'Hello World',
-    userId: '1',
+    title: 'A site'
   },
   2: {
     _id: '2',
-    text: 'By World',
-    userId: '2',
+    title: 'B site'
   },
+  3: {
+    _id: '3',
+    title: 'C site'
+  }
 };
 
 export default {
   users,
-  messages,
+  feeds
 };

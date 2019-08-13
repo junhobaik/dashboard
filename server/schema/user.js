@@ -10,6 +10,7 @@ export default gql`
   type User {
     _id: ID!
     name: String!
-    messages: [Message!]
+    feedIds: [String]
+    feeds: [Feed]
   }
 `;
