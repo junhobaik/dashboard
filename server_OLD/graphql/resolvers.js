@@ -41,7 +41,10 @@ const dummy_feeds = [
 
 const resolvers = {
   Query: {
-    users: () => dummy_users,
+    users: (p, args, { users }) => {
+      console.log(users.find());
+      return users.find();
+    },
     user: (p, { id }) => dummy_users.find(({ _id }) => id === _id)
   },
   User: {
