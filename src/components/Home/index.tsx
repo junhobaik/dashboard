@@ -1,23 +1,41 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 
-export default class Home extends Component {
-  componentDidMount() {
-    const accountBtn: any = document.querySelector('#check-account');
-    accountBtn.addEventListener('click', () => {
-      fetch('/api/account')
-        .then(res => res.json())
-        .then(json => {
-          console.log(json);
-        });
-    });
+export interface iProps {}
+export interface iStates {
+  login: boolean;
+}
+
+export default class Home extends Component<iProps, iStates> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      login: false
+    };
   }
+
+  componentDidMount() {
+    fetch('/api/account')
+      .then(res => res.json())
+      .then(json => {
+        if (json.user) {
+          this.setState({
+            login: true
+          });
+        }
+      });
+  }
+
   render() {
+    const { login } = this.state;
+
+    if (login) return <Redirect to={'/user'} />;
+
     return (
       <div id="Home">
         <div className="login">
           <a href="/auth/google">Google Login</a>
         </div>
-        <button id="check-account">Account 정보 확인 (console)</button>
       </div>
     );
   }
