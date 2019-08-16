@@ -1,5 +1,4 @@
 import express from 'express';
-import { ApolloServer } from 'apollo-server-express';
 import mongoose from 'mongoose';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
@@ -8,10 +7,9 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
-import schema from './schema';
-import resolvers from './resolvers';
-import { userModel, feedModel } from './models';
-import dummyData from './models/dummyData';
+import server from './apollo';
+import auth from './routes/auth';
+import api from './routes/api';
 
 require('dotenv').config();
 
@@ -25,17 +23,6 @@ const db = mongoose.connection;
 db.on('error', console.error);
 db.once('open', () => {
   console.log('💡 Connected to MongoDB Server');
-});
-
-const server = new ApolloServer({
-  typeDefs: schema,
-  resolvers,
-  context: {
-    modles: dummyData,
-    userModel,
-    feedModel,
-    admin: async () => await userModel.find({ name: 'Jhon' }, (err, user) => user)
-  }
 });
 
 // passport
@@ -67,37 +54,13 @@ passport.use(
 app.use(cors());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(session({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
-
-// session.
+app.use(session({ secret: 'dashboard_BJH', resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 
-// 구글 로그인
-app.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }));
-
-// 구글 로그인 후, 콜백
-app.get(
-  '/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/' }),
-  (req, res) => {
-    const { user } = req;
-    userModel.findOne({ googleId: user.id }, (err, userData) => {
-      if (err) console.error(err);
-      if (!userData) {
-        userModel.create({ googleId: user.id, name: user.displayName });
-      }
-    });
-    res.redirect('http://localhost:3000');
-  }
-);
-
-// 현재 user 정보 불러오기
-app.get('/api/account', (req, res) => {
-  res.json({
-    user: req.user || null
-  });
-});
+// route
+app.use('/auth', auth);
+app.use('/api', api);
 
 server.applyMiddleware({ app });
 
