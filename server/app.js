@@ -82,7 +82,8 @@ app.get(
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
     const { user } = req;
-    userModel.findOne({ googleId: req.user.id }, (err, userData) => {
+    userModel.findOne({ googleId: user.id }, (err, userData) => {
+      if (err) console.error(err);
       if (!userData) {
         userModel.create({ googleId: user.id, name: user.displayName });
       }

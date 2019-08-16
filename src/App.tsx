@@ -18,7 +18,7 @@ class App extends React.Component<AppProps, AppStates> {
       <ApolloProvider client={client}>
         <Router>
             <Route exact={true} path={`/`} component={Home} />
-            <Route path={`/user/:userId`} component={User} />
+            <Route path={`/user`} component={User} />
             <Route path={`/admin`} component={Admin} />
         </Router>
       </ApolloProvider>
