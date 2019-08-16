@@ -81,6 +81,12 @@ app.get(
   '/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
+    const { user } = req;
+    userModel.findOne({ googleId: req.user.id }, (err, userData) => {
+      if (!userData) {
+        userModel.create({ googleId: user.id, name: user.displayName });
+      }
+    });
     res.redirect('http://localhost:3000');
   }
 );
