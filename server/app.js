@@ -1,24 +1,19 @@
 import express from 'express';
-import { ApolloServer } from 'apollo-server-express';
 import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
-import schema from './schema';
-import resolvers from './resolvers';
-import { userModel, feedModel } from './models';
-import dummyData from './models/dummyData';
+import server from './apollo';
+import api from './routes/api';
 
 require('dotenv').config();
 
 const app = express();
-app.use(cors());
 
-const DB_NAME = 'dashboard';
-const { MONGO_USERNAME, MONGO_PASSWORD } = process.env;
-
-const uri = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@cluster0-tsis4.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`;
+// mongodb
 mongoose.Promise = global.Promise;
-mongoose.connect(uri, { useNewUrlParser: true });
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true });
 
 const db = mongoose.connection;
 db.on('error', console.error);
@@ -26,16 +21,15 @@ db.once('open', () => {
   console.log('💡 Connected to MongoDB Server');
 });
 
-const server = new ApolloServer({
-  typeDefs: schema,
-  resolvers,
-  context: {
-    modles: dummyData,
-    userModel,
-    feedModel,
-    admin: async () => await userModel.find({ name: 'Jhon' }, (err, user) => user)
-  }
-});
+// middleware
+app.use(cors());
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+require('./routes/passport')(app);
+
+app.use('/api', api);
 
 server.applyMiddleware({ app });
 

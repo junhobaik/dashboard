@@ -6,8 +6,8 @@ export default {
     users: async (parent, args, { userModel }) => {
       return await userModel.find({}, (err, users) => users);
     },
-    user: async (parent, { _id }, { userModel }) => {
-      return await userModel.findOne({ _id });
+    user: async (parent, { googleId }, { userModel }) => {
+      return await userModel.findOne({ googleId });
     }
   },
 
