@@ -31,12 +31,6 @@ export default class Home extends Component<iProps, iStates> {
 
     if (login) return <Redirect to={'/user'} />;
 
-    return (
-      <div id="Home">
-        <div className="login">
-          <a href="/auth/google">Google Login</a>
-        </div>
-      </div>
-    );
+    return <div id="Home">Home</div>;
   }
 }
