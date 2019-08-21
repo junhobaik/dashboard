@@ -60,7 +60,7 @@ module.exports = app => {
     (async () => {
       if (req.isAuthenticated()) {
         const { user } = req;
-        console.log(user);
+
         userModel.findOne({ googleId: user.id }, (err, userData) => {
           if (err) console.error(err);
           if (!userData) {
@@ -74,7 +74,7 @@ module.exports = app => {
           }
         });
       } else {
-        console.log('인증 재필요');
+        // console.log('인증 재필요');
       }
     })();
 

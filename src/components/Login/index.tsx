@@ -29,7 +29,6 @@ export default class Login extends Component<iProps, iStates> {
       })
       .then(json => {
         if (json.user) {
-          console.log('account 정보를 불러옴');
           this.setState({
             googleId: json.user.id,
             name: json.user.displayName
@@ -64,7 +63,7 @@ export default class Login extends Component<iProps, iStates> {
       body: JSON.stringify({ name: this.state.name })
     }).then(res => {
       if (res.status === 200) {
-        console.log('가입 성공');
+        // console.log('가입 성공');
         this.setState({
           redirect: true
         });
