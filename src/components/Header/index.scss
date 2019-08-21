@@ -1,0 +1,16 @@
+.header-inner {
+  display: flex;
+  padding: 0rem 0.5rem;
+  align-items: center;
+  border-bottom: 1px solid gray;
+  padding: 0.5rem 1rem;
+
+  .title {
+    flex-grow: 1;
+
+    & > h1 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+  }
+}
