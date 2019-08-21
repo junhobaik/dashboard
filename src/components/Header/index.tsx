@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Query } from 'react-apollo';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { RouteComponentProps, Redirect } from 'react-router';
 
 import { USER_DATA } from '../../queries';
@@ -57,13 +57,15 @@ class Header extends Component<RouteComponentProps<iProps>, iStates> {
       <Query query={USER_DATA} variables={{ googleId }}>
         {({ loading, data, error }: any) => {
           let userReder: any;
+          let userName: string | undefined;
 
           if (loading) userReder = <span>loding...</span>;
           if (error) userReder = <span>error</span>;
 
           if (data.user) {
             const { name } = data.user;
-            userReder = <a href="/auth/logout">{name}</a>;
+            userName = name;
+            userReder = <a href="/auth/logout">logout</a>;
             if (history.location.pathname === '/') {
               return <Redirect to="/user" />;
             }
@@ -75,7 +77,9 @@ class Header extends Component<RouteComponentProps<iProps>, iStates> {
             <header id="Header">
               <div className="header-inner">
                 <div className="title">
-                  <h1>Dashboard</h1>
+                  <Link to="/">
+                    <h1>{userName ? `${userName}'s Dashboard` : `Dashboard`}</h1>
+                  </Link>
                 </div>
                 <div className="user-info">{userReder}</div>
               </div>

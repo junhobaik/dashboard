@@ -4,11 +4,21 @@
   align-items: center;
   border-bottom: 1px solid gray;
   padding: 0.5rem 1rem;
+  background-color: #24292e;
+  color: #fff;
+  height: 3rem;
+
+  a {
+    all: unset;
+    cursor: pointer;
+  }
 
   .title {
     flex-grow: 1;
-
-    & > h1 {
+    user-select: none;
+    // cursor: pointer;
+    & h1 {
+      display: inline-block;
       margin: 0;
       font-size: 1.2rem;
     }
