@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
 import { Query } from 'react-apollo';
+import { withRouter } from 'react-router-dom';
+import { RouteComponentProps, Redirect } from 'react-router';
 
 import { USER_DATA } from '../../queries';
 import './index.scss';
 
-interface iProps {}
+interface iProps {
+  history: any;
+}
 interface iStates {
-  googleId: String;
+  googleId: string;
 }
 
-export default class Header extends Component<iProps, iStates> {
+class Header extends Component<RouteComponentProps<iProps>, iStates> {
+  _isMounted = false;
   constructor(props: any) {
     super(props);
     this.state = {
@@ -17,19 +22,35 @@ export default class Header extends Component<iProps, iStates> {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
+    this._isMounted = true;
+
     fetch('/api/account')
-      .then(res => res.json())
+      .then(res => {
+        return res.json();
+      })
       .then(json => {
-        if (json.user) {
+        if (json.user && this._isMounted) {
           this.setState({
             googleId: json.user.id
+          });
+        }
+      })
+      .catch(err => {
+        if (this._isMounted) {
+          this.setState({
+            googleId: ''
           });
         }
       });
   }
 
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   render() {
+    const { history } = this.props;
     const { googleId } = this.state;
 
     return (
@@ -38,14 +59,16 @@ export default class Header extends Component<iProps, iStates> {
           let userReder: any;
 
           if (loading) userReder = <span>loding...</span>;
-
           if (error) userReder = <span>error</span>;
 
           if (data.user) {
             const { name } = data.user;
             userReder = <a href="/auth/logout">{name}</a>;
+            if (history.location.pathname === '/') {
+              return <Redirect to="/user" />;
+            }
           } else {
-            userReder = <a href="/auth/google">login</a>;
+            userReder = <a href="/auth/google">Sign in / Sign up</a>;
           }
 
           return (
@@ -63,3 +86,5 @@ export default class Header extends Component<iProps, iStates> {
     );
   }
 }
+
+export default withRouter(Header);

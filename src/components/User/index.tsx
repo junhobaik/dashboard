@@ -16,7 +16,7 @@ export default class User extends Component<iProps, iStates> {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     fetch('/api/account')
       .then(res => res.json())
       .then(json => {
@@ -31,7 +31,7 @@ export default class User extends Component<iProps, iStates> {
   render() {
     const { googleId } = this.state;
 
-    // if (googleId === '') return <Redirect to={'/'} />;
+    if (googleId === '') return <div id="User">로그인을 다시 해주세요</div>;
 
     return (
       <Query query={USER_DATA} variables={{ googleId }}>
@@ -41,9 +41,11 @@ export default class User extends Component<iProps, iStates> {
 
           if (!data.user) return <Redirect to={'/'} />;
 
+          const { name } = data.user;
+
           return (
             <div id="User">
-              <div className="home-inner">{data.user.name}님의 Dashboard</div>
+              <div className="home-inner">{name}님의 Dashboard</div>
             </div>
           );
         }}

@@ -1,36 +1,78 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Query } from 'react-apollo';
 
-export interface iProps {}
-export interface iStates {
-  login: boolean;
+import { USER_DATA } from '../../queries';
+import './index.scss';
+
+interface iProps {}
+interface iStates {
+  googleId: String;
 }
 
-export default class Home extends Component<iProps, iStates> {
+class Home extends Component<iProps, iStates> {
+  _isMounted = false;
+
   constructor(props: any) {
     super(props);
+
     this.state = {
-      login: false
+      googleId: ''
     };
   }
 
   componentDidMount() {
+    this._isMounted = true;
+
     fetch('/api/account')
-      .then(res => res.json())
+      .then(res => {
+        return res.json();
+      })
       .then(json => {
-        if (json.user) {
+        if (json.user && this._isMounted) {
           this.setState({
-            login: true
+            googleId: json.user.id
+          });
+        }
+      })
+      .catch(err => {
+        if (this._isMounted) {
+          this.setState({
+            googleId: ''
           });
         }
       });
   }
 
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   render() {
-    const { login } = this.state;
+    const { googleId } = this.state;
 
-    if (login) return <Redirect to={'/user'} />;
+    return (
+      <Query query={USER_DATA} variables={{ googleId }}>
+        {({ loading, data, error }: any) => {
+          let userRender: any;
 
-    return <div id="Home">Home</div>;
+          if (loading) userRender = <span>loding...</span>;
+          if (error) userRender = <span>error</span>;
+
+          if (!data.user) {
+            userRender = <span>가입이 필요합니다.</span>;
+          }
+
+          return (
+            <div id="Home">
+              Home
+              <br />
+              {userRender}
+            </div>
+          );
+        }}
+      </Query>
+    );
   }
 }
+
+export default Home;

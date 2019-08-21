@@ -1,14 +1,10 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import passport from 'passport';
-import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import session from 'express-session';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
 import server from './apollo';
-import auth from './routes/auth';
 import api from './routes/api';
 
 require('dotenv').config();
@@ -25,41 +21,14 @@ db.once('open', () => {
   console.log('💡 Connected to MongoDB Server');
 });
 
-// passport
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-
-passport.deserializeUser((obj, done) => {
-  done(null, obj);
-});
-
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET_ID,
-      callbackURL: 'http://localhost:4000/auth/google/callback',
-      proxy: true
-    },
-    (accessToken, refreshToken, profile, done) => {
-      process.nextTick(() => {
-        return done(null, profile);
-      });
-    }
-  )
-);
-
 // middleware
 app.use(cors());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(session({ secret: 'dashboard_BJH', resave: true, saveUninitialized: true }));
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(bodyParser.json());
 
-// route
-app.use('/auth', auth);
+require('./routes/passport')(app);
+
 app.use('/api', api);
 
 server.applyMiddleware({ app });

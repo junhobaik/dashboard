@@ -7,25 +7,20 @@ import './App.scss';
 
 import Home from './components/Home';
 import User from './components/User';
-import Admin from './components/Admin';
 import Header from './components/Header';
+import Login from './components/Login';
 
-export interface AppProps {}
-export interface AppStates {}
-
-class App extends React.Component<AppProps, AppStates> {
-  render() {
-    return (
-      <ApolloProvider client={client}>
+const App = () => {
+  return (
+    <ApolloProvider client={client}>
+      <Router>
         <Header />
-        <Router>
-          <Route exact={true} path={`/`} component={Home} />
-          <Route path={`/user`} component={User} />
-          <Route path={`/admin`} component={Admin} />
-        </Router>
-      </ApolloProvider>
-    );
-  }
-}
+        <Route exact={true} path={`/`} component={Home} />
+        <Route path={`/login`} component={Login} />
+        <Route path={`/user`} component={User} />
+      </Router>
+    </ApolloProvider>
+  );
+};
 
 export default App;
