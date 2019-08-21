@@ -13,8 +13,6 @@ interface iStates {
 }
 
 export default class Login extends Component<iProps, iStates> {
-  _isMounted = false;
-
   constructor(props: any) {
     super(props);
     this.state = {
@@ -24,15 +22,14 @@ export default class Login extends Component<iProps, iStates> {
     };
   }
 
-  componentDidMount() {
-    this._isMounted = true;
-
+  componentWillMount() {
     fetch('/api/account')
       .then(res => {
         return res.json();
       })
       .then(json => {
-        if (json.user && this._isMounted) {
+        if (json.user) {
+          console.log('account 정보를 불러옴');
           this.setState({
             googleId: json.user.id,
             name: json.user.displayName
@@ -40,18 +37,11 @@ export default class Login extends Component<iProps, iStates> {
         }
       })
       .catch(err => {
-        if (this._isMounted) {
-          this.setState({
-            googleId: '',
-            name: '',
-            redirect: true
-          });
-        }
+        this.setState({
+          googleId: '',
+          name: ''
+        });
       });
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
   }
 
   handleNameValue = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,8 +63,8 @@ export default class Login extends Component<iProps, iStates> {
       },
       body: JSON.stringify({ name: this.state.name })
     }).then(res => {
-      //가입 성공
       if (res.status === 200) {
+        console.log('가입 성공');
         this.setState({
           redirect: true
         });
@@ -94,9 +84,10 @@ export default class Login extends Component<iProps, iStates> {
 
           if (loading) res = <span>loading</span>;
           if (error) res = <span>error</span>;
-          if (data.user) {
-            res = <Redirect to="/" />;
-          } else {
+
+          if (data.user) return <Redirect to="/" />;
+
+          if (data.user === null) {
             res = (
               <div id="Login">
                 <div className="home-inner">
@@ -107,6 +98,8 @@ export default class Login extends Component<iProps, iStates> {
                 </div>
               </div>
             );
+          } else {
+            res = <div />;
           }
 
           return res;

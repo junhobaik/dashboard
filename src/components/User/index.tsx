@@ -31,7 +31,7 @@ export default class User extends Component<iProps, iStates> {
   render() {
     const { googleId } = this.state;
 
-    if (googleId === '') return <div id="User">로그인을 다시 해주세요</div>;
+    // if (googleId === '') return <div id="User">로그인을 다시 해주세요</div>;
 
     return (
       <Query query={USER_DATA} variables={{ googleId }}>
@@ -39,7 +39,7 @@ export default class User extends Component<iProps, iStates> {
           if (loading) return <span>loading</span>;
           if (error) return <span>error</span>;
 
-          if (!data.user) return <Redirect to={'/'} />;
+          if (data.user === null) return <Redirect to={'/'} />;
 
           const { name } = data.user;
 
