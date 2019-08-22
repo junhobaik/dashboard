@@ -1,12 +1,19 @@
-.header-inner {
-  display: flex;
-  padding: 0rem 0.5rem;
-  align-items: center;
-  border-bottom: 1px solid gray;
-  padding: 0.5rem 1rem;
+#Header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 4rem;
   background-color: #24292e;
   color: #fff;
-  height: 3rem;
+  display: flex;
+}
+
+.header-inner {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #222222;
+  padding: 0.5rem 1rem;
 
   a {
     all: unset;
