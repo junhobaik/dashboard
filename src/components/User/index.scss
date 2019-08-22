@@ -1,0 +1,30 @@
+#User {
+  background-color: green;
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+
+  .user-inner {
+    display: flex;
+    padding-top: 4rem;
+    width: 100%;
+
+    .left,
+    .right {
+      height: 100%;
+      overflow: auto;
+    }
+
+    .left {
+      min-width: 15rem;
+      max-width: 20rem;
+      background-color: #fff;
+      border-right: 1px solid black;
+    }
+
+    .right {
+      background-color: lightgray;
+      flex-grow: 1;
+    }
+  }
+}
