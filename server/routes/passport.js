@@ -2,7 +2,7 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import session from 'express-session';
-
+import cookieParser from 'cookie-parser';
 import { userModel } from '../models';
 
 // passport
@@ -34,7 +34,15 @@ passport.use(
 );
 
 module.exports = app => {
-  app.use(session({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+  app.use(cookieParser());
+  app.use(
+    session({
+      secret: 'dashboard',
+      cookie: { secure: false, maxAge: 1000 * 60 * 60 * 24 * 31 }, // 31일
+      resave: false,
+      saveUninitialized: true
+    })
+  );
   app.use(passport.initialize());
   app.use(passport.session());
 
@@ -68,7 +76,7 @@ module.exports = app => {
               if (created.name === name) {
                 res.send(200);
               } else {
-                console.log(created)
+                console.log(created);
               }
             });
           }

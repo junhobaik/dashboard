@@ -1,7 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
 import server from './apollo';
@@ -23,7 +22,6 @@ db.once('open', () => {
 
 // middleware
 app.use(cors());
-app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
