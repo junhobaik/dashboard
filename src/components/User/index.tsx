@@ -48,8 +48,14 @@ export default class User extends Component<iProps, iStates> {
           return (
             <div id="User">
               <div className="user-inner">
-                <div className="left">left</div>
-                <div className="right">right</div>
+                <div className="left">
+                  <div className="header" />
+                  <div className="content" />
+                </div>
+                <div className="right">
+                  <div className="header" />
+                  <div className="content" />
+                </div>
               </div>
             </div>
           );

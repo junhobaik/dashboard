@@ -1,5 +1,7 @@
+$left-background-color: #dddddd;
+$right-background-color: #eeeeee;
+
 #User {
-  background-color: green;
   height: 100vh;
   display: flex;
   overflow: hidden;
@@ -11,20 +13,37 @@
 
     .left,
     .right {
+      display: flex;
+      flex-direction: column;
       height: 100%;
       overflow: auto;
+
+      .header {
+        position: sticky;
+        top: 0;
+        min-height: 2.5rem;
+        border-bottom: 1px solid gray;
+      }
     }
 
     .left {
       min-width: 15rem;
       max-width: 20rem;
-      background-color: #fff;
+      background-color: $left-background-color;
       border-right: 1px solid black;
+
+      .header {
+        background-color: $left-background-color;
+      }
     }
 
     .right {
-      background-color: lightgray;
+      background-color: $right-background-color;
       flex-grow: 1;
+
+      .header {
+        background-color: $right-background-color;
+      }
     }
   }
 }
