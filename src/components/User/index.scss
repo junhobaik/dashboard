@@ -22,7 +22,6 @@ $right-background-color: #eeeeee;
         position: sticky;
         top: 0;
         min-height: 2.5rem;
-        border-bottom: 1px solid gray;
       }
     }
 
@@ -30,7 +29,6 @@ $right-background-color: #eeeeee;
       min-width: 15rem;
       max-width: 20rem;
       background-color: $left-background-color;
-      border-right: 1px solid black;
 
       .header {
         background-color: $left-background-color;
