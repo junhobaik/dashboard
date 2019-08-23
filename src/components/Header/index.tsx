@@ -56,21 +56,21 @@ class Header extends Component<RouteComponentProps<iProps>, iStates> {
     return (
       <Query query={USER_DATA} variables={{ googleId }}>
         {({ loading, data, error }: any) => {
-          let userReder: any;
+          let loginStatus: any;
           let userName: string | undefined;
 
-          if (loading) userReder = <span>loding...</span>;
-          if (error) userReder = <span>error</span>;
+          if (loading) loginStatus = <span>loding...</span>;
+          if (error) loginStatus = <span>error</span>;
 
           if (data.user) {
             const { name } = data.user;
             userName = name;
-            userReder = <a href="/auth/logout">logout</a>;
+            loginStatus = <a href="/auth/logout">logout</a>;
             if (history.location.pathname === '/') {
               return <Redirect to="/user" />;
             }
           } else {
-            userReder = <a href="/auth/google">Sign in / Sign up</a>;
+            loginStatus = <a href="/auth/google">Sign in / Sign up</a>;
           }
 
           return (
@@ -81,7 +81,7 @@ class Header extends Component<RouteComponentProps<iProps>, iStates> {
                     <h1>{userName ? `${userName}'s Dashboard` : `Dashboard`}</h1>
                   </Link>
                 </div>
-                <div className="user-info">{userReder}</div>
+                <div className="user-info">{loginStatus}</div>
               </div>
             </header>
           );

@@ -81,18 +81,42 @@ export default class Login extends Component<iProps, iStates> {
         {({ loading, data, error }: any) => {
           let res;
 
-          if (loading) res = <span>loading</span>;
-          if (error) res = <span>error</span>;
+          if (loading)
+            res = (
+              <div id="Login">
+                <p>loading</p>
+              </div>
+            );
+
+          if (error)
+            res = (
+              <div id="Login">
+                <p>Error</p>
+                <span>{error}</span>
+              </div>
+            );
 
           if (data.user) return <Redirect to="/" />;
 
           if (data.user === null) {
             res = (
               <div id="Login">
-                <div className="home-inner">
-                  <form onSubmit={e => this.sendSignUpData(e)}>
-                    name: <input type="text" value={name} onChange={e => this.handleNameValue(e)} />
-                    <input type="submit" value="Sign Up" />
+                <div className="login-inner">
+                  <p>Welcome!</p>
+
+                  <form className="sign-up-form" onSubmit={e => this.sendSignUpData(e)}>
+                    <div className="name-input form-group">
+                      <label htmlFor="signUpNameInput">Name</label>
+                      <input
+                        type="text"
+                        id="signUpNameInput"
+                        className="form-control"
+                        value={name}
+                        onChange={e => this.handleNameValue(e)}
+                      />
+                    </div>
+
+                    <input id="signUpSubmit" className="btn btn-primary" type="submit" value="Sign Up" />
                   </form>
                 </div>
               </div>

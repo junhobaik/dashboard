@@ -16,8 +16,11 @@
   padding: 0.5rem 1rem;
 
   a {
-    all: unset;
-    cursor: pointer;
+    color: #fff;
+    &:hover {
+      color: #ddd;
+      text-decoration: none;
+    }
   }
 
   .title {
