@@ -77,7 +77,7 @@ class Header extends Component<RouteComponentProps<iProps>, iStates> {
             <header id="Header">
               <div className="header-inner">
                 <div className="title">
-                  <Link to="/">
+                  <Link to={userName ? '/user' : '/'}>
                     <h1>{userName ? `${userName}'s Dashboard` : `Dashboard`}</h1>
                   </Link>
                 </div>
