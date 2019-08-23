@@ -74,9 +74,9 @@ module.exports = app => {
           if (!userData) {
             userModel.create({ googleId: user.id, name: req.body.name }).then((created, error) => {
               if (created.name === name) {
-                res.send(200);
+                res.sendStatus(201);
               } else {
-                console.log(created);
+                res.sendStatus(202);
               }
             });
           }
