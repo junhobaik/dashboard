@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { Query } from 'react-apollo';
 import { Redirect } from 'react-router-dom';
+import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
+import { faCog, faPlus } from '@fortawesome/free-solid-svg-icons';
+
 import { USER_DATA } from '../../queries';
 
 import './index.scss';
@@ -45,7 +48,14 @@ export default class User extends Component<iProps, iStates> {
             <div id="User">
               <div className="user-inner">
                 <div className="left">
-                  <div className="header" />
+                  <div className="header">
+                    <div className="add-feed">
+                      <Fa icon={faPlus} />
+                    </div>
+                    <div className="setting">
+                      <Fa icon={faCog} />
+                    </div>
+                  </div>
                   <div className="content" />
                 </div>
                 <div className="right">
