@@ -4,15 +4,16 @@ import { Redirect } from 'react-router-dom';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faCog, faPlus } from '@fortawesome/free-solid-svg-icons';
 
-import { USER_DATA } from '../../queries';
-
 import './index.scss';
+import { USER_DATA } from '../../queries';
+import AddFeedModal from './AddFeedModal';
 
 export default class User extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      googleId: ''
+      googleId: '',
+      isAddFeedModal: false
     };
   }
 
@@ -28,8 +29,21 @@ export default class User extends Component {
       });
   }
 
+  openAddFeedModal = () => {
+    this.setState({
+      isAddFeedModal: true
+    });
+  };
+
+  closeAddFeedModal = () => {
+    console.log('close');
+    this.setState({
+      isAddFeedModal: false
+    });
+  };
+
   render() {
-    const { googleId } = this.state;
+    const { googleId, isAddFeedModal } = this.state;
 
     return (
       <Query query={USER_DATA} variables={{ googleId }}>
@@ -37,28 +51,31 @@ export default class User extends Component {
           if (loading) return <span>loading</span>;
           if (error) return <span>error</span>;
 
-          if (data.user === null) return <Redirect to={'/'} />;
+          if (data.user === null) return <Redirect to="/" />;
 
           return (
-            <div id="User">
-              <div className="user-inner">
-                <div className="left">
-                  <div className="header">
-                    <div className="add-feed">
-                      <Fa icon={faPlus} />
+            <React.Fragment>
+              <div id="User">
+                <div className="user-inner">
+                  <div className="left">
+                    <div className="header">
+                      <div className="add-feed">
+                        <Fa icon={faPlus} onClick={this.openAddFeedModal} />
+                      </div>
+                      <div className="setting">
+                        <Fa icon={faCog} />
+                      </div>
                     </div>
-                    <div className="setting">
-                      <Fa icon={faCog} />
-                    </div>
+                    <div className="content" />
                   </div>
-                  <div className="content" />
-                </div>
-                <div className="right">
-                  <div className="header" />
-                  <div className="content" />
+                  <div className="right">
+                    <div className="header" />
+                    <div className="content" />
+                  </div>
                 </div>
               </div>
-            </div>
+              <AddFeedModal isOpen={isAddFeedModal} close={this.closeAddFeedModal} />
+            </React.Fragment>
           );
         }}
       </Query>
