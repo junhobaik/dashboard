@@ -10,6 +10,7 @@ interface iStates {
   googleId: string;
   name: string;
   redirect: boolean;
+  signUpStatus: string;
 }
 
 export default class Login extends Component<iProps, iStates> {
@@ -18,7 +19,8 @@ export default class Login extends Component<iProps, iStates> {
     this.state = {
       googleId: '',
       name: '',
-      redirect: false
+      redirect: false,
+      signUpStatus: ''
     };
   }
 
@@ -38,7 +40,8 @@ export default class Login extends Component<iProps, iStates> {
       .catch(err => {
         this.setState({
           googleId: '',
-          name: ''
+          name: '',
+          redirect: true
         });
       });
   }
@@ -61,18 +64,35 @@ export default class Login extends Component<iProps, iStates> {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ name: this.state.name })
-    }).then(res => {
-      if (res.status === 200) {
-        // console.log('가입 성공');
+    })
+      .then(res => {
         this.setState({
-          redirect: true
+          signUpStatus: 'info'
         });
-      }
-    });
+        setTimeout(() => {
+          if (res.status === 201) {
+            this.setState({
+              signUpStatus: 'success'
+            });
+          }
+          if (res.status === 202) {
+            this.setState({
+              signUpStatus: 'warning'
+            });
+          }
+        }, 3000);
+      })
+      .catch(res => {
+        setTimeout(() => {
+          this.setState({
+            signUpStatus: 'danger'
+          });
+        }, 3000);
+      });
   };
 
   render() {
-    const { googleId, name, redirect } = this.state;
+    const { googleId, name, redirect, signUpStatus } = this.state;
 
     if (redirect) return <Redirect to="/" />;
 
@@ -98,6 +118,41 @@ export default class Login extends Component<iProps, iStates> {
 
           if (data.user) return <Redirect to="/" />;
 
+          let statusMsg;
+          switch (signUpStatus) {
+            case 'success':
+              statusMsg = (
+                <div className="alert alert-success" role="alert">
+                  가입이 완료되었습니다, 다시 로그인해주세요.
+                </div>
+              );
+              break;
+            case 'warning':
+              statusMsg = (
+                <div className="alert alert-warning" role="alert">
+                  알 수 없는 오류가 발생했습니다. 다시 시도해주세요.
+                </div>
+              );
+              break;
+            case 'info':
+              statusMsg = (
+                <div className="alert alert-info" role="alert">
+                  잠시만 기다려주세요...
+                </div>
+              );
+              break;
+            case 'danger':
+              statusMsg = (
+                <div className="alert alert-danger" role="alert">
+                  죄송합니다, 서버에 오류가 있습니다. 잠시 후 다시 시도해주세요.
+                </div>
+              );
+              break;
+
+            default:
+              break;
+          }
+
           if (data.user === null) {
             res = (
               <div id="Login">
@@ -116,8 +171,15 @@ export default class Login extends Component<iProps, iStates> {
                       />
                     </div>
 
-                    <input id="signUpSubmit" className="btn btn-primary" type="submit" value="Sign Up" />
+                    <input
+                      id="signUpSubmit"
+                      className="btn btn-primary"
+                      type="submit"
+                      value="Sign Up"
+                    />
                   </form>
+
+                  <div className="status-msg">{statusMsg}</div>
                 </div>
               </div>
             );
