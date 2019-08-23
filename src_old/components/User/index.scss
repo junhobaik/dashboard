@@ -1,0 +1,61 @@
+$left-background-color: #dddddd;
+$right-background-color: #eeeeee;
+
+#User {
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+
+  .user-inner {
+    display: flex;
+    padding-top: 4rem;
+    width: 100%;
+
+    .left,
+    .right {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: auto;
+
+      .header {
+        display: flex;
+        position: sticky;
+        top: 0;
+        min-height: 2.5rem;
+      }
+    }
+
+    .left {
+      min-width: 15rem;
+      max-width: 20rem;
+      background-color: $left-background-color;
+
+      .header {
+        padding: 0 0.5rem;
+        justify-content: space-between;
+        align-items: center;
+        background-color: $left-background-color;
+
+        svg {
+          cursor: pointer;
+          opacity: 0.6;
+          font-size: 1.5rem;
+
+          &:hover {
+            opacity: 0.9;
+          }
+        }
+      }
+    }
+
+    .right {
+      background-color: $right-background-color;
+      flex-grow: 1;
+
+      .header {
+        background-color: $right-background-color;
+      }
+    }
+  }
+}
