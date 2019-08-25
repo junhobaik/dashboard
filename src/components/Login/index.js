@@ -18,7 +18,7 @@ export default class Login extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     fetch('/api/account')
       .then(res => {
         return res.json();
