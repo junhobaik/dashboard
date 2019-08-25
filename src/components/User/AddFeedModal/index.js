@@ -12,7 +12,8 @@ class AddFeedModal extends React.Component {
     this.state = {
       isAddCategory: false,
       linkValue: '',
-      isLinkTyping: false
+      isLinkTyping: false,
+      linkVerification: false
     };
   }
 
@@ -38,7 +39,15 @@ class AddFeedModal extends React.Component {
         });
 
         fetch(`/api/getfeed?url=${currentValue}`).then(res => {
-          console.log(res);
+          if (res.status === 200) {
+            this.setState({
+              linkVerification: true
+            });
+          } else {
+            this.setState({
+              linkVerification: false
+            });
+          }
         });
       }
     }, 1000);
@@ -46,9 +55,36 @@ class AddFeedModal extends React.Component {
 
   render() {
     const { isOpen, close } = this.props;
-    const { isAddCategory, linkValue } = this.state;
+    const { isAddCategory, linkValue, isLinkTyping, linkVerification } = this.state;
 
     if (isOpen) {
+      let linkMsg = (
+        <div className="alert alert-info" role="alert">
+          Feed 주소 또는 해당 사이트 주소를 입력해주세요.
+        </div>
+      );
+
+      if (linkValue !== '' && !isLinkTyping) {
+        linkMsg = (
+          <div className="alert alert-secondary" role="alert">
+            Feed 주소를 확인 중입니다.
+          </div>
+        );
+        if (linkVerification) {
+          linkMsg = (
+            <div className="alert alert-success" role="alert">
+              Feed 주소가 확인되었습니다.
+            </div>
+          );
+        } else {
+          linkMsg = (
+            <div className="alert alert-danger" role="alert">
+              Feed 주소를 확인 할 수 없습니다, 주소를 확인해주세요.
+            </div>
+          );
+        }
+      }
+
       return (
         <React.Fragment>
           <div className="modal-layout" onClick={close} role="button" tabIndex="0" />
@@ -72,11 +108,7 @@ class AddFeedModal extends React.Component {
                   />
                 </div>
 
-                <div className="link-msg">
-                  <div className="alert alert-info" role="alert">
-                    Feed 주소 또는 해당 사이트 주소를 입력해주세요.
-                  </div>
-                </div>
+                <div className="link-msg">{linkMsg}</div>
               </div>
               <div className="feed-category">
                 <h2>Category</h2>
