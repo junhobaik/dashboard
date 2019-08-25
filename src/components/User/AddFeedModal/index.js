@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-state */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
@@ -9,7 +10,9 @@ class AddFeedModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isAddCategory: false
+      isAddCategory: false,
+      linkValue: '',
+      isLinkTyping: false
     };
   }
 
@@ -20,10 +23,30 @@ class AddFeedModal extends React.Component {
     });
   };
 
+  handleLinkValue = e => {
+    const currentValue = e.currentTarget.value;
+    this.setState({
+      linkValue: currentValue,
+      isLinkTyping: true
+    });
+
+    setTimeout(() => {
+      // eslint-disable-next-line react/destructuring-assignment
+      if (this.state.linkValue === currentValue) {
+        this.setState({
+          isLinkTyping: false
+        });
+
+        fetch(`/api/getfeed?url=${currentValue}`).then(res => {
+          console.log(res);
+        });
+      }
+    }, 1000);
+  };
+
   render() {
-    console.log('render');
     const { isOpen, close } = this.props;
-    const { isAddCategory } = this.state;
+    const { isAddCategory, linkValue } = this.state;
 
     if (isOpen) {
       return (
@@ -40,7 +63,13 @@ class AddFeedModal extends React.Component {
               <div className="feed-link">
                 <div className="link-input">
                   <h2>Feed URL</h2>
-                  <input type="text" id="feedLink" placeholder="ex. http://site.com/rss" />
+                  <input
+                    type="text"
+                    id="feedLink"
+                    placeholder="ex. http://site.com/rss"
+                    value={linkValue}
+                    onChange={e => this.handleLinkValue(e)}
+                  />
                 </div>
 
                 <div className="link-msg">
