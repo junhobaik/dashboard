@@ -84,9 +84,20 @@ class AddFeedModal extends React.Component {
     console.log(`handleAddFeedSubmit()`);
     const feedUrl = document.querySelector('#feedLink').value;
     const categorySelect = document.querySelector('#categorySelect');
-    const selectedCategory = categorySelect[categorySelect.options.selectedIndex].value;
+    const category = categorySelect[categorySelect.options.selectedIndex].value;
 
-    console.log(feedUrl, selectedCategory);
+    fetch('/api/addfeed', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ feedUrl, category })
+    }).then(res => {
+      console.log(res);
+    });
+
+    console.log(feedUrl, category);
   };
 
   render() {
@@ -183,7 +194,7 @@ class AddFeedModal extends React.Component {
               type="button"
               className="btn btn-primary add-feed-btn"
               onClick={this.handleAddFeedSubmit}
-              // disabled
+              disabled
             >
               Add Feed
             </button>
