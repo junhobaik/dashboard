@@ -27,11 +27,12 @@ class AddFeedModal extends React.Component {
 
   handleLinkValue = e => {
     const currentValue = e.currentTarget.value;
-    
+
     this.setState({
       linkValue: currentValue,
       isLinkTyping: true
     });
+    this.handleSubmitActive(false);
 
     setTimeout(() => {
       const { linkValue } = this.state;
@@ -49,11 +50,13 @@ class AddFeedModal extends React.Component {
                 linkVerification: true,
                 pendingLinkVertification: false
               });
+              this.handleSubmitActive(true);
             } else {
               this.setState({
                 linkVerification: false,
                 pendingLinkVertification: false
               });
+              this.handleSubmitActive(false);
             }
           })
           .catch(() => {
@@ -61,9 +64,20 @@ class AddFeedModal extends React.Component {
               linkVerification: false,
               pendingLinkVertification: false
             });
+            this.handleSubmitActive(false);
           });
       }
     }, 1000);
+  };
+
+  handleSubmitActive = isActive => {
+    const submitBtn = document.querySelector('.add-feed-btn');
+
+    if (!isActive) {
+      submitBtn.setAttribute('disabled', 'true');
+    } else {
+      submitBtn.removeAttribute('disabled');
+    }
   };
 
   render() {
@@ -137,7 +151,7 @@ class AddFeedModal extends React.Component {
                 <div className="category-select">
                   {!isAddCategory ? (
                     <select name="category">
-                      <option value="">category</option>
+                      <option value="root">No Category</option>
                       <option value="foo1">foo1</option>
                       <option value="foo2">foo2</option>
                       <option value="foo3">foo3</option>
@@ -157,7 +171,7 @@ class AddFeedModal extends React.Component {
               </div>
             </div>
             <div className="submit">
-              <button type="button" className="btn btn-primary">
+              <button type="button" className="btn btn-primary add-feed-btn" disabled>
                 Add Feed
               </button>
             </div>
