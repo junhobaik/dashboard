@@ -80,8 +80,12 @@ class AddFeedModal extends React.Component {
     }
   };
 
+  handleAddFeedSubmit = () => {
+    console.log(`handleAddFeedSubmit()`);
+  };
+
   render() {
-    const { isOpen, close } = this.props;
+    const { close } = this.props;
     const {
       isAddCategory,
       linkValue,
@@ -90,101 +94,102 @@ class AddFeedModal extends React.Component {
       pendingLinkVertification
     } = this.state;
 
-    if (isOpen) {
-      let linkMsg = (
-        <div className="alert alert-info" role="alert">
-          Feed 주소 또는 해당 사이트 주소를 입력해주세요.
+    let linkMsg = (
+      <div className="alert alert-info" role="alert">
+        Feed 주소 또는 해당 사이트 주소를 입력해주세요.
+      </div>
+    );
+
+    if (linkValue.length) {
+      linkMsg = (
+        <div className="alert alert-secondary" role="alert">
+          Feed 주소를 확인 중입니다.
         </div>
       );
 
-      if (linkValue.length) {
-        linkMsg = (
-          <div className="alert alert-secondary" role="alert">
-            Feed 주소를 확인 중입니다.
-          </div>
-        );
-
-        if (!isLinkTyping && !pendingLinkVertification) {
-          if (linkVerification) {
-            linkMsg = (
-              <div className="alert alert-success" role="alert">
-                Feed 주소가 확인되었습니다.
-              </div>
-            );
-          } else {
-            linkMsg = (
-              <div className="alert alert-danger" role="alert">
-                Feed 주소를 확인 할 수 없습니다, 주소를 확인해주세요.
-              </div>
-            );
-          }
+      if (!isLinkTyping && !pendingLinkVertification) {
+        if (linkVerification) {
+          linkMsg = (
+            <div className="alert alert-success" role="alert">
+              Feed 주소가 확인되었습니다.
+            </div>
+          );
+        } else {
+          linkMsg = (
+            <div className="alert alert-danger" role="alert">
+              Feed 주소를 확인 할 수 없습니다, 주소를 확인해주세요.
+            </div>
+          );
         }
       }
+    }
 
-      return (
-        <React.Fragment>
-          <div className="modal-layout" onClick={close} role="button" tabIndex="0" />
-          <div id="AddFeedModal">
-            <div className="header">
-              <h1 className="title">Add Feed</h1>
-              <button type="button" className="close" onClick={close}>
-                <Fa icon={faTimes} />
-              </button>
+    return (
+      <React.Fragment>
+        <div className="modal-layout" onClick={close} role="button" tabIndex="0" />
+        <div id="AddFeedModal">
+          <div className="header">
+            <h1 className="title">Add Feed</h1>
+            <button type="button" className="close" onClick={close}>
+              <Fa icon={faTimes} />
+            </button>
+          </div>
+          <div className="content">
+            <div className="feed-link">
+              <div className="link-input">
+                <h2>Feed URL</h2>
+                <input
+                  type="text"
+                  id="feedLink"
+                  placeholder="ex. http://site.com/rss"
+                  value={linkValue}
+                  onChange={e => this.handleLinkValue(e)}
+                />
+              </div>
+
+              <div className="link-msg">{linkMsg}</div>
             </div>
-            <div className="content">
-              <div className="feed-link">
-                <div className="link-input">
-                  <h2>Feed URL</h2>
-                  <input
-                    type="text"
-                    id="feedLink"
-                    placeholder="ex. http://site.com/rss"
-                    value={linkValue}
-                    onChange={e => this.handleLinkValue(e)}
+            <div className="feed-category">
+              <h2>Category</h2>
+              <div className="category-select">
+                {!isAddCategory ? (
+                  <select name="category">
+                    <option value="root">No Category</option>
+                    <option value="foo1">foo1</option>
+                    <option value="foo2">foo2</option>
+                    <option value="foo3">foo3</option>
+                  </select>
+                ) : (
+                  <input type="text" id="newCategory" placeholder="category name" />
+                )}
+
+                <div className="add-category-icon">
+                  <Fa
+                    className="add-category-btn"
+                    icon={!isAddCategory ? faPlus : faTimes}
+                    onClick={this.toggleCategoryInput}
                   />
                 </div>
-
-                <div className="link-msg">{linkMsg}</div>
               </div>
-              <div className="feed-category">
-                <h2>Category</h2>
-                <div className="category-select">
-                  {!isAddCategory ? (
-                    <select name="category">
-                      <option value="root">No Category</option>
-                      <option value="foo1">foo1</option>
-                      <option value="foo2">foo2</option>
-                      <option value="foo3">foo3</option>
-                    </select>
-                  ) : (
-                    <input type="text" id="newCategory" placeholder="category name" />
-                  )}
-
-                  <div className="add-category-icon">
-                    <Fa
-                      className="add-category-btn"
-                      icon={!isAddCategory ? faPlus : faTimes}
-                      onClick={this.toggleCategoryInput}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="submit">
-              <button type="button" className="btn btn-primary add-feed-btn" disabled>
-                Add Feed
-              </button>
             </div>
           </div>
-        </React.Fragment>
-      );
-    }
-    return null;
+          <div className="submit">
+            <button
+              type="button"
+              className="btn btn-primary add-feed-btn"
+              onClick={this.handleAddFeedSubmit}
+              // disabled
+            >
+              Add Feed
+            </button>
+          </div>
+        </div>
+      </React.Fragment>
+    );
   }
 }
 
 AddFeedModal.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired
 };
 

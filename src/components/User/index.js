@@ -74,7 +74,7 @@ export default class User extends Component {
                   </div>
                 </div>
               </div>
-              <AddFeedModal isOpen={isAddFeedModal} close={this.closeAddFeedModal} />
+              {isAddFeedModal ? <AddFeedModal close={this.closeAddFeedModal} /> : null}
             </React.Fragment>
           );
         }}
