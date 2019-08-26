@@ -5,6 +5,7 @@ import fetch from 'node-fetch';
 import Parser from 'rss-parser';
 
 const router = express.Router();
+const parser = new Parser();
 
 router.get(
   '/account',
@@ -28,26 +29,33 @@ router.get(
   }
 );
 
+const getFeed = async url => {
+  return await parser.parseURL(url);
+};
+
 router.get('/getfeed', (req, res, next) => {
   const { url } = req.query;
 
-  const parser = new Parser();
-
-  const feed = (async () => {
-    return await parser.parseURL(url);
-  })();
-
-  feed
+  getFeed(url)
     .then(() => {
       console.log('Success');
       res.sendStatus(200);
     })
     .catch(err => {
-      console.log('Error')
+      console.log('Error');
       res.sendStatus(204);
     });
+});
 
-  
+router.post('/addfeed', (req, res) => {
+  const { feedUrl, category } = req.body;
+  console.log(feedUrl, category);
+
+  getFeed(feedUrl).then(feed => {
+    console.log(feed);
+  });
+
+  res.sendStatus(200);
 });
 
 export default router;
