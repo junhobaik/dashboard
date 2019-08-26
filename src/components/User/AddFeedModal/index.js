@@ -13,7 +13,8 @@ class AddFeedModal extends React.Component {
       isAddCategory: false,
       linkValue: '',
       isLinkTyping: false,
-      linkVerification: false
+      linkVerification: false,
+      pendingLinkVertification: false
     };
   }
 
@@ -26,36 +27,54 @@ class AddFeedModal extends React.Component {
 
   handleLinkValue = e => {
     const currentValue = e.currentTarget.value;
+    
     this.setState({
       linkValue: currentValue,
       isLinkTyping: true
     });
 
     setTimeout(() => {
-      // eslint-disable-next-line react/destructuring-assignment
-      if (this.state.linkValue === currentValue) {
+      const { linkValue } = this.state;
+
+      if (linkValue === currentValue) {
         this.setState({
-          isLinkTyping: false
+          isLinkTyping: false,
+          pendingLinkVertification: true
         });
 
-        fetch(`/api/getfeed?url=${currentValue}`).then(res => {
-          if (res.status === 200) {
+        fetch(`/api/getfeed?url=${currentValue}`)
+          .then(res => {
+            if (res.status === 200) {
+              this.setState({
+                linkVerification: true,
+                pendingLinkVertification: false
+              });
+            } else {
+              this.setState({
+                linkVerification: false,
+                pendingLinkVertification: false
+              });
+            }
+          })
+          .catch(() => {
             this.setState({
-              linkVerification: true
+              linkVerification: false,
+              pendingLinkVertification: false
             });
-          } else {
-            this.setState({
-              linkVerification: false
-            });
-          }
-        });
+          });
       }
     }, 1000);
   };
 
   render() {
     const { isOpen, close } = this.props;
-    const { isAddCategory, linkValue, isLinkTyping, linkVerification } = this.state;
+    const {
+      isAddCategory,
+      linkValue,
+      isLinkTyping,
+      linkVerification,
+      pendingLinkVertification
+    } = this.state;
 
     if (isOpen) {
       let linkMsg = (
@@ -64,24 +83,27 @@ class AddFeedModal extends React.Component {
         </div>
       );
 
-      if (linkValue !== '' && !isLinkTyping) {
+      if (linkValue.length) {
         linkMsg = (
           <div className="alert alert-secondary" role="alert">
             Feed 주소를 확인 중입니다.
           </div>
         );
-        if (linkVerification) {
-          linkMsg = (
-            <div className="alert alert-success" role="alert">
-              Feed 주소가 확인되었습니다.
-            </div>
-          );
-        } else {
-          linkMsg = (
-            <div className="alert alert-danger" role="alert">
-              Feed 주소를 확인 할 수 없습니다, 주소를 확인해주세요.
-            </div>
-          );
+
+        if (!isLinkTyping && !pendingLinkVertification) {
+          if (linkVerification) {
+            linkMsg = (
+              <div className="alert alert-success" role="alert">
+                Feed 주소가 확인되었습니다.
+              </div>
+            );
+          } else {
+            linkMsg = (
+              <div className="alert alert-danger" role="alert">
+                Feed 주소를 확인 할 수 없습니다, 주소를 확인해주세요.
+              </div>
+            );
+          }
         }
       }
 
