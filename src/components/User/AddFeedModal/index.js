@@ -82,6 +82,11 @@ class AddFeedModal extends React.Component {
 
   handleAddFeedSubmit = () => {
     console.log(`handleAddFeedSubmit()`);
+    const feedUrl = document.querySelector('#feedLink').value;
+    const categorySelect = document.querySelector('#categorySelect');
+    const selectedCategory = categorySelect[categorySelect.options.selectedIndex].value;
+
+    console.log(feedUrl, selectedCategory);
   };
 
   render() {
@@ -153,11 +158,11 @@ class AddFeedModal extends React.Component {
               <h2>Category</h2>
               <div className="category-select">
                 {!isAddCategory ? (
-                  <select name="category">
+                  <select name="category" id="categorySelect">
                     <option value="root">No Category</option>
-                    <option value="foo1">foo1</option>
+                    {/* <option value="foo1">foo1</option>
                     <option value="foo2">foo2</option>
-                    <option value="foo3">foo3</option>
+                    <option value="foo3">foo3</option> */}
                   </select>
                 ) : (
                   <input type="text" id="newCategory" placeholder="category name" />
