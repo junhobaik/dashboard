@@ -11,6 +11,7 @@ const FeedSchema = new Schema({
     type: String,
     required: true
   },
+  pubDate: Date,
   items: [{ title: String, contentSnippet: String, link: String, isoDate: Date }]
 });
 
