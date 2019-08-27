@@ -4,7 +4,7 @@ import express from 'express';
 import fetch from 'node-fetch';
 import Parser from 'rss-parser';
 
-import { feedModel } from '../models';
+import { feedModel, userModel } from '../models';
 
 const router = express.Router();
 const parser = new Parser();
@@ -40,11 +40,11 @@ router.get('/getfeed', (req, res, next) => {
 
   getFeed(url)
     .then(() => {
-      console.log('Success');
+      // console.log('Success');
       res.sendStatus(200);
     })
     .catch(err => {
-      console.log('Error');
+      // console.log('Error');
       res.sendStatus(204);
     });
 });
@@ -61,20 +61,52 @@ router.post('/addfeed', (req, res) => {
         if (!feedData) {
           return (async () => {
             return await feedModel.create({ feedUrl, title, items }).then((created, error) => {
-              console.log('새로운 Feed 추가', created);
-              return created._id;
+              // console.log('새로운 Feed 추가', created);
+              return { id: created._id, title };
             });
           })();
         }
 
-        return feedData._id;
+        return { id: feedData._id, title };
       })
-      .then(id => {
-        console.log(`Feed ID: ${id}`);
+      .then(data => {
+        let resultStatus;
+
+        userModel
+          .find({ 'feedList.feedId': data.id })
+          .then(userData => {
+            if (!userData.length) {
+              console.log('새로운 피드 추가');
+              const update = async () => {
+                const updateRes = await userModel.updateOne(
+                  { googleId: req.user.id },
+                  {
+                    $push: {
+                      feedList: {
+                        feedId: data.id,
+                        title: data.title
+                      }
+                    }
+                  }
+                );
+                if (updateRes.n === 1) return 201;
+                return 500;
+              };
+
+              update().then(code => {
+                res.sendStatus(code);
+              });
+            } else {
+              console.log('이미 추가된 피드');
+              res.sendStatus(204);
+            }
+          })
+          .catch(err => {
+            console.log('catch', err);
+            res.sendStatus(500);
+          });
       });
   });
-
-  res.sendStatus(200);
 });
 
 export default router;

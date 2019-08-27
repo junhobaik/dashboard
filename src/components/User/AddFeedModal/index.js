@@ -14,7 +14,8 @@ class AddFeedModal extends React.Component {
       linkValue: '',
       isLinkTyping: false,
       linkVerification: false,
-      pendingLinkVertification: false
+      pendingLinkVertification: false,
+      submitStatus: 0
     };
   }
 
@@ -86,7 +87,7 @@ class AddFeedModal extends React.Component {
 
   handleAddFeedSubmit = () => {
     console.log(`handleAddFeedSubmit()`);
-    
+
     const feedUrl = document.querySelector('#feedLink').value;
     const categorySelect = document.querySelector('#categorySelect');
     const category = categorySelect[categorySelect.options.selectedIndex].value;
@@ -99,7 +100,9 @@ class AddFeedModal extends React.Component {
       },
       body: JSON.stringify({ feedUrl, category })
     }).then(res => {
-      console.log(res);
+      this.setState({
+        submitStatus: res.status
+      });
     });
 
     console.log(feedUrl, category);
@@ -112,7 +115,8 @@ class AddFeedModal extends React.Component {
       linkValue,
       isLinkTyping,
       linkVerification,
-      pendingLinkVertification
+      pendingLinkVertification,
+      submitStatus
     } = this.state;
 
     let linkMsg = (
@@ -143,6 +147,35 @@ class AddFeedModal extends React.Component {
           );
         }
       }
+    }
+
+    let submitMsg;
+
+    switch (submitStatus) {
+      case 201:
+        submitMsg = (
+          <div className="alert alert-success" role="alert">
+            Feed 주소가 확인되었습니다.
+          </div>
+        );
+        break;
+      case 204:
+        submitMsg = (
+          <div className="alert alert-secondary" role="alert">
+            이미 추가된 Feed 입니다.
+          </div>
+        );
+        break;
+      case 500:
+        submitMsg = (
+          <div className="alert alert-danger" role="alert">
+            죄송합니다, 알 수 없는 오류가 발생했습니다.
+          </div>
+        );
+        break;
+
+      default:
+        break;
     }
 
     return (
@@ -195,6 +228,7 @@ class AddFeedModal extends React.Component {
             </div>
           </div>
           <div className="submit">
+            <div className="submit-msg">{submitMsg}</div>
             <button type="button" className="btn btn-primary add-feed-btn" disabled>
               Add Feed
             </button>
