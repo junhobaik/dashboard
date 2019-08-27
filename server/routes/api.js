@@ -60,7 +60,7 @@ router.post('/addfeed', (req, res) => {
       .then(feedData => {
         if (!feedData) {
           return (async () => {
-            return await feedModel.create({ feedUrl, title }).then((created, error) => {
+            return await feedModel.create({ feedUrl, title, items }).then((created, error) => {
               console.log('새로운 Feed 추가', created);
               return created._id;
             });
