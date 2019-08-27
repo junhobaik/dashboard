@@ -18,6 +18,10 @@ class AddFeedModal extends React.Component {
     };
   }
 
+  componentDidMount() {
+    document.querySelector('.add-feed-btn').addEventListener('click', this.handleAddFeedSubmit);
+  }
+
   toggleCategoryInput = () => {
     const { isAddCategory } = this.state;
     this.setState({
@@ -82,6 +86,7 @@ class AddFeedModal extends React.Component {
 
   handleAddFeedSubmit = () => {
     console.log(`handleAddFeedSubmit()`);
+    
     const feedUrl = document.querySelector('#feedLink').value;
     const categorySelect = document.querySelector('#categorySelect');
     const category = categorySelect[categorySelect.options.selectedIndex].value;
@@ -190,12 +195,7 @@ class AddFeedModal extends React.Component {
             </div>
           </div>
           <div className="submit">
-            <button
-              type="button"
-              className="btn btn-primary add-feed-btn"
-              onClick={this.handleAddFeedSubmit}
-              disabled
-            >
+            <button type="button" className="btn btn-primary add-feed-btn" disabled>
               Add Feed
             </button>
           </div>
