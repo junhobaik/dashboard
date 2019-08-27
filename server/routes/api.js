@@ -4,6 +4,8 @@ import express from 'express';
 import fetch from 'node-fetch';
 import Parser from 'rss-parser';
 
+import { feedModel } from '../models';
+
 const router = express.Router();
 const parser = new Parser();
 
@@ -49,10 +51,27 @@ router.get('/getfeed', (req, res, next) => {
 
 router.post('/addfeed', (req, res) => {
   const { feedUrl, category } = req.body;
-  console.log(feedUrl, category);
 
   getFeed(feedUrl).then(feed => {
-    console.log(feed);
+    const { items, title, pubDate } = feed;
+
+    feedModel
+      .findOne({ feedUrl })
+      .then(feedData => {
+        if (!feedData) {
+          return (async () => {
+            return await feedModel.create({ feedUrl, title }).then((created, error) => {
+              console.log('새로운 Feed 추가', created);
+              return created._id;
+            });
+          })();
+        }
+
+        return feedData._id;
+      })
+      .then(id => {
+        console.log(`Feed ID: ${id}`);
+      });
   });
 
   res.sendStatus(200);
