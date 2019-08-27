@@ -15,7 +15,8 @@ class AddFeedModal extends React.Component {
       isLinkTyping: false,
       linkVerification: false,
       pendingLinkVertification: false,
-      submitStatus: 0
+      submitStatus: 0,
+      pendingSubmit: false
     };
   }
 
@@ -92,6 +93,10 @@ class AddFeedModal extends React.Component {
     const categorySelect = document.querySelector('#categorySelect');
     const category = categorySelect[categorySelect.options.selectedIndex].value;
 
+    this.setState({
+      pendingSubmit: true
+    });
+
     fetch('/api/addfeed', {
       method: 'POST',
       headers: {
@@ -99,11 +104,17 @@ class AddFeedModal extends React.Component {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ feedUrl, category })
-    }).then(res => {
-      this.setState({
-        submitStatus: res.status
+    })
+      .then(res => {
+        this.setState({
+          submitStatus: res.status
+        });
+      })
+      .finally(() => {
+        this.setState({
+          pendingSubmit: false
+        });
       });
-    });
 
     console.log(feedUrl, category);
   };
@@ -116,67 +127,77 @@ class AddFeedModal extends React.Component {
       isLinkTyping,
       linkVerification,
       pendingLinkVertification,
-      submitStatus
+      submitStatus,
+      pendingSubmit
     } = this.state;
 
-    let linkMsg = (
-      <div className="alert alert-info" role="alert">
-        Feed 주소 또는 해당 사이트 주소를 입력해주세요.
-      </div>
-    );
-
-    if (linkValue.length) {
-      linkMsg = (
-        <div className="alert alert-secondary" role="alert">
-          Feed 주소를 확인 중입니다.
+    const createLinkMsg = () => {
+      let linkMsg = (
+        <div className="alert alert-info" role="alert">
+          Feed 주소 또는 해당 사이트 주소를 입력해주세요.
         </div>
       );
 
-      if (!isLinkTyping && !pendingLinkVertification) {
-        if (linkVerification) {
-          linkMsg = (
+      if (linkValue.length) {
+        linkMsg = (
+          <div className="alert alert-secondary" role="alert">
+            Feed 주소를 확인 중입니다.
+          </div>
+        );
+
+        if (!isLinkTyping && !pendingLinkVertification) {
+          if (linkVerification) {
+            linkMsg = (
+              <div className="alert alert-success" role="alert">
+                Feed 주소가 확인되었습니다.
+              </div>
+            );
+          } else {
+            linkMsg = (
+              <div className="alert alert-danger" role="alert">
+                Feed 주소를 확인 할 수 없습니다, 주소를 확인해주세요.
+              </div>
+            );
+          }
+        }
+      }
+      return linkMsg;
+    };
+
+    const createSubmitMsg = () => {
+      if (pendingSubmit) {
+        return (
+          <div className="alert alert-secondary" role="alert">
+            Feed를 추가중입니다...
+          </div>
+        );
+      }
+      switch (submitStatus) {
+        case 201:
+          return (
             <div className="alert alert-success" role="alert">
               Feed 주소가 확인되었습니다.
             </div>
           );
-        } else {
-          linkMsg = (
-            <div className="alert alert-danger" role="alert">
-              Feed 주소를 확인 할 수 없습니다, 주소를 확인해주세요.
+        case 204:
+          return (
+            <div className="alert alert-warning" role="alert">
+              이미 추가된 Feed 입니다.
             </div>
           );
-        }
+        case 500:
+          return (
+            <div className="alert alert-danger" role="alert">
+              죄송합니다, 알 수 없는 오류가 발생했습니다.
+            </div>
+          );
+        default:
+          return null;
       }
-    }
+    };
 
-    let submitMsg;
-
-    switch (submitStatus) {
-      case 201:
-        submitMsg = (
-          <div className="alert alert-success" role="alert">
-            Feed 주소가 확인되었습니다.
-          </div>
-        );
-        break;
-      case 204:
-        submitMsg = (
-          <div className="alert alert-secondary" role="alert">
-            이미 추가된 Feed 입니다.
-          </div>
-        );
-        break;
-      case 500:
-        submitMsg = (
-          <div className="alert alert-danger" role="alert">
-            죄송합니다, 알 수 없는 오류가 발생했습니다.
-          </div>
-        );
-        break;
-
-      default:
-        break;
-    }
+    const linkMsg = createLinkMsg();
+    const submitMsg = createSubmitMsg();
 
     return (
       <React.Fragment>
