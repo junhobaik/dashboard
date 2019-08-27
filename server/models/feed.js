@@ -10,7 +10,8 @@ const FeedSchema = new Schema({
   title: {
     type: String,
     required: true
-  }
+  },
+  items: [{ title: String, contentSnippet: String, link: String, isoDate: Date }]
 });
 
 export default mongoose.model('feed', FeedSchema);
