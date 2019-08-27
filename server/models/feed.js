@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const FeedSchema = new Schema({
-  _id: {
+  feedUrl: {
     type: String,
     required: true
   },
