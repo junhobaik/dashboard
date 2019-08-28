@@ -10,5 +10,19 @@ export default gql`
     _id: String!
     googleId: String!
     name: String!
+    feedList: [feedList]
+    feed: [Feed]
+  }
+
+  type feedList {
+    _id: String!
+    feedId: String!
+    title: String!
+    category: String!
+    readedItem: [readedItem]
+  }
+
+  type readedItem {
+    _id: String
   }
 `;

@@ -11,5 +11,14 @@ export default gql`
     title: String!
     feedUrl: String!
     pubDate: String
+    items: [feedItems]
+  }
+
+  type feedItems {
+    _id: String!
+    title: String!
+    contentSnippet: String
+    link: String!
+    isoDate: String
   }
 `;
