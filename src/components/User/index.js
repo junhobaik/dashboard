@@ -61,7 +61,7 @@ export default class User extends Component {
             items = [...items, ...v.items];
             return (
               <li key={v.feedUrl}>
-                <a href={v.feedUrl} target="_blank" rel="noopener noreferrer">
+                <a href={v.link} target="_blank" rel="noopener noreferrer">
                   {v.title}
                 </a>
               </li>

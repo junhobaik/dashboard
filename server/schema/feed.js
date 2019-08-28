@@ -9,6 +9,7 @@ export default gql`
   type Feed {
     _id: String!
     title: String!
+    link: String!
     feedUrl: String!
     pubDate: String
     items: [feedItems]

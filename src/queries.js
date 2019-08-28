@@ -7,6 +7,7 @@ export const USER_DATA = gql`
       feed {
         title
         feedUrl
+        link
         items {
           _id
           title
