@@ -3,6 +3,7 @@ import { Query } from 'react-apollo';
 import { Redirect } from 'react-router-dom';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faCog, faPlus } from '@fortawesome/free-solid-svg-icons';
+import moment from 'moment';
 
 import './index.scss';
 import { USER_DATA } from '../../queries';
@@ -55,12 +56,32 @@ export default class User extends Component {
 
           const { feed } = data.user;
 
+          let items = [];
           const feedLink = feed.map(v => {
+            items = [...items, ...v.items];
             return (
               <li key={v.feedUrl}>
                 <a href={v.feedUrl} target="_blank" rel="noopener noreferrer">
                   {v.title}
                 </a>
+              </li>
+            );
+          });
+
+          items.sort((a, b) => {
+            return parseInt(b.isoDate, 10) - parseInt(a.isoDate, 10);
+          });
+
+          const itemList = items.map(v => {
+            const unixDate = `${v.isoDate.slice(0, 10)}.${v.isoDate.slice(9, 12)}`;
+
+            return (
+              <li key={v.link}>
+                <a href={v.link} target="_blank" rel="noopener noreferrer">
+                  {v.title}
+                </a>
+                &nbsp;
+                <span>{moment.unix(unixDate).format('YY-MM-DD')}</span>
               </li>
             );
           });
@@ -84,7 +105,9 @@ export default class User extends Component {
                   </div>
                   <div className="right">
                     <div className="header" />
-                    <div className="content" />
+                    <div className="content">
+                      <ul>{itemList}</ul>
+                    </div>
                   </div>
                 </div>
               </div>
