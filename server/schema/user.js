@@ -10,7 +10,5 @@ export default gql`
     _id: String!
     googleId: String!
     name: String!
-    feedIds: [String]
-    feeds: [Feed]
   }
 `;

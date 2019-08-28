@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-return-await */
 import _ from 'lodash';
 
@@ -8,12 +9,6 @@ export default {
     },
     user: async (parent, { googleId }, { userModel }) => {
       return await userModel.findOne({ googleId });
-    }
-  },
-
-  User: {
-    feeds: (user, args, { models }) => {
-      return _.filter(models.feeds, feed => _.indexOf(user.feedIds, feed._id) > -1);
     }
   }
 };
