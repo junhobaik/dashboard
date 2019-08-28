@@ -53,17 +53,19 @@ router.post('/addfeed', (req, res) => {
   const { feedUrl, category } = req.body;
 
   getFeed(feedUrl).then(feed => {
-    const { items, title, pubDate } = feed;
+    const { items, title, pubDate, link } = feed;
 
     feedModel
       .findOne({ feedUrl })
       .then(feedData => {
         if (!feedData) {
           return (async () => {
-            return await feedModel.create({ feedUrl, title, items, pubDate }).then((created, error) => {
-              // console.log('새로운 Feed 추가', created);
-              return { id: created._id, title };
-            });
+            return await feedModel
+              .create({ feedUrl, title, items, pubDate, link })
+              .then((created, error) => {
+                // console.log('새로운 Feed 추가', created);
+                return { id: created._id, title };
+              });
           })();
         }
 
@@ -83,7 +85,8 @@ router.post('/addfeed', (req, res) => {
                       feedList: {
                         feedId: data.id,
                         title: data.title,
-                        category
+                        category,
+                        link
                       }
                     }
                   }
