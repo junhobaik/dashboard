@@ -30,6 +30,11 @@ export default class User extends Component {
       });
   }
 
+  shouldComponentUpdate(p){
+    console.log(p);
+    return p;
+  }
+
   openAddFeedModal = () => {
     this.setState({
       isAddFeedModal: true
@@ -48,7 +53,8 @@ export default class User extends Component {
 
     return (
       <Query query={USER_DATA} variables={{ googleId }}>
-        {({ loading, data, error }) => {
+        {({ loading, error, data, refetch }) => {
+
           if (loading) return <span>loading</span>;
           if (error) return <span>error</span>;
 
@@ -129,7 +135,7 @@ export default class User extends Component {
                   </div>
                 </div>
               </div>
-              {isAddFeedModal ? <AddFeedModal close={this.closeAddFeedModal} /> : null}
+              {isAddFeedModal ? <AddFeedModal close={this.closeAddFeedModal} refetch={refetch} /> : null}
             </React.Fragment>
           );
         }}

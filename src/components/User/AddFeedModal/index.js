@@ -127,7 +127,7 @@ class AddFeedModal extends React.Component {
   };
 
   render() {
-    const { close } = this.props;
+    const { close, refetch } = this.props;
     const {
       isAddCategory,
       linkValue,
@@ -208,11 +208,26 @@ class AddFeedModal extends React.Component {
 
     return (
       <React.Fragment>
-        <div className="modal-layout" onClick={close} role="button" tabIndex="0" />
+        <div
+          className="modal-layout"
+          onClick={() => {
+            refetch();
+            close();
+          }}
+          role="button"
+          tabIndex="0"
+        />
         <div id="AddFeedModal">
           <div className="header">
             <h1 className="title">Add Feed</h1>
-            <button type="button" className="close" onClick={close}>
+            <button
+              type="button"
+              className="close"
+              onClick={() => {
+                refetch();
+                close();
+              }}
+            >
               <Fa icon={faTimes} />
             </button>
           </div>
@@ -268,7 +283,8 @@ class AddFeedModal extends React.Component {
 }
 
 AddFeedModal.propTypes = {
-  close: PropTypes.func.isRequired
+  close: PropTypes.func.isRequired,
+  refetch: PropTypes.func.isRequired
 };
 
 export default AddFeedModal;
