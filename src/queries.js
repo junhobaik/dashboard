@@ -11,6 +11,8 @@ export const USER_DATA = gql`
           _id
           title
           contentSnippet
+          isoDate
+          link
         }
       }
     }
