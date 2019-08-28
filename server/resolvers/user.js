@@ -18,5 +18,19 @@ export default {
       const ids = parent.feedList.map(v => v.feedId);
       return await feedModel.find({ _id: { $in: [...ids] } }, (err, feeds) => feeds);
     }
+  },
+
+  Mutation: {
+    createUser: async (parent, { googleId, name }, { userModel }) => {
+      return await userModel.findOne({ googleId }, (err, userData) => {
+        if (err) return new Error(err);
+        if (!userData) {
+          userModel.create({ googleId, name }).then((created, error) => {
+            return created;
+          });
+        }
+        return null;
+      });
+    }
   }
 };

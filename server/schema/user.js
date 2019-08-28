@@ -25,4 +25,8 @@ export default gql`
   type readedItem {
     _id: String
   }
+
+  extend type Mutation {
+    createUser(googleId: String!, name: String!): User
+  }
 `;

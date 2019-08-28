@@ -1,11 +1,21 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/label-has-for */
 import React, { Component } from 'react';
-import { Query } from 'react-apollo';
+import { Query, Mutation } from 'react-apollo';
 import { Redirect } from 'react-router-dom';
+import gql from 'graphql-tag';
 
 import { USER_DATA } from '../../queries';
 import './index.scss';
+
+const CREATE_USER = gql`
+  mutation createUser($googleId: String!, $name: String!) {
+    createUser(googleId: $googleId, name: $name) {
+      googleId
+      name
+    }
+  }
+`;
 
 export default class Login extends Component {
   constructor(props) {
@@ -173,7 +183,24 @@ export default class Login extends Component {
                       value="Sign Up"
                     />
                   </form>
-
+                  {/*  */}
+                  <Mutation mutation={CREATE_USER}>
+                    {/* eslint-disable-next-line no-unused-vars */}
+                    {createUser => (
+                      // eslint-disable-next-line react/button-has-type
+                      <button
+                        onClick={e => {
+                          e.preventDefault();
+                          createUser({
+                            variables: { name: 'TEST_NAME', googleId: '110528014959483593016' }
+                          });
+                        }}
+                      >
+                        TEST
+                      </button>
+                    )}
+                  </Mutation>
+                  {/*  */}
                   <div className="status-msg">{statusMsg}</div>
                 </div>
               </div>
