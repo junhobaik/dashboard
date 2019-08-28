@@ -96,7 +96,7 @@ export default class User extends Component {
                   <span className="item-date">{moment.unix(unixDate).format('YYYY-MM-DD')}</span>
                 </div>
                 <div className="item-content-snippet">
-                  <span>{`${item.contentSnippet.slice(0, 120)}...`}</span>  
+                  <span>{`${item.contentSnippet.slice(0, 120)}...`}</span>
                 </div>
               </li>
             );
@@ -120,7 +120,9 @@ export default class User extends Component {
                     </div>
                   </div>
                   <div className="right">
-                    <div className="header" />
+                    <div className="header">
+                      <input type="text" id="searchItem" placeholder="Search item" />
+                    </div>
                     <div className="content">
                       <ul className="item-list">{itemList}</ul>
                     </div>
