@@ -13,7 +13,7 @@ export default class User extends Component {
     super(props);
     this.state = {
       googleId: '',
-      isAddFeedModal: true
+      isAddFeedModal: false
     };
   }
 
