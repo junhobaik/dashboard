@@ -47,6 +47,18 @@ $right-background-color: #eeeeee;
           }
         }
       }
+
+      .content {
+        padding: 1rem;
+
+        ul.feed-list {
+          padding: 0;
+
+          li.feed {
+            list-style: none;
+          }
+        }
+      }
     }
 
     .right {
@@ -55,6 +67,35 @@ $right-background-color: #eeeeee;
 
       .header {
         background-color: $right-background-color;
+      }
+
+      .content {
+        padding: 0 2rem 1rem 2rem;
+
+        ul.item-list {
+          padding: 0;
+
+          li.item {
+            list-style: none;
+            border: 1px solid gray;
+            border-radius: 3px;
+            padding: 1rem;
+            // max-width: 50rem;
+            margin: 0 auto;
+            margin-bottom: 1.5rem;
+
+            h3.item-title {
+              font-size: 1.2rem;
+            }
+
+            span {
+              font-size: 0.9rem;
+            }
+            span.item-feed-link {
+              margin-right: 0.5rem;
+            }
+          }
+        }
       }
     }
   }

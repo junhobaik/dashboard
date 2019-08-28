@@ -65,7 +65,7 @@ export default class User extends Component {
               })
             ];
             return (
-              <li key={v.feedUrl}>
+              <li className="feed" key={v.feedUrl}>
                 <a href={v.link} target="_blank" rel="noopener noreferrer">
                   {v.title}
                 </a>
@@ -81,21 +81,23 @@ export default class User extends Component {
             const unixDate = `${item.isoDate.slice(0, 10)}.${item.isoDate.slice(9, 12)}`;
 
             return (
-              <li key={item.link}>
-                <h3>
+              <li className="item" key={item.link}>
+                <h3 className="item-title">
                   <a href={item.link} target="_blank" rel="noopener noreferrer">
                     {item.title}
                   </a>
                 </h3>
                 <div className="item-feed-info">
-                  <span>
+                  <span className="item-feed-link">
                     <a href={item.feedLink} target="_blank" rel="noopener noreferrer">
                       {item.feedTitle}
                     </a>
                   </span>
-                  <span>{moment.unix(unixDate).format('YYYY-MM-DD')}</span>
+                  <span className="item-date">{moment.unix(unixDate).format('YYYY-MM-DD')}</span>
                 </div>
-                <div className="content-snippet">{item.contentSnippet.slice(0, 120)}</div>
+                <div className="item-content-snippet">
+                  <span>{`${item.contentSnippet.slice(0, 120)}...`}</span>  
+                </div>
               </li>
             );
           });
@@ -114,13 +116,13 @@ export default class User extends Component {
                       </div>
                     </div>
                     <div className="content">
-                      <ul>{feedLink}</ul>
+                      <ul className="feed-list">{feedLink}</ul>
                     </div>
                   </div>
                   <div className="right">
                     <div className="header" />
                     <div className="content">
-                      <ul>{itemList}</ul>
+                      <ul className="item-list">{itemList}</ul>
                     </div>
                   </div>
                 </div>
