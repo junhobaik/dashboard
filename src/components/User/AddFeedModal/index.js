@@ -183,7 +183,7 @@ class AddFeedModal extends React.Component {
         case 201:
           return (
             <div className="alert alert-success" role="alert">
-              Feed 주소가 확인되었습니다.
+              Feed 추가에 성공했습니다.
             </div>
           );
         case 204:
