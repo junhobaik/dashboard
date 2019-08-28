@@ -53,6 +53,18 @@ export default class User extends Component {
 
           if (data.user === null) return <Redirect to="/" />;
 
+          const { feed } = data.user;
+
+          const feedLink = feed.map(v => {
+            return (
+              <li key={v.feedUrl}>
+                <a href={v.feedUrl} target="_blank" rel="noopener noreferrer">
+                  {v.title}
+                </a>
+              </li>
+            );
+          });
+
           return (
             <React.Fragment>
               <div id="User">
@@ -66,7 +78,9 @@ export default class User extends Component {
                         <Fa icon={faCog} />
                       </div>
                     </div>
-                    <div className="content" />
+                    <div className="content">
+                      <ul>{feedLink}</ul>
+                    </div>
                   </div>
                   <div className="right">
                     <div className="header" />
