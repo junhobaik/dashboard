@@ -26,7 +26,12 @@ export default gql`
     _id: String
   }
 
+  type userResponse {
+    ok: Boolean
+  }
+
   extend type Mutation {
     createUser(googleId: String!, name: String!): User
+    login(googleId: String!): userResponse!
   }
 `;

@@ -2,6 +2,7 @@
 /* eslint-disable no-return-await */
 import _ from 'lodash';
 import { ObjectID } from 'mongodb';
+import passport from 'passport';
 
 export default {
   Query: {
@@ -31,6 +32,10 @@ export default {
         }
         return null;
       });
-    }
+    },
+
+    login: (parent, args, ctx) => new Promise((resolve, reject) => {
+      passport.authenticate('google', { scope: ['profile'] })
+    })
   }
 };

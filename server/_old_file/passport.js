@@ -3,6 +3,7 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
+
 import { userModel } from '../models';
 
 // passport
@@ -34,8 +35,9 @@ module.exports = app => {
   app.use(cookieParser());
   app.use(
     session({
-      secret: 'dashboard',
+      secret: 'dashboardTempSecret',
       cookie: { secure: false, maxAge: 1000 * 60 * 60 * 24 * 31 }, // 31일
+      // store: new MongoStore({ mongooseConnection: mongoose.connection }),
       resave: false,
       saveUninitialized: true
     })

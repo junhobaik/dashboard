@@ -8,4 +8,15 @@ const UserSchema = new Schema({
   feedList: [{ feedId: String, title: String, category: String, readedItem: [String] }]
 });
 
+UserSchema.pre('save', async next => {
+  try {
+    const user = this;
+    console.log('userSchema pre:', user);
+
+    return next();
+  } catch (error) {
+    return next(error);
+  }
+});
+
 export default mongoose.model('user', UserSchema);
