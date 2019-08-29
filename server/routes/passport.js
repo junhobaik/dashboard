@@ -22,12 +22,9 @@ passport.use(
       callbackURL: 'http://localhost:4000/auth/google/callback',
       proxy: true
     },
-    (accessToken, refreshToken, profile, done) => {
+    (accessToken, refreshToken, profile, cb) => {
       process.nextTick(() => {
-        // console.log('> accessToken: ', accessToken);
-        // console.log('> refreshToken: ', refreshToken);
-
-        return done(null, profile);
+        return cb(null, profile);
       });
     }
   )
