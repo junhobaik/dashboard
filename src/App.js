@@ -9,6 +9,7 @@ import Home from './components/Home';
 import User from './components/User';
 import Header from './components/Header';
 import Login from './components/Login';
+import Intro from './components/Intro';
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
       <Router>
         <Header />
         <Route exact path="/" component={Home} />
+        <Route path="/intro" component={Intro} />
         <Route path="/login" component={Login} />
         <Route path="/user" component={User} />
       </Router>
