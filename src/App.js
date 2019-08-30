@@ -15,9 +15,9 @@ const App = () => {
     <ApolloProvider client={client}>
       <Router>
         <Header />
-        <Route exact={true} path={`/`} component={Home} />
-        <Route path={`/login`} component={Login} />
-        <Route path={`/user`} component={User} />
+        <Route exact path="/" component={Home} />
+        <Route path="/login" component={Login} />
+        <Route path="/user" component={User} />
       </Router>
     </ApolloProvider>
   );
