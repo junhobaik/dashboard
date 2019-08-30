@@ -5,12 +5,12 @@ import { userModel } from '../models';
 module.exports = passport => {
   // passport
   passport.serializeUser((user, done) => {
-    console.log('> serializeUser', user.displayName);
+    // console.log('> serializeUser', user.displayName);
     done(null, user);
   });
 
   passport.deserializeUser((user, done) => {
-    console.log('> deserializeUser:', user.displayName);
+    // console.log('> deserializeUser:', user.displayName);
     done(null, user);
     // userModel.findOne({ googleId: user.id }, (err, userData) => {
     //   if (userData) {

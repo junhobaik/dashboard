@@ -32,10 +32,6 @@ export default {
         }
         return null;
       });
-    },
-
-    login: (parent, args, ctx) => new Promise((resolve, reject) => {
-      passport.authenticate('google', { scope: ['profile'] })
-    })
+    }
   }
 };

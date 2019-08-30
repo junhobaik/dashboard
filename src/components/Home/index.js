@@ -29,7 +29,7 @@ class Home extends Component {
           });
         }
       })
-      .catch(err => {
+      .catch(() => {
         if (this._isMounted) {
           this.setState({
             googleId: ''
@@ -53,8 +53,10 @@ class Home extends Component {
           if (loading) userRender = <span>loding...</span>;
           if (error) userRender = <span>error</span>;
 
-          if (!data.user) {
-            userRender = <span>가입이 필요합니다.</span>;
+          if (data) {
+            if (!data.user) {
+              userRender = <span>가입이 필요합니다.</span>;
+            }
           }
 
           return (

@@ -76,7 +76,9 @@ class Header extends Component {
                   return <a href="/auth/google">Login by Google</a>;
                 }}
               </Query>
-            ) : null}
+            ) : (
+              <a href="/auth/google">Login by Google</a>
+            )}
           </div>
         </div>
       </header>

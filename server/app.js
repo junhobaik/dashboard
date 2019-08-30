@@ -1,25 +1,29 @@
+/* eslint-disable no-unused-vars */
 import express from 'express';
 import cookie from 'cookie-parser';
 import bodyParser from 'body-parser';
 import passport from 'passport';
 import cors from 'cors';
+import morgan from 'morgan';
 import { ApolloServer } from 'apollo-server-express';
 
 import schema from './schema';
 import resolvers from './resolvers';
 import { userModel, feedModel } from './models';
 
-// import server from './apollo';
 import passportInit from './lib/passport';
 import session from './lib/session';
 
 import api from './routes/api';
 import auth from './routes/auth';
 
+import isAuth from './routes/util';
+
 require('dotenv').config();
 
 const app = express();
 
+// app.use(morgan('dev'));
 app.use(cors());
 app.use(session);
 app.use(cookie());
@@ -36,19 +40,16 @@ app.use('/auth', auth);
 const server = new ApolloServer({
   typeDefs: schema,
   resolvers,
+  playground: {
+    settings: {
+      'request.credentials': 'include'
+    }
+  },
   context: ({ req }) => {
-    const user = req.user || null;
-    console.log('context user: ', user, req);
-    return { user, req };
+    console.log('context req.user', req.user);
+    return { userModel, feedModel };
   }
 });
-
-// const isAuthenticated = (req, res, next) => {
-//   console.log(req.isAuthenticated());
-//   return req.isAuthenticated() ? next() : res.redirect('http://localhost:3000');
-// };
-
-// app.use('/graphql', isAuthenticated );
 
 server.applyMiddleware({ app });
 
