@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-return-await */
 import _ from 'lodash';
@@ -9,8 +10,11 @@ export default {
     users: async (parent, args, { userModel }) => {
       return await userModel.find({}, (err, users) => users);
     },
-    user: async (parent, { googleId }, { userModel }) => {
-      return await userModel.findOne({ googleId });
+
+    user: async (parent, args, { userModel, user }) => {
+      if (user) {
+        return await userModel.findOne({ googleId: user.id });
+      }
     }
   },
 
@@ -21,17 +25,17 @@ export default {
     }
   },
 
-  Mutation: {
-    createUser: async (parent, { googleId, name }, { userModel }) => {
-      return await userModel.findOne({ googleId }, (err, userData) => {
-        if (err) return new Error(err);
-        if (!userData) {
-          userModel.create({ googleId, name }).then((created, error) => {
-            return created;
-          });
-        }
-        return null;
-      });
-    }
-  }
+  // Mutation: {
+  //   createUser: async (parent, { googleId, name }, { userModel }) => {
+  //     return await userModel.findOne({ googleId }, (err, userData) => {
+  //       if (err) return new Error(err);
+  //       if (!userData) {
+  //         userModel.create({ googleId, name }).then((created, error) => {
+  //           return created;
+  //         });
+  //       }
+  //       return null;
+  //     });
+  //   }
+  // }
 };

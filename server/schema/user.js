@@ -3,22 +3,22 @@ import { gql } from 'apollo-server-express';
 export default gql`
   extend type Query {
     users: [User!]
-    user(googleId: String!): User
+    user: User
   }
 
   type User {
-    _id: String!
-    googleId: String!
-    name: String!
+    _id: String
+    googleId: String
+    name: String
     feedList: [feedList]
     feed: [Feed]
   }
 
   type feedList {
-    _id: String!
-    feedId: String!
-    title: String!
-    category: String!
+    _id: String
+    feedId: String
+    title: String
+    category: String
     readedItem: [readedItem]
   }
 
@@ -30,8 +30,8 @@ export default gql`
     ok: Boolean
   }
 
-  extend type Mutation {
-    createUser(googleId: String!, name: String!): User
-    login(googleId: String!): userResponse!
-  }
+  # extend type Mutation {
+  #   createUser(googleId: String!, name: String!): User
+  #   login(googleId: String!): userResponse!
+  # }
 `;
