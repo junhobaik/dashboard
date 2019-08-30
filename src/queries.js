@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const USER_DATA = gql`
-  query getUserData($googleId: String!) {
-    user(googleId: $googleId) {
+  query getUserData {
+    user {
       name
     }
   }
