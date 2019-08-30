@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Query } from 'react-apollo';
 import { withRouter, Link } from 'react-router-dom';
-import { Redirect } from 'react-router';
 
 import { USER_DATA } from '../../queries';
 import './index.scss';
@@ -12,7 +11,7 @@ class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      googleId: ''
+      googleId: null
     };
   }
 
@@ -43,45 +42,44 @@ class Header extends Component {
     this._isMounted = false;
   }
 
+  getAccountId = async () => {
+    const response = await fetch('/api/account');
+    const json = await response.json();
+    return json.user.id.toString();
+  };
+
   render() {
-    // eslint-disable-next-line react/prop-types
-    const { history } = this.props;
+    console.log('Header render()');
     const { googleId } = this.state;
 
     return (
-      <Query query={USER_DATA} variables={{ googleId }}>
-        {({ loading, data, error }) => {
-          let loginStatus;
-          let userName;
+      <header id="Header">
+        <div className="header-inner">
+          <div className="title">
+            <Link to={googleId ? '/user' : '/'}>
+              <h1>DashBoard</h1>
+            </Link>
+          </div>
+          <div className="user-info">
+            {googleId ? (
+              <Query query={USER_DATA} variables={{ googleId }}>
+                {({ loading, data, error }) => {
+                  console.log('Header <Qeury />', loading, data, error);
 
-          if (loading) loginStatus = <span>loding...</span>;
-          if (error) loginStatus = <span>error</span>;
+                  if (loading) return <span>Loding...</span>;
+                  if (error) return <span>Error..!</span>;
 
-          if (data.user) {
-            const { name } = data.user;
-            userName = name;
-            loginStatus = <a href="/auth/logout">logout</a>;
-            if (history.location.pathname === '/') {
-              return <Redirect to="/user" />;
-            }
-          } else {
-            loginStatus = <a href="/auth/google">Sign in / Sign up</a>;
-          }
+                  if (data && data.user) {
+                    return <a href="/auth/logout">Logout</a>;
+                  }
 
-          return (
-            <header id="Header">
-              <div className="header-inner">
-                <div className="title">
-                  <Link to={userName ? '/user' : '/'}>
-                    <h1>{userName ? `${userName}'s Dashboard` : `Dashboard`}</h1>
-                  </Link>
-                </div>
-                <div className="user-info">{loginStatus}</div>
-              </div>
-            </header>
-          );
-        }}
-      </Query>
+                  return <a href="/auth/google">Login by Google</a>;
+                }}
+              </Query>
+            ) : null}
+          </div>
+        </div>
+      </header>
     );
   }
 }
