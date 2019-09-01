@@ -9,27 +9,31 @@ const Header = () => {
   return (
     <header id="Header">
       <div className="header-inner">
-        <div className="title">
-          <Link to="/">
-            <h1>DashBoard</h1>
-          </Link>
-        </div>
-        <div className="user-info">
-          <Query query={USER_DATA}>
-            {({ loading, data, error }) => {
-              console.log('Header <Qeury />', loading, data, error);
+        <Query query={USER_DATA}>
+          {({ loading, data, error }) => {
+            console.log('Header <Qeury />', loading, data, error);
 
-              if (loading) return <span>Loding...</span>;
-              if (error) return <span>Error..!</span>;
+            let loginStatus = <a href="/auth/google">Login by Google</a>;
 
-              if (data && data.user) {
-                return <a href="/auth/logout">Logout</a>;
-              }
+            if (loading) loginStatus = <span>Loding...</span>;
+            if (error) loginStatus = <span>Error..!</span>;
 
-              return <a href="/auth/google">Login by Google</a>;
-            }}
-          </Query>
-        </div>
+            if (data && data.user) {
+              loginStatus = <a href="/auth/logout">Logout</a>;
+            }
+
+            return (
+              <React.Fragment>
+                <div className="title">
+                  <Link to={data.user ? '/board' : '/'}>
+                    <h1>DashBoard</h1>
+                  </Link>
+                </div>
+                <div className="user-info">{loginStatus}</div>
+              </React.Fragment>
+            );
+          }}
+        </Query>
       </div>
     </header>
   );
