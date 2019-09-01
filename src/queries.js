@@ -8,11 +8,18 @@ export const USER_DATA = gql`
   }
 `;
 
-export const ADMIN = gql`
+export const FEED_DATA = gql`
   {
-    users {
-      _id
+    user {
       name
+      feedList {
+        title
+        items {
+          title
+          link
+          contentSnippet
+        }
+      }
     }
   }
 `;
