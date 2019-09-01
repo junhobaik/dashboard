@@ -10,28 +10,15 @@ export default gql`
     _id: String
     googleId: String
     name: String
-    feedList: [feedList]
-    feed: [Feed]
+    feedList: [feedListItem]
   }
 
-  type feedList {
+  type feedListItem {
     _id: String
     feedId: String
     title: String
     category: String
-    readedItem: [readedItem]
+    readedItem: [String]
+    items: [feedItems]
   }
-
-  type readedItem {
-    _id: String
-  }
-
-  type userResponse {
-    ok: Boolean
-  }
-
-  # extend type Mutation {
-  #   createUser(googleId: String!, name: String!): User
-  #   login(googleId: String!): userResponse!
-  # }
 `;

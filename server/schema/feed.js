@@ -4,6 +4,7 @@ export default gql`
   extend type Query {
     feeds: [Feed]
     feed(_id: String!): Feed
+    feedsByIds(ids: [String]!): [feedItems]
   }
 
   type Feed {
