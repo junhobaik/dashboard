@@ -21,11 +21,9 @@ const Header = () => {
             if (data && data.user) {
               console.log(data.user);
               loginStatus = (
-                <div className="user-info">
-                  <a href="/auth/logout">
-                    <img src={data.user.picture} alt="google user profile" />
-                  </a>
-                </div>
+                <a href="/auth/logout">
+                  <img src={data.user.picture} alt="google user profile" />
+                </a>
               );
             }
 
