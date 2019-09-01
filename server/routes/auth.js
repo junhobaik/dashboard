@@ -18,8 +18,7 @@ router.get(
   '/google/callback',
   passport.authenticate('google', { failureRedirect: clientPath }),
   (req, res) => {
-    // console.log('login으로 이동');
-    res.redirect(`${clientPath}`);
+    res.redirect(`${clientPath}/board`);
   }
 );
 
