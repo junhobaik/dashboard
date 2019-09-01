@@ -43,7 +43,7 @@ export default class User extends Component {
 
             const feedListEl = [];
             const itemListEl = [];
-            const loadingTransition = 1000;
+            const loadingTransition = 300;
             const loadingStyle = {
               transition: `${loadingTransition}ms`,
               opacity: 1
@@ -54,7 +54,7 @@ export default class User extends Component {
 
               setTimeout(() => {
                 this.hideLoadingLayout();
-              }, loadingTransition + 100);
+              }, loadingTransition + 10);
             }
 
             if (error) return <span>Error..!</span>;
