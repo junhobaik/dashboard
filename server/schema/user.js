@@ -10,6 +10,7 @@ export default gql`
     _id: String
     googleId: String
     name: String
+    picture: String
     feedList: [feedListItem] # user schema
   }
 
