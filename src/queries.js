@@ -14,10 +14,12 @@ export const FEED_DATA = gql`
       name
       feedList {
         title
+        link
         items {
           title
           link
           contentSnippet
+          isoDate
         }
       }
     }
