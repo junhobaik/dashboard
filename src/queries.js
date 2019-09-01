@@ -8,6 +8,15 @@ export const USER_DATA = gql`
   }
 `;
 
+export const HEADER_QUERY = gql`
+  {
+    user {
+      name
+      picture
+    }
+  }
+`;
+
 export const FEED_DATA = gql`
   {
     user {

@@ -33,4 +33,14 @@
       font-size: 1.2rem;
     }
   }
+
+  .user-info {
+    a {
+      img {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 100%;
+      }
+    }
+  }
 }

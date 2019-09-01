@@ -2,14 +2,14 @@ import React from 'react';
 import { Query } from 'react-apollo';
 import { Link } from 'react-router-dom';
 
-import { USER_DATA } from '../../queries';
+import { HEADER_QUERY } from '../../queries';
 import './index.scss';
 
 const Header = () => {
   return (
     <header id="Header">
       <div className="header-inner">
-        <Query query={USER_DATA}>
+        <Query query={HEADER_QUERY}>
           {({ loading, data, error }) => {
             console.log('Header <Qeury />', loading, data, error);
 
@@ -19,7 +19,14 @@ const Header = () => {
             if (error) loginStatus = <span>Error..!</span>;
 
             if (data && data.user) {
-              loginStatus = <a href="/auth/logout">Logout</a>;
+              console.log(data.user);
+              loginStatus = (
+                <div className="user-info">
+                  <a href="/auth/logout">
+                    <img src={data.user.picture} alt="google user profile" />
+                  </a>
+                </div>
+              );
             }
 
             return (
