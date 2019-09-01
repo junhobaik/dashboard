@@ -28,6 +28,10 @@ export default class User extends Component {
     });
   };
 
+  hideLoadingLayout = () => {
+    document.querySelector('.loading').style.display = 'none';
+  };
+
   render() {
     const { isAddFeedModal } = this.state;
 
@@ -37,11 +41,22 @@ export default class User extends Component {
           {({ loading, data, error, refetch }) => {
             console.log('Board <Qeury />', loading, data, error);
 
-            // eslint-disable-next-line one-var
             const feedListEl = [];
             const itemListEl = [];
+            const loadingTransition = 1000;
+            const loadingStyle = {
+              transition: `${loadingTransition}ms`,
+              opacity: 1
+            };
 
-            // if(loading)
+            if (!loading) {
+              loadingStyle.opacity = 0;
+
+              setTimeout(() => {
+                this.hideLoadingLayout();
+              }, loadingTransition);
+            }
+
             if (error) return <span>Error..!</span>;
 
             if (data.user) {
@@ -89,6 +104,9 @@ export default class User extends Component {
 
             return (
               <React.Fragment>
+                <div className="loading" style={loadingStyle}>
+                  <div className="loading-icon">loading...</div>
+                </div>
                 <div className="user-inner">
                   <div className="left">
                     <div className="header">
