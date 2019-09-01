@@ -2,9 +2,9 @@ import { gql } from 'apollo-server-express';
 
 export default gql`
   extend type Query {
-    feeds: [Feed]
-    feed(_id: String!): Feed
-    feedsByIds(ids: [String]!): [feedItems]
+    feeds: [Feed] # feed resolver
+    feed(_id: String!): Feed # feed resolver
+    feedsByIds(ids: [String]!): [feedItems] # feed resolver
   }
 
   type Feed {
@@ -13,7 +13,7 @@ export default gql`
     link: String
     feedUrl: String
     pubDate: String
-    items: [feedItems]
+    items: [feedItems] # feed schema
   }
 
   type feedItems {
