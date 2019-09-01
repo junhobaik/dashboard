@@ -82,7 +82,7 @@ export default class User extends Component {
                   const date = moment.unix(unixDate);
 
                   itemListEl.push(
-                    <li className="item" key={item.link}>
+                    <li className="item" key={item.link} date={item.isoDate}>
                       <h3 className="item-title">
                         <a href={item.link} target="_blank" rel="noopener noreferrer">
                           {item.title}
@@ -108,6 +108,10 @@ export default class User extends Component {
                 return null;
               });
             }
+
+            itemListEl.sort((a, b) => {
+              return parseInt(b.props.date, 10) - parseInt(a.props.date, 10);
+            });
 
             return (
               <React.Fragment>
