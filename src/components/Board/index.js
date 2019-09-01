@@ -54,7 +54,7 @@ export default class User extends Component {
 
               setTimeout(() => {
                 this.hideLoadingLayout();
-              }, loadingTransition);
+              }, loadingTransition + 100);
             }
 
             if (error) return <span>Error..!</span>;
