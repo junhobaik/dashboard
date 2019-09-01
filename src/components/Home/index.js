@@ -16,10 +16,10 @@ const Home = () => {
           if (error) return <span>Error..!</span>;
 
           if (data && data.user) {
-            return <span>Home</span>;
+            return <Redirect to="/board" />;
           }
-          
-          return <Redirect to="/intro" />;
+
+          return <span>Home</span>;
         }}
       </Query>
     </div>
