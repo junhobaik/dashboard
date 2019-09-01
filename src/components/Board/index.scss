@@ -22,6 +22,7 @@ $right-background-color: #eeeeee;
       left: 50%;
     }
   }
+
   .user-inner {
     display: flex;
     padding-top: 4rem;
@@ -48,7 +49,7 @@ $right-background-color: #eeeeee;
       background-color: $left-background-color;
 
       .header {
-        padding: 0 0.5rem;
+        padding: 0 5% 0 1rem;
         justify-content: space-between;
         align-items: center;
         background-color: $left-background-color;
@@ -72,6 +73,36 @@ $right-background-color: #eeeeee;
 
           li.feed {
             list-style: none;
+            margin-bottom: 1rem;
+            display: flex;
+
+            .feed-title-btn {
+              all: unset;
+              flex-grow: 1;
+
+              a {
+                max-width: 90%;
+                opacity: 0.9;
+                border-radius: 3px;
+                color: white;
+                background-color: #888;
+                padding: 0.4rem 0.5rem;
+
+                &:hover {
+                  opacity: 1;
+                }
+              }
+            }
+
+            .feed-visible-toggle-btn {
+              all: unset;
+              cursor: pointer;
+              opacity: 0.2;
+
+              &:hover {
+                opacity: 0.5;
+              }
+            }
           }
         }
       }
@@ -82,6 +113,7 @@ $right-background-color: #eeeeee;
       flex-grow: 1;
 
       .header {
+        z-index: 1;
         background-color: $right-background-color;
         display: flex;
         padding: 0.5rem 2rem;
@@ -91,7 +123,11 @@ $right-background-color: #eeeeee;
           flex-grow: 1;
           background-color: transparent;
           border: 0;
-          border-bottom: 1px solid gray;
+          border-bottom: 1px solid lightgray;
+
+          &::placeholder {
+            color: lightgray;
+          }
         }
       }
 
@@ -112,13 +148,39 @@ $right-background-color: #eeeeee;
 
             h3.item-title {
               font-size: 1.2rem;
+              margin-bottom: 1rem;
             }
 
             span {
+              color: #888;
               font-size: 0.9rem;
             }
-            span.item-feed-link {
-              margin-right: 0.5rem;
+
+            .item-feed-info {
+              display: flex;
+              align-items: flex-end;
+
+              span.item-feed-link {
+                opacity: 0.7;
+                font-size: 0.8rem;
+                background-color: #888;
+                border-radius: 3px;
+                padding: 0.05rem 0.25rem;
+                margin-right: 0.5rem;
+                transition: 0.3s;
+
+                a {
+                  color: white;
+                }
+
+                &:hover {
+                  opacity: 1;
+                }
+              }
+            }
+
+            .item-content-snippet {
+              margin-top: 0.5rem;
             }
           }
         }
