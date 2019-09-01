@@ -17,13 +17,11 @@ import session from './lib/session';
 import api from './routes/api';
 import auth from './routes/auth';
 
-import isAuth from './routes/util';
-
 require('dotenv').config();
 
 const app = express();
 
-// app.use(morgan('dev'));
+app.use(morgan('dev'));
 app.use(cors());
 app.use(session);
 app.use(cookie());
