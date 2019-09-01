@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Query } from 'react-apollo';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
-import { faCog, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faPlus, faEye } from '@fortawesome/free-solid-svg-icons';
 import moment from 'moment';
 
 import './index.scss';
@@ -65,14 +65,21 @@ export default class User extends Component {
               feedList.map(feed => {
                 feedListEl.push(
                   <li className="feed" key={feed.link}>
-                    <a href={feed.link} target="_blank" rel="noopener noreferrer">
-                      {feed.title}
-                    </a>
+                    <button type="button" className="feed-title-btn">
+                      <a href={feed.link} target="_blank" rel="noopener noreferrer">
+                        {feed.title}
+                      </a>
+                    </button>
+
+                    <button type="button" className="feed-visible-toggle-btn">
+                      <Fa icon={faEye} />
+                    </button>
                   </li>
                 );
 
                 feed.items.map(item => {
                   const unixDate = `${item.isoDate.slice(0, 10)}.${item.isoDate.slice(9, 12)}`;
+                  const date = moment.unix(unixDate);
 
                   itemListEl.push(
                     <li className="item" key={item.link}>
@@ -88,7 +95,7 @@ export default class User extends Component {
                           </a>
                         </span>
                         <span className="item-date">
-                          {moment.unix(unixDate).format('YYYY-MM-DD')}
+                          {`${date.format('YYYY-MM-DD')} (${date.fromNow()})`}
                         </span>
                       </div>
                       <div className="item-content-snippet">
