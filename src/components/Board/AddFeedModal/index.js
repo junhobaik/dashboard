@@ -12,9 +12,8 @@ class AddFeedModal extends React.Component {
     this.state = {
       isAddCategory: false,
       linkValue: '',
-      isLinkTyping: false,
-      linkVerification: false,
-      pendingLinkVertification: false,
+      linkMsg: 'Feed 주소를 입력해주세요.',
+      linkMsgAlertLevel: 'info',
       submitStatus: 0,
       pendingSubmit: false
     };
@@ -35,44 +34,57 @@ class AddFeedModal extends React.Component {
     const currentValue = e.currentTarget.value;
 
     this.setState({
-      linkValue: currentValue,
-      isLinkTyping: true
+      linkValue: currentValue
     });
     this.handleSubmitActive(false);
+
+    if (currentValue === '') {
+      this.setState({
+        linkMsg: 'Feed 주소를 입력해주세요.',
+        linkMsgAlertLevel: 'info'
+      });
+    }
 
     setTimeout(() => {
       const { linkValue } = this.state;
       const httpIndexOf = linkValue.indexOf('http://') > -1 || linkValue.indexOf('https://') > -1;
 
-      if (httpIndexOf && linkValue === currentValue) {
-        this.setState({
-          isLinkTyping: false,
-          pendingLinkVertification: true
-        });
+      if (linkValue !== '' && linkValue === currentValue) {
+        if (!httpIndexOf) {
+          this.setState({
+            linkMsg: '주소에는 http:// 또는 https://가 포함되어야 합니다.',
+            linkMsgAlertLevel: 'warning'
+          });
+        } else {
+          this.setState({
+            linkMsg: 'Feed 주소를 확인 중입니다.',
+            linkMsgAlertLevel: 'secondary'
+          });
 
-        fetch(`/api/getfeed?url=${currentValue}`)
-          .then(res => {
-            if (res.status === 200) {
+          fetch(`/api/getfeed?url=${currentValue}`)
+            .then(res => {
+              if (res.status === 200) {
+                this.setState({
+                  linkMsg: 'Feed 주소가 확인되었습니다.',
+                  linkMsgAlertLevel: 'success'
+                });
+                this.handleSubmitActive(true);
+              } else {
+                this.setState({
+                  linkMsg: 'Feed 주소를 확인 할 수 없습니다, 주소를 확인해주세요.',
+                  linkMsgAlertLevel: 'danger'
+                });
+                this.handleSubmitActive(false);
+              }
+            })
+            .catch(() => {
               this.setState({
-                linkVerification: true,
-                pendingLinkVertification: false
-              });
-              this.handleSubmitActive(true);
-            } else {
-              this.setState({
-                linkVerification: false,
-                pendingLinkVertification: false
+                linkMsg: '죄송합니다. 알 수 없는 오류가 발생했습니다.',
+                linkMsgAlertLevel: 'danger'
               });
               this.handleSubmitActive(false);
-            }
-          })
-          .catch(() => {
-            this.setState({
-              linkVerification: false,
-              pendingLinkVertification: false
             });
-            this.handleSubmitActive(false);
-          });
+        }
       }
     }, 1000);
   };
@@ -132,45 +144,11 @@ class AddFeedModal extends React.Component {
     const {
       isAddCategory,
       linkValue,
-      isLinkTyping,
-      linkVerification,
-      pendingLinkVertification,
+      linkMsg,
+      linkMsgAlertLevel,
       submitStatus,
       pendingSubmit
     } = this.state;
-
-    const createLinkMsg = () => {
-      let linkMsg = (
-        <div className="alert alert-info" role="alert">
-          Feed 주소 또는 해당 사이트 주소를 입력해주세요.
-        </div>
-      );
-
-      if (linkValue.length) {
-        linkMsg = (
-          <div className="alert alert-secondary" role="alert">
-            Feed 주소를 확인 중입니다.
-          </div>
-        );
-
-        if (!isLinkTyping && !pendingLinkVertification) {
-          if (linkVerification) {
-            linkMsg = (
-              <div className="alert alert-success" role="alert">
-                Feed 주소가 확인되었습니다.
-              </div>
-            );
-          } else {
-            linkMsg = (
-              <div className="alert alert-danger" role="alert">
-                Feed 주소를 확인 할 수 없습니다, 주소를 확인해주세요.
-              </div>
-            );
-          }
-        }
-      }
-      return linkMsg;
-    };
 
     const createSubmitMsg = () => {
       if (pendingSubmit) {
@@ -204,8 +182,12 @@ class AddFeedModal extends React.Component {
       }
     };
 
-    const linkMsg = createLinkMsg();
-    const submitMsg = createSubmitMsg();
+    const submitMsgEl = createSubmitMsg();
+    const linkMsgEl = (
+      <div className={`alert alert-${linkMsgAlertLevel}`} role="alert">
+        {linkMsg}
+      </div>
+    );
 
     return (
       <React.Fragment>
@@ -241,11 +223,12 @@ class AddFeedModal extends React.Component {
                   id="feedLink"
                   placeholder="ex. http://site.com/rss"
                   value={linkValue}
+                  autoComplete="off"
                   onChange={e => this.handleLinkValue(e)}
                 />
               </div>
 
-              <div className="link-msg">{linkMsg}</div>
+              <div className="link-msg">{linkMsgEl}</div>
             </div>
             <div className="feed-category">
               <h2>Category</h2>
@@ -272,7 +255,7 @@ class AddFeedModal extends React.Component {
             </div>
           </div>
           <div className="submit">
-            <div className="submit-msg">{submitMsg}</div>
+            <div className="submit-msg">{submitMsgEl}</div>
             <button type="button" className="btn btn-primary add-feed-btn" disabled>
               Add Feed
             </button>
