@@ -13,7 +13,7 @@ const Header = () => {
           {({ loading, data, error }) => {
             console.log('Header <Qeury />', loading, data, error);
 
-            let loginStatus = <a href="/auth/google">Login by Google</a>;
+            let loginStatus = <a href="/auth/google">Login with Google</a>;
 
             if (loading) loginStatus = <span>Loding...</span>;
             if (error) loginStatus = <span>Error..!</span>;
