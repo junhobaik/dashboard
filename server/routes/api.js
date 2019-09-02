@@ -21,7 +21,7 @@ const getFeed = async url => {
   return await parser.parseURL(url);
 };
 
-router.get('/getfeed', isAuthenticated, (req, res, next) => {
+router.get('/getfeed', (req, res, next) => {
   const { url } = req.query;
 
   getFeed(url)
