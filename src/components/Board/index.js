@@ -29,7 +29,13 @@ export default class User extends Component {
   };
 
   hideLoadingLayout = () => {
-    document.querySelector('.loading').style.display = 'none';
+    if (document.querySelector('.loading')) {
+      document.querySelector('.loading').style.display = 'none';
+    } else {
+      setTimeout(() => {
+        this.hideLoadingLayout();
+      }, 100);
+    }
   };
 
   render() {
