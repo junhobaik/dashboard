@@ -11,7 +11,7 @@ const Header = () => {
       <div className="header-inner">
         <Query query={HEADER_QUERY}>
           {({ loading, data, error }) => {
-            console.log('Header <Qeury />', loading, data, error);
+            console.log('Header <Qeury />', data);
 
             let loginStatus = <a href="/auth/google">Login with Google</a>;
 
@@ -19,7 +19,6 @@ const Header = () => {
             if (error) loginStatus = <span>Error..!</span>;
 
             if (data && data.user) {
-              console.log(data.user);
               loginStatus = (
                 <a href="/auth/logout">
                   <img src={data.user.picture} alt="google user profile" />

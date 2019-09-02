@@ -10,7 +10,7 @@ const Home = () => {
     <div id="Home">
       <Query query={USER_DATA}>
         {({ loading, data, error }) => {
-          console.log('Home <Qeury />', loading, data, error);
+          console.log('Home <Qeury />', data);
 
           if (loading) return <span>Loding...</span>;
           if (error) return <span>Error..!</span>;

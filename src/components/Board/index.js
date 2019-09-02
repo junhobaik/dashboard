@@ -45,7 +45,7 @@ export default class User extends Component {
       <div id="Board">
         <Query query={FEED_DATA}>
           {({ loading, data, error, refetch }) => {
-            console.log('Board <Qeury />', loading, data, error);
+            console.log('Board <Qeury />', data);
 
             const feedListEl = [];
             const itemListEl = [];

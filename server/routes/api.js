@@ -62,7 +62,7 @@ router.post('/addfeed', isAuthenticated, (req, res) => {
           .find({ 'feedList.feedId': data.id })
           .then(userData => {
             if (!userData.length) {
-              console.log('새로운 피드 추가');
+              // console.log('새로운 피드 추가');
               const update = async () => {
                 const updateRes = await userModel.updateOne(
                   { googleId: req.user.id },
@@ -85,12 +85,12 @@ router.post('/addfeed', isAuthenticated, (req, res) => {
                 res.sendStatus(code);
               });
             } else {
-              console.log('이미 추가된 피드');
+              // console.log('이미 추가된 피드');
               res.sendStatus(204);
             }
           })
           .catch(err => {
-            console.log('catch', err);
+            // console.log('catch', err);
             res.sendStatus(500);
           });
       });

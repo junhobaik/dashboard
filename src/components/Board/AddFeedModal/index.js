@@ -101,7 +101,6 @@ class AddFeedModal extends React.Component {
 
   handleAddFeedSubmit = () => {
     const { isAddCategory } = this.state;
-    console.log(`handleAddFeedSubmit()`);
 
     const feedUrl = document.querySelector('#feedLink').value;
     const categorySelect = document.querySelector('#categorySelect');
@@ -135,8 +134,6 @@ class AddFeedModal extends React.Component {
           pendingSubmit: false
         });
       });
-
-    console.log(feedUrl, category);
   };
 
   render() {
