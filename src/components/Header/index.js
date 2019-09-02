@@ -14,6 +14,7 @@ const Header = () => {
             console.log('Header <Qeury />', data);
 
             let loginStatus = <a href="/auth/google">Login with Google</a>;
+            let titleLink = '/';
 
             if (loading) loginStatus = <span>Loding...</span>;
             if (error) loginStatus = <span>Error..!</span>;
@@ -24,12 +25,13 @@ const Header = () => {
                   <img src={data.user.picture} alt="google user profile" />
                 </a>
               );
+              titleLink = '/board';
             }
 
             return (
               <React.Fragment>
                 <div className="title">
-                  <Link to={data.user ? '/board' : '/'}>
+                  <Link to={titleLink}>
                     <h1>DashBoard</h1>
                   </Link>
                 </div>
