@@ -3,8 +3,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { Mutation } from 'react-apollo';
+import gql from 'graphql-tag';
 
 import './index.scss';
+
+const ADD_FEED = gql`
+  mutation addFeed($url: String!, $category: String!) {
+    addFeed(url: $url, category: $category) {
+      response
+    }
+  }
+`;
 
 class AddFeedModal extends React.Component {
   constructor(props) {
@@ -20,7 +30,8 @@ class AddFeedModal extends React.Component {
   }
 
   componentDidMount() {
-    document.querySelector('.add-feed-btn').addEventListener('click', this.handleAddFeedSubmit);
+    this.handleSubmitActive(false);
+    // document.querySelector('.add-feed-btn').addEventListener('click', this.handleAddFeedSubmit);
   }
 
   toggleCategoryInput = () => {
@@ -97,6 +108,21 @@ class AddFeedModal extends React.Component {
     } else {
       submitBtn.removeAttribute('disabled');
     }
+  };
+
+  getCategory = () => {
+    const { isAddCategory } = this.state;
+
+    const categorySelect = document.querySelector('#categorySelect');
+
+    let category;
+    if (isAddCategory) {
+      category = document.querySelector('#newCategory').value;
+    } else {
+      category = categorySelect[categorySelect.options.selectedIndex].value;
+    }
+
+    return category;
   };
 
   handleAddFeedSubmit = () => {
@@ -253,9 +279,26 @@ class AddFeedModal extends React.Component {
           </div>
           <div className="submit">
             <div className="submit-msg">{submitMsgEl}</div>
-            <button type="button" className="btn btn-primary add-feed-btn" disabled>
+            {/* <button type="button" className="btn btn-primary add-feed-btn" disabled>
               Add Feed
-            </button>
+            </button> */}
+            <Mutation mutation={ADD_FEED}>
+              {addFeed => {
+                return (
+                  <button
+                    className="btn btn-primary add-feed-btn"
+                    type="submit"
+                    onClick={e => {
+                      e.preventDefault();
+                      console.log(this.getCategory());
+                      addFeed({ variables: { url: linkValue, category: this.getCategory() } });
+                    }}
+                  >
+                    Add Feed
+                  </button>
+                );
+              }}
+            </Mutation>
           </div>
         </div>
       </React.Fragment>

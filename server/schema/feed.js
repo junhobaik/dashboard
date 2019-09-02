@@ -23,4 +23,12 @@ export default gql`
     link: String
     isoDate: String
   }
+
+  type addFeedResponse {
+    response: Boolean
+  }
+  
+  extend type Mutation {
+    addFeed(url: String, category: String): addFeedResponse
+  }
 `;
