@@ -42,8 +42,9 @@ class AddFeedModal extends React.Component {
 
     setTimeout(() => {
       const { linkValue } = this.state;
+      const httpIndexOf = linkValue.indexOf('http://') > -1 || linkValue.indexOf('https://') > -1;
 
-      if (linkValue === currentValue) {
+      if (httpIndexOf && linkValue === currentValue) {
         this.setState({
           isLinkTyping: false,
           pendingLinkVertification: true
