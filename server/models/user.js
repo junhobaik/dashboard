@@ -6,7 +6,7 @@ const UserSchema = new Schema({
   name: { type: String, required: true },
   googleId: { type: String, required: true },
   picture: { type: String },
-  feedList: [{ feedId: String, title: String, category: String, readedItem: [String] }]
+  feedList: [{ feedId: String, title: String, category: String, readedItem: [String], link: String }]
 });
 
 export default mongoose.model('user', UserSchema);
