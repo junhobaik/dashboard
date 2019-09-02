@@ -197,12 +197,17 @@ class AddFeedModal extends React.Component {
               </div>
             </div>
           </div>
+
           <div className="submit">
             <Mutation mutation={ADD_FEED}>
               {(addFeed, { loading, data, error }) => {
-                console.log(loading, data, error);
-
                 let submitMsg;
+                const submitFailMsg = (
+                  <div className="alert alert-danger" role="alert">
+                    Feed 추가에 실패했습니다.
+                  </div>
+                );
+
                 if (loading) {
                   submitMsg = (
                     <div className="alert alert-secondary" role="alert">
@@ -210,6 +215,11 @@ class AddFeedModal extends React.Component {
                     </div>
                   );
                 }
+
+                if (error) {
+                  submitMsg = submitFailMsg;
+                }
+
                 if (data) {
                   if (data.addFeed.response) {
                     submitMsg = (
@@ -218,11 +228,7 @@ class AddFeedModal extends React.Component {
                       </div>
                     );
                   } else {
-                    submitMsg = (
-                      <div className="alert alert-danger" role="alert">
-                        Feed 추가에 실패했습니다.
-                      </div>
-                    );
+                    submitMsg = submitFailMsg;
                   }
                 }
 
