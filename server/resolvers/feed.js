@@ -46,25 +46,33 @@ export default {
         );
       };
 
-      feedModel.findOne({ feedUrl: url }).then(feedData => {
-        if (feedData) {
-          const { _id, title, category, link } = feedData;
-          userUpdate(_id, title, category, link);
-        }
+      const result = await feedModel
+        .findOne({ feedUrl: url })
+        .then(feedData => {
+          if (feedData) {
+            const { _id, title, category, link } = feedData;
+            userUpdate(_id, title, category, link);
+          }
 
-        if (!feedData) {
-          getFeed(url).then(feed => {
-            const { items, title, pubDate, link } = feed;
+          if (!feedData) {
+            getFeed(url).then(feed => {
+              const { items, title, pubDate, link } = feed;
 
-            feedModel.create({ feedUrl: url, title, items, pubDate, link }).then(created => {
-              userUpdate(created._id, title, category, link);
+              feedModel.create({ feedUrl: url, title, items, pubDate, link }).then(created => {
+                userUpdate(created._id, title, category, link);
+              });
             });
-          });
-        }
-      });
+          }
+        })
+        .then(() => {
+          return true;
+        })
+        .catch(err => {
+          return false;
+        });
 
       return {
-        response: true
+        response: result
       };
     }
   }
