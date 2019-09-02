@@ -23,15 +23,12 @@ class AddFeedModal extends React.Component {
       isAddCategory: false,
       linkValue: '',
       linkMsg: 'Feed 주소를 입력해주세요.',
-      linkMsgAlertLevel: 'info',
-      submitStatus: 0,
-      pendingSubmit: false
+      linkMsgAlertLevel: 'info'
     };
   }
 
   componentDidMount() {
     this.handleSubmitActive(false);
-    // document.querySelector('.add-feed-btn').addEventListener('click', this.handleAddFeedSubmit);
   }
 
   toggleCategoryInput = () => {
@@ -125,87 +122,10 @@ class AddFeedModal extends React.Component {
     return category;
   };
 
-  handleAddFeedSubmit = () => {
-    const { isAddCategory } = this.state;
-
-    const feedUrl = document.querySelector('#feedLink').value;
-    const categorySelect = document.querySelector('#categorySelect');
-
-    let category;
-    if (isAddCategory) {
-      category = document.querySelector('#newCategory').value;
-    } else {
-      category = categorySelect[categorySelect.options.selectedIndex].value;
-    }
-
-    this.setState({
-      pendingSubmit: true
-    });
-
-    fetch('/api/addfeed', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ feedUrl, category })
-    })
-      .then(res => {
-        this.setState({
-          submitStatus: res.status
-        });
-      })
-      .finally(() => {
-        this.setState({
-          pendingSubmit: false
-        });
-      });
-  };
-
   render() {
     const { close, refetch } = this.props;
-    const {
-      isAddCategory,
-      linkValue,
-      linkMsg,
-      linkMsgAlertLevel,
-      submitStatus,
-      pendingSubmit
-    } = this.state;
+    const { isAddCategory, linkValue, linkMsg, linkMsgAlertLevel } = this.state;
 
-    const createSubmitMsg = () => {
-      if (pendingSubmit) {
-        return (
-          <div className="alert alert-secondary" role="alert">
-            Feed를 추가중입니다...
-          </div>
-        );
-      }
-      switch (submitStatus) {
-        case 201:
-          return (
-            <div className="alert alert-success" role="alert">
-              Feed 추가에 성공했습니다.
-            </div>
-          );
-        case 204:
-          return (
-            <div className="alert alert-warning" role="alert">
-              이미 추가된 Feed 입니다.
-            </div>
-          );
-        case 500:
-          return (
-            <div className="alert alert-danger" role="alert">
-              죄송합니다, 알 수 없는 오류가 발생했습니다.
-            </div>
-          );
-        default:
-          return null;
-      }
-    };
-
-    const submitMsgEl = createSubmitMsg();
     const linkMsgEl = (
       <div className={`alert alert-${linkMsgAlertLevel}`} role="alert">
         {linkMsg}
@@ -278,24 +198,48 @@ class AddFeedModal extends React.Component {
             </div>
           </div>
           <div className="submit">
-            <div className="submit-msg">{submitMsgEl}</div>
-            {/* <button type="button" className="btn btn-primary add-feed-btn" disabled>
-              Add Feed
-            </button> */}
             <Mutation mutation={ADD_FEED}>
-              {addFeed => {
+              {(addFeed, { loading, data, error }) => {
+                console.log(loading, data, error);
+
+                let submitMsg;
+                if (loading) {
+                  submitMsg = (
+                    <div className="alert alert-secondary" role="alert">
+                      Feed를 추가중입니다...
+                    </div>
+                  );
+                }
+                if (data) {
+                  if (data.addFeed.response) {
+                    submitMsg = (
+                      <div className="alert alert-success" role="alert">
+                        Feed가 추가되었습니다.
+                      </div>
+                    );
+                  } else {
+                    submitMsg = (
+                      <div className="alert alert-danger" role="alert">
+                        Feed 추가에 실패했습니다.
+                      </div>
+                    );
+                  }
+                }
+
                 return (
-                  <button
-                    className="btn btn-primary add-feed-btn"
-                    type="submit"
-                    onClick={e => {
-                      e.preventDefault();
-                      console.log(this.getCategory());
-                      addFeed({ variables: { url: linkValue, category: this.getCategory() } });
-                    }}
-                  >
-                    Add Feed
-                  </button>
+                  <React.Fragment>
+                    <div className="submit-msg">{submitMsg}</div>
+                    <button
+                      className="btn btn-primary add-feed-btn"
+                      type="submit"
+                      onClick={e => {
+                        e.preventDefault();
+                        addFeed({ variables: { url: linkValue, category: this.getCategory() } });
+                      }}
+                    >
+                      Add Feed
+                    </button>
+                  </React.Fragment>
                 );
               }}
             </Mutation>
