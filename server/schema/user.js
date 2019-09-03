@@ -22,5 +22,6 @@ export default gql`
     category: String
     readedItem: [String]
     items: [feedItems] # user resolver
+    isHideItems: Boolean
   }
 `;
