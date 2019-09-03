@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { Query, Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faEdit, faTrashAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 import './index.scss';
 
@@ -78,8 +78,12 @@ class SetFeedModal extends React.Component {
                       return (
                         <li className="feed" key={f.feedId}>
                           <input type="text" value={f.title} />
-                          <button type="button">m</button>
-                          <button type="button">d</button>
+                          <button className="feed-edit" type="button">
+                            <Fa icon={faEdit} />
+                          </button>
+                          <button className="feed-delete" type="button">
+                            <Fa icon={faTrashAlt} />
+                          </button>
                         </li>
                       );
                     });
@@ -88,8 +92,12 @@ class SetFeedModal extends React.Component {
                       <li className="category" key={c}>
                         <div className="category-inner-wrap">
                           <input type="text" value={c} />
-                          <button type="button">m</button>
-                          <button type="button">d</button>
+                          <button className="category-edit" type="button">
+                            <Fa icon={faEdit} />
+                          </button>
+                          <button className="category-delete" type="button">
+                            <Fa icon={faTrashAlt} />
+                          </button>
                         </div>
                         <ul className="feed-list">{feedListEl}</ul>
                       </li>
@@ -103,7 +111,9 @@ class SetFeedModal extends React.Component {
                       {categoryListEl}
                       <li className="category new-category">
                         <input type="text" placeholder="new category" />
-                        <button type="button">+</button>
+                        <button type="button">
+                          <Fa icon={faPlus} />
+                        </button>
                       </li>
                     </ul>
                   </React.Fragment>
