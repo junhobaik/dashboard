@@ -81,7 +81,7 @@ $right-background-color: #eeeeee;
             li.feed {
               margin-left: 0.5rem;
               list-style: none;
-              margin-bottom: 1rem;
+              margin-bottom: 0.75rem;
               display: flex;
 
               .feed-title-btn {
@@ -94,7 +94,7 @@ $right-background-color: #eeeeee;
                   border-radius: 3px;
                   color: white;
                   background-color: #888;
-                  padding: 0.4rem 0.5rem;
+                  padding: 0.25rem 0.5rem;
 
                   &:hover {
                     opacity: 1;
@@ -106,6 +106,10 @@ $right-background-color: #eeeeee;
                 all: unset;
                 cursor: pointer;
                 opacity: 0.2;
+
+                svg {
+                  font-size: 0.75rem;
+                }
 
                 &:hover {
                   opacity: 0.5;
