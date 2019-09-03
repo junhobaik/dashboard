@@ -85,12 +85,16 @@ class SetFeedModal extends React.Component {
 
                                 if (v === c) {
                                   return (
-                                    <option value={v} selected>
+                                    <option value={v} key={`${v}-option`} selected>
                                       {optionText}
                                     </option>
                                   );
                                 }
-                                return <option value={v}>{optionText}</option>;
+                                return (
+                                  <option value={v} key={`${v}-option`}>
+                                    {optionText}
+                                  </option>
+                                );
                               })}
                             </select>
                             <input type="text" value={f.title} />
