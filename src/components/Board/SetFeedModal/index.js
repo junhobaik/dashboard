@@ -1,10 +1,26 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unused-state */
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Query, Mutation } from 'react-apollo';
+import gql from 'graphql-tag';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 import './index.scss';
+
+const SET_FEED = gql`
+  {
+    user {
+      feedList {
+        feedId
+        title
+        category
+      }
+    }
+  }
+`;
 
 class SetFeedModal extends React.Component {
   constructor(props) {
@@ -40,7 +56,61 @@ class SetFeedModal extends React.Component {
               <Fa icon={faTimes} />
             </button>
           </div>
-          <div className="content">content</div>
+          <div className="content">
+            <Query query={SET_FEED}>
+              {({ loading, data, error }) => {
+                console.log('SetFeedModal <Query />', loading, data, error);
+
+                let categoryListEl;
+
+                if (data) {
+                  const { feedList } = data.user;
+                  const category = new Set();
+
+                  for (const feed of feedList) {
+                    category.add(feed.category);
+                  }
+
+                  categoryListEl = Array.from(category).map(c => {
+                    const feed = feedList.filter(f => f.category === c);
+
+                    const feedListEl = feed.map(f => {
+                      return (
+                        <li className="feed" key={f.feedId}>
+                          <input type="text" value={f.title} />
+                          <button type="button">m</button>
+                          <button type="button">d</button>
+                        </li>
+                      );
+                    });
+
+                    return (
+                      <li className="category" key={c}>
+                        <div className="category-inner-wrap">
+                          <input type="text" value={c} />
+                          <button type="button">m</button>
+                          <button type="button">d</button>
+                        </div>
+                        <ul className="feed-list">{feedListEl}</ul>
+                      </li>
+                    );
+                  });
+                }
+
+                return (
+                  <React.Fragment>
+                    <ul className="category-list">
+                      {categoryListEl}
+                      <li className="category new-category">
+                        <input type="text" placeholder="new category" />
+                        <button type="button">+</button>
+                      </li>
+                    </ul>
+                  </React.Fragment>
+                );
+              }}
+            </Query>
+          </div>
         </div>
       </React.Fragment>
     );
