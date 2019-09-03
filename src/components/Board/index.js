@@ -1,12 +1,22 @@
+/* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
-import { Query } from 'react-apollo';
+import { Query, Mutation } from 'react-apollo';
+import gql from 'graphql-tag';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
-import { faCog, faPlus, faEye } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faPlus, faEye, faEyeSlash, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import moment from 'moment';
 
 import './index.scss';
 import { FEED_DATA } from '../../queries';
 import AddFeedModal from './AddFeedModal';
+
+const TOGGLE_HIDE_FEED_ITEMS = gql`
+  mutation toggleHideFeedItems($feedId: String!, $isHide: Boolean!) {
+    toggleHideFeedItems(feedId: $feedId, isHide: $isHide) {
+      response
+    }
+  }
+`;
 
 export default class User extends Component {
   constructor(props) {
@@ -77,40 +87,60 @@ export default class User extends Component {
                       </a>
                     </button>
 
-                    <button type="button" className="feed-visible-toggle-btn">
-                      <Fa icon={faEye} />
-                    </button>
+                    <Mutation mutation={TOGGLE_HIDE_FEED_ITEMS}>
+                      {/* eslint-disable-next-line no-shadow */}
+                      {(toggleHideFeedItems, { loading, data, error }) => {
+                        console.log('Board <Mutation />', loading, data);
+
+                        return (
+                          <button type="button" className="feed-visible-toggle-btn">
+                            <Fa
+                              icon={feed.isHideItems ? faEyeSlash : faEye}
+                              onClick={() => {
+                                toggleHideFeedItems({
+                                  variables: { feedId: feed.feedId, isHide: !feed.isHideItems }
+                                }).then(() => {
+                                  refetch();
+                                });
+                              }}
+                            />
+                          </button>
+                        );
+                      }}
+                    </Mutation>
                   </li>
                 );
 
-                feed.items.map(item => {
-                  const unixDate = `${item.isoDate.slice(0, 10)}.${item.isoDate.slice(9, 12)}`;
-                  const date = moment.unix(unixDate);
+                if (!feed.isHideItems) {
+                  feed.items.map(item => {
+                    const unixDate = `${item.isoDate.slice(0, 10)}.${item.isoDate.slice(9, 12)}`;
+                    const date = moment.unix(unixDate);
 
-                  itemListEl.push(
-                    <li className="item" key={item.link} date={item.isoDate}>
-                      <h3 className="item-title">
-                        <a href={item.link} target="_blank" rel="noopener noreferrer">
-                          {item.title}
-                        </a>
-                      </h3>
-                      <div className="item-feed-info">
-                        <span className="item-feed-link">
-                          <a href={feed.link} target="_blank" rel="noopener noreferrer">
-                            {feed.title}
+                    itemListEl.push(
+                      <li className="item" key={item.link} date={item.isoDate}>
+                        <h3 className="item-title">
+                          <a href={item.link} target="_blank" rel="noopener noreferrer">
+                            {item.title}
                           </a>
-                        </span>
-                        <span className="item-date">
-                          {`${date.format('YYYY-MM-DD')} (${date.fromNow()})`}
-                        </span>
-                      </div>
-                      <div className="item-content-snippet">
-                        <span>{`${item.contentSnippet.slice(0, 120)}...`}</span>
-                      </div>
-                    </li>
-                  );
-                  return null;
-                });
+                        </h3>
+                        <div className="item-feed-info">
+                          <span className="item-feed-link">
+                            <a href={feed.link} target="_blank" rel="noopener noreferrer">
+                              {feed.title}
+                            </a>
+                          </span>
+                          <span className="item-date">
+                            {`${date.format('YYYY-MM-DD')} (${date.fromNow()})`}
+                          </span>
+                        </div>
+                        <div className="item-content-snippet">
+                          <span>{`${item.contentSnippet.slice(0, 120)}...`}</span>
+                        </div>
+                      </li>
+                    );
+                    return null;
+                  });
+                }
                 return null;
               });
             }
