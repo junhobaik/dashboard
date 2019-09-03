@@ -65,41 +65,57 @@ class SetFeedModal extends React.Component {
 
                 if (data) {
                   const { feedList } = data.user;
-                  const category = new Set();
+                  let category = new Set();
 
                   for (const feed of feedList) {
                     category.add(feed.category);
                   }
 
-                  categoryListEl = Array.from(category).map(c => {
+                  category = Array.from(category);
+                  categoryListEl = category.map((c, i, a) => {
                     const feed = feedList.filter(f => f.category === c);
 
                     const feedListEl = feed.map(f => {
                       return (
                         <li className="feed" key={f.feedId}>
-                          <input type="text" value={f.title} />
-                          <button className="feed-edit" type="button">
-                            <Fa icon={faEdit} />
-                          </button>
-                          <button className="feed-delete" type="button">
-                            <Fa icon={faTrashAlt} />
-                          </button>
+                          <div className="feed-inner">
+                            <select id="feed-category-edit">
+                              {a.map(v => {
+                                if (v === c)
+                                  return (
+                                    <option value={v} selected>
+                                      {v}
+                                    </option>
+                                  );
+                                return <option value={v}>{v}</option>;
+                              })}
+                            </select>
+                            <input type="text" value={f.title} />
+                            <button className="feed-edit" type="button">
+                              <Fa icon={faEdit} />
+                            </button>
+                            <button className="feed-delete" type="button">
+                              <Fa icon={faTrashAlt} />
+                            </button>
+                          </div>
                         </li>
                       );
                     });
 
                     return (
-                      <li className="category" key={c}>
-                        <div className="category-inner-wrap">
-                          <input type="text" value={c} />
-                          <button className="category-edit" type="button">
-                            <Fa icon={faEdit} />
-                          </button>
-                          <button className="category-delete" type="button">
-                            <Fa icon={faTrashAlt} />
-                          </button>
+                      <li className="category-wrap-li" key={c}>
+                        <div className="category">
+                          <div className="category-inner">
+                            <input type="text" value={c} />
+                            <button className="category-edit" type="button">
+                              <Fa icon={faEdit} />
+                            </button>
+                            <button className="category-delete" type="button">
+                              <Fa icon={faTrashAlt} />
+                            </button>
+                          </div>
+                          <ul className="feed-list">{feedListEl}</ul>
                         </div>
-                        <ul className="feed-list">{feedListEl}</ul>
                       </li>
                     );
                   });
@@ -109,11 +125,15 @@ class SetFeedModal extends React.Component {
                   <React.Fragment>
                     <ul className="category-list">
                       {categoryListEl}
-                      <li className="category new-category">
-                        <input type="text" placeholder="new category" />
-                        <button type="button">
-                          <Fa icon={faPlus} />
-                        </button>
+                      <li className="category-wrap-li new-category">
+                        <div className="category new-category">
+                          <div className="category-inner">
+                            <input type="text" placeholder="new category" />
+                            <button type="button">
+                              <Fa icon={faPlus} />
+                            </button>
+                          </div>
+                        </div>
                       </li>
                     </ul>
                   </React.Fragment>
