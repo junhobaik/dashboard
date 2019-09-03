@@ -27,7 +27,7 @@ export default {
 
   Mutation: {
     addFeed: async (parent, { url, category }, { userModel, feedModel, user }) => {
-      const userUpdate = (feedId, title, category, link) => {
+      const userUpdate = (feedId, title, category) => {
         userModel.updateOne(
           { googleId: user.id, 'feedList.feedId': { $ne: feedId } },
           {
@@ -35,8 +35,7 @@ export default {
               feedList: {
                 feedId,
                 title,
-                category,
-                link
+                category
               }
             }
           },
@@ -50,8 +49,8 @@ export default {
         .findOne({ feedUrl: url })
         .then(feedData => {
           if (feedData) {
-            const { _id, title, category, link } = feedData;
-            userUpdate(_id, title, category, link);
+            const { _id, title, category } = feedData;
+            userUpdate(_id, title, category);
           }
 
           if (!feedData) {
@@ -59,7 +58,7 @@ export default {
               const { items, title, pubDate, link } = feed;
 
               feedModel.create({ feedUrl: url, title, items, pubDate, link }).then(created => {
-                userUpdate(created._id, title, category, link);
+                userUpdate(created._id, title, category);
               });
             });
           }

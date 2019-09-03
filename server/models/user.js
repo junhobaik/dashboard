@@ -5,8 +5,16 @@ const { Schema } = mongoose;
 const UserSchema = new Schema({
   name: { type: String, required: true },
   googleId: { type: String, required: true },
-  picture: { type: String },
-  feedList: [{ feedId: String, title: String, category: String, readedItem: [String], link: String }]
+  picture: String,
+  feedList: [
+    {
+      feedId: String,
+      title: String,
+      category: String,
+      readedItem: [String],
+      isHideItems: { type: Boolean, default: false }
+    }
+  ]
 });
 
 export default mongoose.model('user', UserSchema);
