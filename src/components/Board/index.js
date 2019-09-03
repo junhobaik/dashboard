@@ -9,6 +9,7 @@ import moment from 'moment';
 import './index.scss';
 import { FEED_DATA } from '../../queries';
 import AddFeedModal from './AddFeedModal';
+import SetFeedModal from './SetFeedModal';
 
 const TOGGLE_HIDE_FEED_ITEMS = gql`
   mutation toggleHideFeedItems($feedId: String!, $isHide: Boolean!) {
@@ -22,7 +23,8 @@ export default class User extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isAddFeedModal: false
+      isAddFeedModal: false,
+      isSetFeedModal: false
     };
   }
 
@@ -32,9 +34,21 @@ export default class User extends Component {
     });
   };
 
+  openSetFeedModal = () => {
+    this.setState({
+      isSetFeedModal: true
+    });
+  };
+
   closeAddFeedModal = () => {
     this.setState({
       isAddFeedModal: false
+    });
+  };
+
+  closeSetFeedModal = () => {
+    this.setState({
+      isSetFeedModal: false
     });
   };
 
@@ -49,7 +63,7 @@ export default class User extends Component {
   };
 
   render() {
-    const { isAddFeedModal } = this.state;
+    const { isAddFeedModal, isSetFeedModal } = this.state;
 
     return (
       <div id="Board">
@@ -184,7 +198,7 @@ export default class User extends Component {
                         <Fa icon={faPlus} onClick={this.openAddFeedModal} />
                       </div>
                       <div className="setting">
-                        <Fa icon={faCog} />
+                        <Fa icon={faCog} onClick={this.openSetFeedModal} />
                       </div>
                     </div>
                     <div className="content">
@@ -207,6 +221,9 @@ export default class User extends Component {
                     refetch={refetch}
                     categoryList={categoryList}
                   />
+                ) : null}
+                {isSetFeedModal ? (
+                  <SetFeedModal close={this.closeSetFeedModal} refetch={refetch} />
                 ) : null}
               </React.Fragment>
             );
