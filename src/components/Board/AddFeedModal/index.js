@@ -123,8 +123,15 @@ class AddFeedModal extends React.Component {
   };
 
   render() {
-    const { close, refetch } = this.props;
+    const { close, refetch, categoryList } = this.props;
     const { isAddCategory, linkValue, linkMsg, linkMsgAlertLevel } = this.state;
+
+    const categoryOptionsEl = categoryList.map(c => {
+      if (c !== 'root') {
+        return <option value={c}>{c}</option>;
+      }
+      return null;
+    });
 
     const linkMsgEl = (
       <div className={`alert alert-${linkMsgAlertLevel}`} role="alert">
@@ -179,9 +186,7 @@ class AddFeedModal extends React.Component {
                 {!isAddCategory ? (
                   <select name="category" id="categorySelect">
                     <option value="root">No Category</option>
-                    {/* <option value="foo1">foo1</option>
-                    <option value="foo2">foo2</option>
-                    <option value="foo3">foo3</option> */}
+                    {categoryOptionsEl}
                   </select>
                 ) : (
                   <input type="text" id="newCategory" placeholder="category name" />
@@ -258,7 +263,12 @@ class AddFeedModal extends React.Component {
 
 AddFeedModal.propTypes = {
   close: PropTypes.func.isRequired,
-  refetch: PropTypes.func.isRequired
+  refetch: PropTypes.func.isRequired,
+  categoryList: PropTypes.arrayOf(PropTypes.string)
+};
+
+AddFeedModal.defaultProps = {
+  categoryList: []
 };
 
 export default AddFeedModal;

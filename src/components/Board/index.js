@@ -59,6 +59,7 @@ export default class User extends Component {
 
             const feedListEl = [];
             const itemListEl = [];
+            let categoryList = new Set();
             const loadingTransition = 300;
             const loadingStyle = {
               transition: `${loadingTransition}ms`,
@@ -79,8 +80,10 @@ export default class User extends Component {
               const { feedList } = data.user;
 
               feedList.map(feed => {
+                categoryList.add(feed.category);
+
                 feedListEl.push(
-                  <li className="feed" key={feed.link}>
+                  <li className="feed" key={feed.link} category={feed.category}>
                     <button type="button" className="feed-title-btn">
                       <a href={feed.link} target="_blank" rel="noopener noreferrer">
                         {feed.title}
@@ -156,6 +159,19 @@ export default class User extends Component {
               return parseInt(b.props.date, 10) - parseInt(a.props.date, 10);
             });
 
+            categoryList = Array.from(categoryList);
+
+            const categoryEl = categoryList.map(c => {
+              return (
+                <ul className="category" key={c}>
+                  {c === 'root' ? null : <h2>{`${c}`}</h2>}
+                  {feedListEl.filter(v => {
+                    return v.props.category === c;
+                  })}
+                </ul>
+              );
+            });
+
             return (
               <React.Fragment>
                 <div className="loading" style={loadingStyle}>
@@ -172,7 +188,7 @@ export default class User extends Component {
                       </div>
                     </div>
                     <div className="content">
-                      <ul className="feed-list">{feedListEl}</ul>
+                      <ul className="feed-list">{categoryEl}</ul>
                     </div>
                   </div>
                   <div className="right">
@@ -186,7 +202,11 @@ export default class User extends Component {
                 </div>
                 ;
                 {isAddFeedModal ? (
-                  <AddFeedModal close={this.closeAddFeedModal} refetch={refetch} />
+                  <AddFeedModal
+                    close={this.closeAddFeedModal}
+                    refetch={refetch}
+                    categoryList={categoryList}
+                  />
                 ) : null}
               </React.Fragment>
             );

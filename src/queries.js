@@ -25,6 +25,7 @@ export const FEED_DATA = gql`
         feedId
         title
         link
+        category
         items {
           title
           link
