@@ -22,6 +22,7 @@ export const FEED_DATA = gql`
     user {
       name
       feedList {
+        feedId
         title
         link
         items {
@@ -30,6 +31,7 @@ export const FEED_DATA = gql`
           contentSnippet
           isoDate
         }
+        isHideItems
       }
     }
   }
