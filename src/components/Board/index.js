@@ -92,10 +92,17 @@ export default class User extends Component {
                       {(toggleHideFeedItems, { loading, data, error }) => {
                         console.log('Board <Mutation />', loading, data);
 
+                        let feedEyeIcon = feed.isHideItems ? faEyeSlash : faEye;
+
+                        if (loading) feedEyeIcon = faSpinner;
+                        if (data) {
+                          feedEyeIcon = data.toggleHideFeedItems.response ? faEyeSlash : faEye;
+                        }
+
                         return (
                           <button type="button" className="feed-visible-toggle-btn">
                             <Fa
-                              icon={feed.isHideItems ? faEyeSlash : faEye}
+                              icon={feedEyeIcon}
                               onClick={() => {
                                 toggleHideFeedItems({
                                   variables: { feedId: feed.feedId, isHide: !feed.isHideItems }
