@@ -81,13 +81,16 @@ class SetFeedModal extends React.Component {
                           <div className="feed-inner">
                             <select id="feed-category-edit">
                               {a.map(v => {
-                                if (v === c)
+                                const optionText = v === 'root' ? 'no category' : v;
+
+                                if (v === c) {
                                   return (
                                     <option value={v} selected>
-                                      {v}
+                                      {optionText}
                                     </option>
                                   );
-                                return <option value={v}>{v}</option>;
+                                }
+                                return <option value={v}>{optionText}</option>;
                               })}
                             </select>
                             <input type="text" value={f.title} />
@@ -105,15 +108,21 @@ class SetFeedModal extends React.Component {
                     return (
                       <li className="category-wrap-li" key={c}>
                         <div className="category">
-                          <div className="category-inner">
-                            <input type="text" value={c} />
-                            <button className="category-edit" type="button">
-                              <Fa icon={faEdit} />
-                            </button>
-                            <button className="category-delete" type="button">
-                              <Fa icon={faTrashAlt} />
-                            </button>
-                          </div>
+                          {c === 'root' ? (
+                            <div className="category-inner">
+                              <input type="text" value="No Category" disabled />
+                            </div>
+                          ) : (
+                            <div className="category-inner">
+                              <input type="text" value={c} />
+                              <button className="category-edit" type="button">
+                                <Fa icon={faEdit} />
+                              </button>
+                              <button className="category-delete" type="button">
+                                <Fa icon={faTrashAlt} />
+                              </button>
+                            </div>
+                          )}
                           <ul className="feed-list">{feedListEl}</ul>
                         </div>
                       </li>
