@@ -24,11 +24,12 @@ export default gql`
     isoDate: String
   }
 
-  type addFeedResponse {
+  type response {
     response: Boolean
   }
   
   extend type Mutation {
-    addFeed(url: String, category: String): addFeedResponse
+    addFeed(url: String, category: String): response
+    toggleHideFeedItems(feedId: String, isHide: Boolean): response
   }
 `;
