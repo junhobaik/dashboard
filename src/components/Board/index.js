@@ -1,23 +1,14 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
 import { Query, Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faCog, faPlus, faEye, faEyeSlash, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import moment from 'moment';
 
 import './index.scss';
-import { FEED_DATA } from '../../queries';
+import { FEED_DATA, TOGGLE_HIDE_FEED_ITEMS } from '../../queries';
 import AddFeedModal from './AddFeedModal';
 import SetFeedModal from './SetFeedModal';
-
-const TOGGLE_HIDE_FEED_ITEMS = gql`
-  mutation toggleHideFeedItems($feedId: String!, $isHide: Boolean!) {
-    toggleHideFeedItems(feedId: $feedId, isHide: $isHide) {
-      response
-    }
-  }
-`;
 
 export default class User extends Component {
   constructor(props) {

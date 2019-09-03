@@ -37,3 +37,19 @@ export const FEED_DATA = gql`
     }
   }
 `;
+
+export const ADD_FEED = gql`
+  mutation addFeed($url: String!, $category: String!) {
+    addFeed(url: $url, category: $category) {
+      response
+    }
+  }
+`;
+
+export const TOGGLE_HIDE_FEED_ITEMS = gql`
+  mutation toggleHideFeedItems($feedId: String!, $isHide: Boolean!) {
+    toggleHideFeedItems(feedId: $feedId, isHide: $isHide) {
+      response
+    }
+  }
+`;

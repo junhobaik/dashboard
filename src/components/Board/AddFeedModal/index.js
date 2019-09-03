@@ -4,17 +4,9 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
 
+import { ADD_FEED } from '../../../queries';
 import './index.scss';
-
-const ADD_FEED = gql`
-  mutation addFeed($url: String!, $category: String!) {
-    addFeed(url: $url, category: $category) {
-      response
-    }
-  }
-`;
 
 class AddFeedModal extends React.Component {
   constructor(props) {
