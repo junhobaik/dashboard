@@ -128,7 +128,11 @@ class AddFeedModal extends React.Component {
 
     const categoryOptionsEl = categoryList.map(c => {
       if (c !== 'root') {
-        return <option value={c}>{c}</option>;
+        return (
+          <option value={c} key={c}>
+            {c}
+          </option>
+        );
       }
       return null;
     });
