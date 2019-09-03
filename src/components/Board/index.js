@@ -60,7 +60,7 @@ export default class User extends Component {
       <div id="Board">
         <Query query={FEED_DATA}>
           {({ loading, data, error, refetch }) => {
-            console.log('Board <Qeury />', data);
+            // console.log('Board <Qeury />', data);
 
             const feedListEl = [];
             const itemListEl = [];
@@ -98,7 +98,7 @@ export default class User extends Component {
                     <Mutation mutation={TOGGLE_HIDE_FEED_ITEMS}>
                       {/* eslint-disable-next-line no-shadow */}
                       {(toggleHideFeedItems, { loading, data, error }) => {
-                        console.log('Board <Mutation />', loading, data);
+                        // console.log('Board <Mutation />', loading, data);
 
                         let feedEyeIcon = feed.isHideItems ? faEyeSlash : faEye;
 

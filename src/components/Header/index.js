@@ -11,7 +11,7 @@ const Header = () => {
       <div className="header-inner">
         <Query query={HEADER_QUERY}>
           {({ loading, data, error }) => {
-            console.log('Header <Qeury />', data);
+            // console.log('Header <Qeury />', data);
 
             let loginStatus = <a href="/auth/google">Login with Google</a>;
             let titleLink = '/';
