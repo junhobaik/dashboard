@@ -75,7 +75,7 @@ const SetFeedModal = ({ close, refetch }) => {
 
   const deleteFeedFn = (id, refetch) => {
     deleteFeedListItem({ variables: { id } }).then(({ data }) => {
-      if (data.deleteFeed.response) refetch();
+      if (data.deleteFeedListItem.response) refetch();
     });
   };
 
