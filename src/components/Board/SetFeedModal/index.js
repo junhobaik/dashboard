@@ -1,12 +1,11 @@
-/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-unused-vars */
-/* eslint-disable react/no-unused-state */
+/* eslint-disable no-restricted-syntax */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Query, Mutation } from 'react-apollo';
+import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
-import { faTimes, faEdit, faTrashAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faEdit, faTrashAlt, faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
 
 import './index.scss';
 
@@ -27,6 +26,46 @@ class SetFeedModal extends React.Component {
     super(props);
     this.state = {};
   }
+
+  focusSelect = e => {
+    const target = e.currentTarget;
+    target.setAttribute('past-value', target.value);
+  };
+
+  changeSelect = e => {
+    const target = e.currentTarget;
+
+    if (target.value === 'new') {
+      const newCategory = target.parentNode.querySelector('.feed-category-new');
+      target.style.display = 'none';
+      if (newCategory) newCategory.style.display = 'inline-block';
+    }
+  };
+
+  cancelNewCategory = e => {
+    const parent = e.currentTarget.parentNode;
+    const select = parent.parentNode.querySelector('.feed-category-edit');
+    const pastSelectValue = select.attributes['past-value'].value;
+
+    // hide new categroy input
+    parent.style.display = 'none';
+    // show category select
+    parent.parentNode.querySelector('.feed-category-edit').style.display = 'inline-block';
+    // reset new category input
+    parent.querySelector('input').value = '';
+    // revert select value
+    select.value = pastSelectValue;
+  };
+
+  saveCategory = (id, value) => {};
+
+  saveNewCategory = () => {
+    // this.saveCategory(id, value)
+  };
+
+  editFeedTitle = () => {};
+
+  deleteFeed = () => {};
 
   render() {
     const { close, refetch } = this.props;
@@ -79,31 +118,64 @@ class SetFeedModal extends React.Component {
                       return (
                         <li className="feed" key={f.feedId}>
                           <div className="feed-inner">
-                            <select id="feed-category-edit">
-                              {a.map(v => {
-                                const optionText = v === 'root' ? 'no category' : v;
+                            <div className="feed-inner-inner">
+                              <div className="category-edit-wrap">
+                                <select
+                                  className="feed-category-edit"
+                                  defaultValue={c}
+                                  onFocus={this.focusSelect}
+                                  onChange={this.changeSelect}
+                                >
+                                  {a.map(v => {
+                                    const optionText = v === 'root' ? 'no category' : v;
+                                    return (
+                                      <option value={v} key={`${v}-option`}>
+                                        {optionText}
+                                      </option>
+                                    );
+                                  })}
+                                  <option value="new">new category</option>
+                                </select>
 
-                                if (v === c) {
-                                  return (
-                                    <option value={v} key={`${v}-option`} selected>
-                                      {optionText}
-                                    </option>
-                                  );
-                                }
-                                return (
-                                  <option value={v} key={`${v}-option`}>
-                                    {optionText}
-                                  </option>
-                                );
-                              })}
-                            </select>
-                            <input type="text" value={f.title} />
-                            <button className="feed-edit" type="button">
-                              <Fa icon={faEdit} />
-                            </button>
-                            <button className="feed-delete" type="button">
-                              <Fa icon={faTrashAlt} />
-                            </button>
+                                <div className="feed-category-new" style={{ display: 'none' }}>
+                                  <input type="text" id="newCategory" placeholder="new category" />
+                                  <button
+                                    type="button"
+                                    className="save-new-category-btn"
+                                    onClick={this.saveNewCategory}
+                                  >
+                                    <Fa icon={faSave} />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={this.cancelNewCategory}
+                                    className="cancel-new-category-btn"
+                                  >
+                                    <Fa icon={faTimes} />
+                                  </button>
+                                </div>
+                              </div>
+                              <input
+                                className="title-edit-input"
+                                type="text"
+                                value={f.title}
+                                onChange={() => {}}
+                              />
+                              <button
+                                className="feed-edit"
+                                type="button"
+                                onClick={this.editFeedTitle}
+                              >
+                                <Fa icon={faEdit} />
+                              </button>
+                              <button
+                                className="feed-delete"
+                                type="button"
+                                onClick={this.deleteFeed}
+                              >
+                                <Fa icon={faTrashAlt} />
+                              </button>
+                            </div>
                           </div>
                         </li>
                       );
@@ -118,7 +190,7 @@ class SetFeedModal extends React.Component {
                             </div>
                           ) : (
                             <div className="category-inner">
-                              <input type="text" value={c} />
+                              <input type="text" value={c} onChange={() => {}} />
                               <button className="category-edit" type="button">
                                 <Fa icon={faEdit} />
                               </button>
