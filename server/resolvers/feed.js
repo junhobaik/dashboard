@@ -89,7 +89,7 @@ export default {
         .findOne({ feedUrl: url })
         .then(feedData => {
           if (feedData) {
-            const { _id, title, category } = feedData;
+            const { _id, title } = feedData;
             userUpdate(_id, title, category);
           }
 
