@@ -215,16 +215,6 @@ const SetFeedModal = ({ close, refetch }) => {
                 <React.Fragment>
                   <ul className="category-list">
                     {categoryListEl}
-                    <li className="category-wrap-li new-category">
-                      <div className="category new-category">
-                        <div className="category-inner">
-                          <input type="text" placeholder="new category" />
-                          <button type="button">
-                            <Fa icon={faPlus} />
-                          </button>
-                        </div>
-                      </div>
-                    </li>
                   </ul>
                 </React.Fragment>
               );
