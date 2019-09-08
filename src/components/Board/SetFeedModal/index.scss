@@ -1,15 +1,6 @@
+@import '../modalStyle.scss';
+
 #SetFeedModal {
-  display: flex;
-  flex-direction: column;
-  z-index: 3;
-  position: fixed;
-  width: 50%;
-  height: 50%;
-  top: 25%;
-  left: 25%;
-  background-color: #fff;
-  border-radius: 5px;
-  padding: 1rem;
 
   .header {
     display: flex;
