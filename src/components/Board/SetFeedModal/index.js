@@ -40,9 +40,18 @@ const CHANGE_CATEGORY_NAME = gql`
   }
 `;
 
+const CHANGE_FEED_CATEGORY = gql`
+  mutation ChangeFeedCategory($feedId: String!, $category: String!) {
+    changeFeedCategory(feedId: $feedId, category: $category) {
+      response
+    }
+  }
+`;
+
 const SetFeedModal = ({ close, refetch }) => {
   const [deleteFeedListItem] = useMutation(DELETE_FEED_LIST_ITEM);
   const [changeCategoryName] = useMutation(CHANGE_CATEGORY_NAME);
+  const [changeFeedCategory] = useMutation(CHANGE_FEED_CATEGORY);
   const [feedTitleInputs, setFeedTitleInputs] = useState({});
   const [feedCategoryInputs, setFeedCategoryInputs] = useState({});
   const [categoryNameInputs, setCategoryNameInputs] = useState({});
@@ -75,7 +84,7 @@ const SetFeedModal = ({ close, refetch }) => {
     target.setAttribute('past-value', target.value);
   };
 
-  const changeCategorySelect = e => {
+  const changeCategorySelect = (e, feedId, refetch) => {
     const target = e.currentTarget;
 
     if (target.value === 'new') {
@@ -84,6 +93,9 @@ const SetFeedModal = ({ close, refetch }) => {
       if (newCategory) newCategory.style.display = 'inline-block';
     } else {
       console.log('새로운 카테고리 선택', target.value);
+      changeFeedCategory({ variables: { feedId, category: target.value } }).then(({ data }) => {
+        if (data.changeFeedCategory.response) refetch();
+      });
     }
   };
 
@@ -136,7 +148,7 @@ const SetFeedModal = ({ close, refetch }) => {
     });
   };
 
-  const saveFeedCategory = (e, key) => {
+  const saveFeedCategory = (e, key, refetch) => {
     const category = feedCategoryInputs[key];
     const pastCategory = e.currentTarget.parentNode.parentNode.querySelector('.feed-category-edit')
       .attributes['past-value'].value;
@@ -145,6 +157,10 @@ const SetFeedModal = ({ close, refetch }) => {
       console.log('이름을 지정하지 않았거나 과거의 카테고리와 같음');
     } else {
       console.log('수정 될 카테고리', category);
+
+      changeFeedCategory({ variables: { feedId: key, category } }).then(({ data }) => {
+        if (data.changeFeedCategory.response) refetch();
+      });
     }
   };
 
@@ -212,7 +228,7 @@ const SetFeedModal = ({ close, refetch }) => {
                                 className="feed-category-edit"
                                 defaultValue={c}
                                 onFocus={focusCategorySelect}
-                                onChange={changeCategorySelect}
+                                onChange={e => changeCategorySelect(e, f.feedId, refetch)}
                               >
                                 {a.map(v => {
                                   const optionText = v === 'root' ? 'no category' : v;
@@ -238,7 +254,7 @@ const SetFeedModal = ({ close, refetch }) => {
                                   type="button"
                                   className="save-new-category-btn"
                                   onClick={e => {
-                                    saveFeedCategory(e, f.feedId);
+                                    saveFeedCategory(e, f.feedId, refetch);
                                   }}
                                 >
                                   <Fa icon={faSave} />
