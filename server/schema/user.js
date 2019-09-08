@@ -27,5 +27,6 @@ export default gql`
 
   extend type Mutation {
     changeCategoryName(oldCategoryName: String, newCategoryName: String): response
+    changeFeedCategory(feedId: String, category: String): response
   }
 `;

@@ -40,11 +40,33 @@ export default {
           { arrayFilters: [{ 'element.category': oldCategoryName }] }
         )
         .then(res => {
-          if (res.nModified > 0) return { response: true };
-          return { response: false };
+          return { response: true };
         })
         .catch(err => {
           if (err) return { response: false };
+        });
+
+      return result;
+    },
+
+    changeFeedCategory: async (parent, { feedId, category }, { userModel, user }) => {
+      const result = await userModel
+        .updateOne(
+          { googleId: user.id, 'feedList.feedId': feedId },
+          {
+            $set: {
+              'feedList.$.category': category
+            }
+          },
+          (error, update) => {
+            // if (update.nModifed) console.log(`${update.nModifed}개 수정`)
+          }
+        )
+        .then(res => {
+          return { response: true };
+        })
+        .catch(err => {
+          return { response: false };
         });
 
       return result;
