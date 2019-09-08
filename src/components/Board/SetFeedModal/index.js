@@ -1,7 +1,7 @@
 /* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-restricted-syntax */
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Query } from 'react-apollo';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
@@ -34,6 +34,32 @@ const DELETE_FEED_LIST_ITEM = gql`
 
 const SetFeedModal = ({ close, refetch }) => {
   const [deleteFeedListItem, { data }] = useMutation(DELETE_FEED_LIST_ITEM);
+  const [titleInputs, setTitleInputs] = useState({});
+  const [categoryInputs, setCategoryInputs] = useState({});
+  const [categoryNameInputs, setCategoryNameInputs] = useState({});
+
+  const updateTitleInputs = (key, value) => {
+    setTitleInputs({
+      ...titleInputs,
+      [key]: value
+    });
+  };
+
+  const updateCategoryInputs = (key, value) => {
+    console.log(key, value);
+    setCategoryInputs({
+      ...categoryInputs,
+      [key]: value
+    });
+  };
+
+  const updateCategoryNameInputs = (key, value) => {
+    console.log(key, value);
+    setCategoryNameInputs({
+      ...categoryNameInputs,
+      [key]: value
+    });
+  };
 
   const focusSelect = e => {
     const target = e.currentTarget;
@@ -47,6 +73,8 @@ const SetFeedModal = ({ close, refetch }) => {
       const newCategory = target.parentNode.querySelector('.feed-category-new');
       target.style.display = 'none';
       if (newCategory) newCategory.style.display = 'inline-block';
+    } else {
+      console.log('새로운 카테고리 선택', target.value);
     }
   };
 
@@ -65,18 +93,51 @@ const SetFeedModal = ({ close, refetch }) => {
     select.value = pastSelectValue;
   };
 
-  const saveCategory = (id, value) => {};
-
-  const saveNewCategory = () => {
-    // saveCategory(id, value)
-  };
-
-  const editFeedTitle = () => {};
-
   const deleteFeedFn = (id, refetch) => {
     deleteFeedListItem({ variables: { id } }).then(({ data }) => {
       if (data.deleteFeedListItem.response) refetch();
     });
+  };
+
+  const changeCategoryNameInput = e => {
+    const { value, name } = e.currentTarget;
+
+    updateCategoryNameInputs(name, value);
+  };
+
+  const chagneCategoryInput = e => {
+    const { value, name } = e.currentTarget;
+
+    updateCategoryInputs(name, value);
+  };
+
+  const changeTitleInput = e => {
+    const { value, name } = e.currentTarget;
+
+    updateTitleInputs(name, value);
+  };
+
+  const editCategoryName = (e, oldCategoryName) => {
+    const newCategoryName = categoryNameInputs[oldCategoryName];
+
+    console.log(`카테고리명 ${oldCategoryName}에서 ${newCategoryName}으로 변경`);
+  };
+
+  const editFeedCategory = (e, key) => {
+    const category = categoryInputs[key];
+    const pastCategory = e.currentTarget.parentNode.parentNode.querySelector('.feed-category-edit')
+      .attributes['past-value'].value;
+
+    if (!category || category === pastCategory) {
+      console.log('이름을 지정하지 않았거나 과거의 카테고리와 같음');
+    } else {
+      console.log('수정 될 카테고리', category);
+    }
+  };
+
+  const editFeedTitle = (e, key) => {
+    const title = titleInputs[key];
+    console.log('수정 될 타이틀', title);
   };
 
   return (
@@ -107,7 +168,7 @@ const SetFeedModal = ({ close, refetch }) => {
         <div className="content">
           <Query query={SET_FEED}>
             {({ loading, data, error, refetch }) => {
-              console.log('SetFeedModal <Query />', loading, data, error);
+              // console.log('SetFeedModal <Query />', loading, data, error);
 
               let categoryListEl;
 
@@ -121,9 +182,14 @@ const SetFeedModal = ({ close, refetch }) => {
 
                 category = Array.from(category);
                 categoryListEl = category.map((c, i, a) => {
+                  const categoryNameModified = categoryNameInputs[c] && categoryNameInputs[c] !== c;
+
                   const feed = feedList.filter(f => f.category === c);
 
                   const feedListEl = feed.map(f => {
+                    const titleModified =
+                      titleInputs[f.feedId] && titleInputs[f.feedId] !== f.title;
+
                     return (
                       <li className="feed" key={f.feedId}>
                         <div className="feed-inner">
@@ -147,11 +213,20 @@ const SetFeedModal = ({ close, refetch }) => {
                               </select>
 
                               <div className="feed-category-new" style={{ display: 'none' }}>
-                                <input type="text" id="newCategory" placeholder="new category" />
+                                <input
+                                  type="text"
+                                  id="newCategory"
+                                  placeholder="new category"
+                                  value={categoryInputs[f.feedId] || ''}
+                                  name={f.feedId}
+                                  onChange={chagneCategoryInput}
+                                />
                                 <button
                                   type="button"
                                   className="save-new-category-btn"
-                                  onClick={saveNewCategory}
+                                  onClick={e => {
+                                    editFeedCategory(e, f.feedId);
+                                  }}
                                 >
                                   <Fa icon={faSave} />
                                 </button>
@@ -167,11 +242,18 @@ const SetFeedModal = ({ close, refetch }) => {
                             <input
                               className="title-edit-input"
                               type="text"
-                              value={f.title}
-                              onChange={() => {}}
+                              value={titleInputs[f.feedId] || f.title}
+                              name={f.feedId}
+                              onChange={changeTitleInput}
                             />
-                            <button className="feed-edit" type="button" onClick={editFeedTitle}>
-                              <Fa icon={faEdit} />
+                            <button
+                              className="feed-edit"
+                              type="button"
+                              onClick={e => {
+                                if (titleModified) editFeedTitle(e, f.feedId);
+                              }}
+                            >
+                              <Fa icon={titleModified ? faSave : faEdit} />
                             </button>
                             <button
                               className="feed-delete"
@@ -195,9 +277,20 @@ const SetFeedModal = ({ close, refetch }) => {
                           </div>
                         ) : (
                           <div className="category-inner">
-                            <input type="text" value={c} onChange={() => {}} />
-                            <button className="category-edit" type="button">
-                              <Fa icon={faEdit} />
+                            <input
+                              type="text"
+                              value={categoryNameInputs[c] || c}
+                              name={c}
+                              onChange={changeCategoryNameInput}
+                            />
+                            <button
+                              className="category-edit"
+                              type="button"
+                              onClick={e => {
+                                if (categoryNameModified) editCategoryName(e, c);
+                              }}
+                            >
+                              <Fa icon={categoryNameModified ? faSave : faEdit} />
                             </button>
                             <button className="category-delete" type="button">
                               <Fa icon={faTrashAlt} />
@@ -213,9 +306,7 @@ const SetFeedModal = ({ close, refetch }) => {
 
               return (
                 <React.Fragment>
-                  <ul className="category-list">
-                    {categoryListEl}
-                  </ul>
+                  <ul className="category-list">{categoryListEl}</ul>
                 </React.Fragment>
               );
             }}
