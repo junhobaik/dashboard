@@ -24,4 +24,8 @@ export default gql`
     items: [feedItems] # user resolver
     isHideItems: Boolean
   }
+
+  extend type Mutation {
+    changeCategoryName(oldCategoryName: String, newCategoryName: String): response
+  }
 `;
