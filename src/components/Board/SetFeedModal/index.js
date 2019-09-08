@@ -32,8 +32,17 @@ const DELETE_FEED_LIST_ITEM = gql`
   }
 `;
 
+const CHANGE_CATEGORY_NAME = gql`
+  mutation ChangeCategoryName($oldCategoryName: String!, $newCategoryName: String!) {
+    changeCategoryName(oldCategoryName: $oldCategoryName, newCategoryName: $newCategoryName) {
+      response
+    }
+  }
+`;
+
 const SetFeedModal = ({ close, refetch }) => {
-  const [deleteFeedListItem, { data }] = useMutation(DELETE_FEED_LIST_ITEM);
+  const [deleteFeedListItem] = useMutation(DELETE_FEED_LIST_ITEM);
+  const [changeCategoryName] = useMutation(CHANGE_CATEGORY_NAME);
   const [feedTitleInputs, setFeedTitleInputs] = useState({});
   const [feedCategoryInputs, setFeedCategoryInputs] = useState({});
   const [categoryNameInputs, setCategoryNameInputs] = useState({});
@@ -117,10 +126,14 @@ const SetFeedModal = ({ close, refetch }) => {
     updateTitleInputs(name, value);
   };
 
-  const saveCategoryName = (e, oldCategoryName) => {
+  const saveCategoryName = (e, oldCategoryName, refetch) => {
     const newCategoryName = categoryNameInputs[oldCategoryName];
 
     console.log(`카테고리명 ${oldCategoryName}에서 ${newCategoryName}으로 변경`);
+
+    changeCategoryName({ variables: { oldCategoryName, newCategoryName } }).then(({ data }) => {
+      if (data.changeCategoryName.response) refetch();
+    });
   };
 
   const saveFeedCategory = (e, key) => {
@@ -242,9 +255,10 @@ const SetFeedModal = ({ close, refetch }) => {
                             <input
                               className="title-edit-input"
                               type="text"
-                              value={feedTitleInputs[f.feedId] || f.title}
+                              value={feedTitleInputs[f.feedId] || ''}
                               name={f.feedId}
                               onChange={changeFeedTitleInput}
+                              placeholder={f.title}
                             />
                             <button
                               className="feed-edit"
@@ -279,15 +293,16 @@ const SetFeedModal = ({ close, refetch }) => {
                           <div className="category-inner">
                             <input
                               type="text"
-                              value={categoryNameInputs[c] || c}
+                              value={categoryNameInputs[c] || ''}
                               name={c}
                               onChange={changeCategoryNameInput}
+                              placeholder={c}
                             />
                             <button
                               className="category-edit"
                               type="button"
                               onClick={e => {
-                                if (categoryNameModified) saveCategoryName(e, c);
+                                if (categoryNameModified) saveCategoryName(e, c, refetch);
                               }}
                             >
                               <Fa icon={categoryNameModified ? faSave : faEdit} />
