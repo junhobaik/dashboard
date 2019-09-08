@@ -34,21 +34,21 @@ const DELETE_FEED_LIST_ITEM = gql`
 
 const SetFeedModal = ({ close, refetch }) => {
   const [deleteFeedListItem, { data }] = useMutation(DELETE_FEED_LIST_ITEM);
-  const [titleInputs, setTitleInputs] = useState({});
-  const [categoryInputs, setCategoryInputs] = useState({});
+  const [feedTitleInputs, setFeedTitleInputs] = useState({});
+  const [feedCategoryInputs, setFeedCategoryInputs] = useState({});
   const [categoryNameInputs, setCategoryNameInputs] = useState({});
 
   const updateTitleInputs = (key, value) => {
-    setTitleInputs({
-      ...titleInputs,
+    setFeedTitleInputs({
+      ...feedTitleInputs,
       [key]: value
     });
   };
 
   const updateCategoryInputs = (key, value) => {
     console.log(key, value);
-    setCategoryInputs({
-      ...categoryInputs,
+    setFeedCategoryInputs({
+      ...feedCategoryInputs,
       [key]: value
     });
   };
@@ -61,12 +61,12 @@ const SetFeedModal = ({ close, refetch }) => {
     });
   };
 
-  const focusSelect = e => {
+  const focusCategorySelect = e => {
     const target = e.currentTarget;
     target.setAttribute('past-value', target.value);
   };
 
-  const changeSelect = e => {
+  const changeCategorySelect = e => {
     const target = e.currentTarget;
 
     if (target.value === 'new') {
@@ -105,26 +105,26 @@ const SetFeedModal = ({ close, refetch }) => {
     updateCategoryNameInputs(name, value);
   };
 
-  const chagneCategoryInput = e => {
+  const chagneFeedCategoryInput = e => {
     const { value, name } = e.currentTarget;
 
     updateCategoryInputs(name, value);
   };
 
-  const changeTitleInput = e => {
+  const changeFeedTitleInput = e => {
     const { value, name } = e.currentTarget;
 
     updateTitleInputs(name, value);
   };
 
-  const editCategoryName = (e, oldCategoryName) => {
+  const saveCategoryName = (e, oldCategoryName) => {
     const newCategoryName = categoryNameInputs[oldCategoryName];
 
     console.log(`카테고리명 ${oldCategoryName}에서 ${newCategoryName}으로 변경`);
   };
 
-  const editFeedCategory = (e, key) => {
-    const category = categoryInputs[key];
+  const saveFeedCategory = (e, key) => {
+    const category = feedCategoryInputs[key];
     const pastCategory = e.currentTarget.parentNode.parentNode.querySelector('.feed-category-edit')
       .attributes['past-value'].value;
 
@@ -135,8 +135,8 @@ const SetFeedModal = ({ close, refetch }) => {
     }
   };
 
-  const editFeedTitle = (e, key) => {
-    const title = titleInputs[key];
+  const saveFeedTitle = (e, key) => {
+    const title = feedTitleInputs[key];
     console.log('수정 될 타이틀', title);
   };
 
@@ -188,7 +188,7 @@ const SetFeedModal = ({ close, refetch }) => {
 
                   const feedListEl = feed.map(f => {
                     const titleModified =
-                      titleInputs[f.feedId] && titleInputs[f.feedId] !== f.title;
+                      feedTitleInputs[f.feedId] && feedTitleInputs[f.feedId] !== f.title;
 
                     return (
                       <li className="feed" key={f.feedId}>
@@ -198,8 +198,8 @@ const SetFeedModal = ({ close, refetch }) => {
                               <select
                                 className="feed-category-edit"
                                 defaultValue={c}
-                                onFocus={focusSelect}
-                                onChange={changeSelect}
+                                onFocus={focusCategorySelect}
+                                onChange={changeCategorySelect}
                               >
                                 {a.map(v => {
                                   const optionText = v === 'root' ? 'no category' : v;
@@ -217,15 +217,15 @@ const SetFeedModal = ({ close, refetch }) => {
                                   type="text"
                                   id="newCategory"
                                   placeholder="new category"
-                                  value={categoryInputs[f.feedId] || ''}
+                                  value={feedCategoryInputs[f.feedId] || ''}
                                   name={f.feedId}
-                                  onChange={chagneCategoryInput}
+                                  onChange={chagneFeedCategoryInput}
                                 />
                                 <button
                                   type="button"
                                   className="save-new-category-btn"
                                   onClick={e => {
-                                    editFeedCategory(e, f.feedId);
+                                    saveFeedCategory(e, f.feedId);
                                   }}
                                 >
                                   <Fa icon={faSave} />
@@ -242,15 +242,15 @@ const SetFeedModal = ({ close, refetch }) => {
                             <input
                               className="title-edit-input"
                               type="text"
-                              value={titleInputs[f.feedId] || f.title}
+                              value={feedTitleInputs[f.feedId] || f.title}
                               name={f.feedId}
-                              onChange={changeTitleInput}
+                              onChange={changeFeedTitleInput}
                             />
                             <button
                               className="feed-edit"
                               type="button"
                               onClick={e => {
-                                if (titleModified) editFeedTitle(e, f.feedId);
+                                if (titleModified) saveFeedTitle(e, f.feedId);
                               }}
                             >
                               <Fa icon={titleModified ? faSave : faEdit} />
@@ -287,7 +287,7 @@ const SetFeedModal = ({ close, refetch }) => {
                               className="category-edit"
                               type="button"
                               onClick={e => {
-                                if (categoryNameModified) editCategoryName(e, c);
+                                if (categoryNameModified) saveCategoryName(e, c);
                               }}
                             >
                               <Fa icon={categoryNameModified ? faSave : faEdit} />
