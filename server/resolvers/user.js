@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable consistent-return */
 export default {
   Query: {
@@ -21,6 +22,32 @@ export default {
     items: async (parent, args, { feedModel }) => {
       const result = await feedModel.findOne({ _id: parent.feedId }, { items: 1 });
       return result.items;
+    }
+  },
+
+  Mutation: {
+    changeCategoryName: async (
+      parent,
+      { oldCategoryName, newCategoryName },
+      { userModel, user }
+    ) => {
+      const result = await userModel
+        .updateMany(
+          { googleId: user.id, 'feedList.category': oldCategoryName },
+          {
+            $set: { 'feedList.$[element].category': newCategoryName }
+          },
+          { arrayFilters: [{ 'element.category': oldCategoryName }] }
+        )
+        .then(res => {
+          if (res.nModified > 0) return { response: true };
+          return { response: false };
+        })
+        .catch(err => {
+          if (err) return { response: false };
+        });
+
+      return result;
     }
   }
 };
