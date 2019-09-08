@@ -11,6 +11,7 @@ import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 
 import './index.scss';
+import { sortCategory } from '../../../utils';
 
 const SET_FEED = gql`
   {
@@ -209,7 +210,8 @@ const SetFeedModal = ({ close, refetch }) => {
                   category.add(feed.category);
                 }
 
-                category = Array.from(category);
+                category = sortCategory(Array.from(category));
+
                 categoryListEl = category.map((c, i, a) => {
                   const categoryNameModified = categoryNameInputs[c] && categoryNameInputs[c] !== c;
 

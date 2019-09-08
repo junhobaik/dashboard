@@ -6,6 +6,7 @@ import { faCog, faPlus, faEye, faEyeSlash, faSpinner } from '@fortawesome/free-s
 import moment from 'moment';
 
 import './index.scss';
+import { sortCategory } from '../../utils';
 import { FEED_DATA, TOGGLE_HIDE_FEED_ITEMS } from '../../queries';
 import AddFeedModal from './AddFeedModal';
 import SetFeedModal from './SetFeedModal';
@@ -164,7 +165,7 @@ export default class User extends Component {
               return parseInt(b.props.date, 10) - parseInt(a.props.date, 10);
             });
 
-            categoryList = Array.from(categoryList);
+            categoryList = sortCategory(Array.from(categoryList));
 
             const categoryEl = categoryList.map(c => {
               return (
