@@ -29,5 +29,6 @@ export default gql`
     changeCategoryName(oldCategoryName: String, newCategoryName: String): response
     changeFeedCategory(feedId: String, category: String): response
     deleteCategory(category: String): response
+    changeFeedTitle(feedId: String, title: String): response
   }
 `;

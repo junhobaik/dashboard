@@ -26,6 +26,11 @@ export default {
   },
 
   Mutation: {
+    changeFeedTitle: async (parent, { feedId, title }, { userModel, user }) => {
+      console.log(feedId, title);
+      return { response: true };
+    },
+
     deleteCategory: async (parent, { category }, { userModel, user }) => {
       const result = await userModel
         .updateMany(
