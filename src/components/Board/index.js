@@ -81,8 +81,8 @@ export default class User extends Component {
             }
 
             if (error) return <span>Error..!</span>;
-
-            if (data.user) {
+            
+            if (data && data.user) {
               const { feedList } = data.user;
 
               feedList.map(feed => {
