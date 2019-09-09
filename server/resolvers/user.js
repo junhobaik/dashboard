@@ -28,7 +28,27 @@ export default {
   Mutation: {
     changeFeedTitle: async (parent, { feedId, title }, { userModel, user }) => {
       console.log(feedId, title);
-      return { response: true };
+
+      const result = await userModel
+        .updateOne(
+          { googleId: user.id, 'feedList.feedId': feedId },
+          {
+            $set: {
+              'feedList.$.title': title
+            }
+          },
+          (error, update) => {
+            // if (update.nModifed) console.log(`${update.nModifed}개 수정`)
+          }
+        )
+        .then(res => {
+          return { response: true };
+        })
+        .catch(err => {
+          return { response: false };
+        });
+
+      return result;
     },
 
     deleteCategory: async (parent, { category }, { userModel, user }) => {
