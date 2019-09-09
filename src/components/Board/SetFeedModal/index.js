@@ -83,7 +83,6 @@ const SetFeedModal = ({ close, refetch }) => {
   };
 
   const updateCategoryInputs = (key, value) => {
-    console.log(key, value);
     setFeedCategoryInputs({
       ...feedCategoryInputs,
       [key]: value
@@ -91,7 +90,6 @@ const SetFeedModal = ({ close, refetch }) => {
   };
 
   const updateCategoryNameInputs = (key, value) => {
-    console.log(key, value);
     setCategoryNameInputs({
       ...categoryNameInputs,
       [key]: value
@@ -111,7 +109,6 @@ const SetFeedModal = ({ close, refetch }) => {
       target.style.display = 'none';
       if (newCategory) newCategory.style.display = 'inline-block';
     } else {
-      console.log('새로운 카테고리 선택', target.value);
       changeFeedCategory({ variables: { feedId, category: target.value } }).then(({ data }) => {
         if (data.changeFeedCategory.response) refetch();
       });
@@ -156,8 +153,6 @@ const SetFeedModal = ({ close, refetch }) => {
   const saveCategoryName = (e, oldCategoryName, refetch) => {
     const newCategoryName = categoryNameInputs[oldCategoryName];
 
-    console.log(`카테고리명 ${oldCategoryName}에서 ${newCategoryName}으로 변경`);
-
     changeCategoryName({ variables: { oldCategoryName, newCategoryName } }).then(({ data }) => {
       if (data.changeCategoryName.response) refetch();
     });
@@ -169,10 +164,8 @@ const SetFeedModal = ({ close, refetch }) => {
       .attributes['past-value'].value;
 
     if (!category || category === pastCategory) {
-      console.log('이름을 지정하지 않았거나 과거의 카테고리와 같음');
+      // console.log('이름을 지정하지 않았거나 과거의 카테고리와 같음');
     } else {
-      console.log('수정 될 카테고리', category);
-
       changeFeedCategory({ variables: { feedId: key, category } }).then(({ data }) => {
         if (data.changeFeedCategory.response) refetch();
       });
