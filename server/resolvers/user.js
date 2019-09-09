@@ -27,9 +27,24 @@ export default {
 
   Mutation: {
     deleteCategory: async (parent, { category }, { userModel, user }) => {
-      console.log(category);
-      return { response: true };
+      const result = await userModel
+        .updateMany(
+          { googleId: user.id, 'feedList.category': category },
+          {
+            $set: { 'feedList.$[element].category': 'root' }
+          },
+          { arrayFilters: [{ 'element.category': category }] }
+        )
+        .then(res => {
+          return { response: true };
+        })
+        .catch(err => {
+          if (err) return { response: false };
+        });
+
+      return result;
     },
+
     changeCategoryName: async (
       parent,
       { oldCategoryName, newCategoryName },
