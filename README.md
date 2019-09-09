@@ -9,7 +9,7 @@
   - react-router
 - express
 - Apollo
-  - Apollo-boost
+  - Apollo-client
   - Apollo-express-server
 - GraphQL
 - MongoDB
