@@ -114,14 +114,10 @@ const SetFeedModal = ({ close, refetch }) => {
     const select = parent.parentNode.querySelector('.feed-category-edit');
     const pastSelectValue = select.attributes['past-value'].value;
 
-    // hide new categroy input
-    parent.style.display = 'none';
-    // show category select
-    parent.parentNode.querySelector('.feed-category-edit').style.display = 'inline-block';
-    // reset new category input
-    parent.querySelector('input').value = '';
-    // revert select value
-    select.value = pastSelectValue;
+    parent.style.display = 'none'; // hide new categroy input
+    select.style.display = 'inline-block'; // show category select
+    parent.querySelector('input').value = ''; // reset new category input
+    select.value = pastSelectValue; // revert select value
   };
 
   const deleteFeedFn = (id, refetch) => {
