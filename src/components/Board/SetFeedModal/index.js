@@ -49,10 +49,19 @@ const CHANGE_FEED_CATEGORY = gql`
   }
 `;
 
+const DELETE_CATEGORY = gql`
+  mutation DeleteCategory($category: String!) {
+    deleteCategory(category: $category) {
+      response
+    }
+  }
+`;
+
 const SetFeedModal = ({ close, refetch }) => {
   const [deleteFeedListItem] = useMutation(DELETE_FEED_LIST_ITEM);
   const [changeCategoryName] = useMutation(CHANGE_CATEGORY_NAME);
   const [changeFeedCategory] = useMutation(CHANGE_FEED_CATEGORY);
+  const [deleteCategory] = useMutation(DELETE_CATEGORY);
   const [feedTitleInputs, setFeedTitleInputs] = useState({});
   const [feedCategoryInputs, setFeedCategoryInputs] = useState({});
   const [categoryNameInputs, setCategoryNameInputs] = useState({});
@@ -168,6 +177,12 @@ const SetFeedModal = ({ close, refetch }) => {
   const saveFeedTitle = (e, key) => {
     const title = feedTitleInputs[key];
     console.log('수정 될 타이틀', title);
+  };
+
+  const deleteCategoryFn = (e, category, refetch) => {
+    deleteCategory({ variables: { category } }).then(({ data }) => {
+      if (data.deleteCategory.response) refetch();
+    });
   };
 
   return (
@@ -325,7 +340,11 @@ const SetFeedModal = ({ close, refetch }) => {
                             >
                               <Fa icon={categoryNameModified ? faSave : faEdit} />
                             </button>
-                            <button className="category-delete" type="button">
+                            <button
+                              className="category-delete"
+                              type="button"
+                              onClick={e => deleteCategoryFn(e, c, refetch)}
+                            >
                               <Fa icon={faTrashAlt} />
                             </button>
                           </div>
