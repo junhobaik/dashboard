@@ -26,6 +26,10 @@ export default {
   },
 
   Mutation: {
+    deleteCategory: async (parent, { category }, { userModel, user }) => {
+      console.log(category);
+      return { response: true };
+    },
     changeCategoryName: async (
       parent,
       { oldCategoryName, newCategoryName },
