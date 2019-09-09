@@ -81,9 +81,13 @@ export default class User extends Component {
             }
 
             if (error) return <span>Error..!</span>;
-            
+
             if (data && data.user) {
               const { feedList } = data.user;
+
+              feedList.sort((a, b) => {
+                return a.title.toLowerCase().localeCompare(b.title.toLowerCase());
+              });
 
               feedList.map(feed => {
                 categoryList.add(feed.category);
