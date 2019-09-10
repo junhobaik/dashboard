@@ -26,46 +26,6 @@ export default {
   },
 
   Mutation: {
-    deleteFeedListItem: async (parent, { id }, { userModel, feedModel, user }) => {
-      const result = await userModel
-        .updateOne(
-          { googleId: user.id },
-          {
-            $pull: {
-              feedList: { feedId: id }
-            }
-          },
-          (error, update) => {
-            console.log(update);
-            // if (update.nModifed) console.log(`${update.nModifed}개 수정`)
-          }
-        )
-        .then(res => {
-          return { response: true };
-        });
-
-      return result;
-    },
-
-    toggleHideFeedItems: async (parent, { feedId, isHide }, { userModel, user }) => {
-      const result = await userModel
-        .updateOne(
-          { googleId: user.id, 'feedList.feedId': feedId },
-          {
-            $set: {
-              'feedList.$.isHideItems': isHide
-            }
-          },
-          (error, update) => {
-            // if (update.nModifed) console.log(`${update.nModifed}개 수정`)
-          }
-        )
-        .then(res => {
-          return { response: isHide };
-        });
-
-      return result;
-    },
     addFeed: async (parent, { url, category }, { userModel, feedModel, user }) => {
       const userUpdate = (feedId, title, category) => {
         userModel.updateOne(

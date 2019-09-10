@@ -30,7 +30,5 @@ export default gql`
 
   extend type Mutation {
     addFeed(url: String, category: String): response
-    toggleHideFeedItems(feedId: String, isHide: Boolean): response
-    deleteFeedListItem(id: String): response
   }
 `;

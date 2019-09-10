@@ -34,5 +34,7 @@ export default gql`
     readFeedItem(feedId: String, itemId: String): response
     unreadFeedItem(feedId: String, itemId: String): response
     toggleHideCategory(category: String, isHide: Boolean): response
+    toggleHideFeedItems(feedId: String, isHide: Boolean): response
+    deleteFeedListItem(id: String): response
   }
 `;

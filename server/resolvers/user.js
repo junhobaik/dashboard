@@ -85,6 +85,47 @@ export default {
       return await toggleFeedItem(true, feedId, itemId, user.id, userModel);
     },
 
+    toggleHideFeedItems: async (parent, { feedId, isHide }, { userModel, user }) => {
+      const result = await userModel
+        .updateOne(
+          { googleId: user.id, 'feedList.feedId': feedId },
+          {
+            $set: {
+              'feedList.$.isHideItems': isHide
+            }
+          },
+          (error, update) => {
+            // if (update.nModifed) console.log(`${update.nModifed}개 수정`)
+          }
+        )
+        .then(res => {
+          return { response: isHide };
+        });
+
+      return result;
+    },
+
+    deleteFeedListItem: async (parent, { id }, { userModel, user }) => {
+      const result = await userModel
+        .updateOne(
+          { googleId: user.id },
+          {
+            $pull: {
+              feedList: { feedId: id }
+            }
+          },
+          (error, update) => {
+            console.log(update);
+            // if (update.nModifed) console.log(`${update.nModifed}개 수정`)
+          }
+        )
+        .then(res => {
+          return { response: true };
+        });
+
+      return result;
+    },
+
     toggleHideCategory: async (parent, { category, isHide }, { userModel, user }) => {
       let updateQuery;
       if (!isHide) {
