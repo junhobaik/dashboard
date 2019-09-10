@@ -164,6 +164,13 @@ $right-background-color: #eeeeee;
             margin-bottom: 1.5rem;
             box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 
+            &.readed-item {
+              opacity: 0.5;
+              .item-content-snippet {
+                display: none;
+              }
+            }
+
             h3.item-title {
               font-size: 1.2rem;
               margin-bottom: 1rem;
