@@ -6,6 +6,7 @@ const UserSchema = new Schema({
   name: { type: String, required: true },
   googleId: { type: String, required: true },
   picture: String,
+  hideCategoryList: { type: [String], default: [] },
   feedList: [
     {
       feedId: String,
