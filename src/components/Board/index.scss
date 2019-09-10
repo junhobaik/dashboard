@@ -171,9 +171,24 @@ $right-background-color: #eeeeee;
               }
             }
 
-            h3.item-title {
-              font-size: 1.2rem;
-              margin-bottom: 1rem;
+            .item-header {
+              display: flex;
+              justify-content: space-between;
+              h3.item-title {
+                font-size: 1.2rem;
+                margin-bottom: 1rem;
+              }
+              .item-readed-toggle {
+                .item-readed-button {
+                  all: unset;
+                  cursor: pointer;
+                  opacity: 0.3;
+                  transition: 0.3s;
+                  &:hover {
+                    opacity: 0.8;
+                  }
+                }
+              }
             }
 
             span {
