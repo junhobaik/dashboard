@@ -26,8 +26,58 @@ export default {
   },
 
   Mutation: {
-    readFeedItem: async (parent, { feedId, itemId }, { userModel, user }) => {
+    unreadFeedItem: async (parent, { feedId, itemId }, { userModel, user }) => {
       console.log(feedId, itemId);
+
+      const result = await userModel
+        .findOne(
+          {
+            googleId: user.id,
+            feedList: { $elemMatch: { feedId, readedItem: { $in: [itemId] } } }
+          },
+          {
+            feedList: { $elemMatch: { feedId, readedItem: { $in: [itemId] } } },
+            'feedList.readedItem': true
+          }
+        )
+        .then(async data => {
+          if (data) {
+            console.log('update가 필요합니다.');
+            const { readedItem } = data.feedList[0];
+
+            readedItem.splice(readedItem.indexOf(itemId), 1);
+
+            const updateReadedItem = await userModel
+              .updateOne(
+                { googleId: user.id, 'feedList.feedId': feedId },
+                {
+                  $set: {
+                    'feedList.$.readedItem': readedItem
+                  }
+                }
+              )
+              .then(updateResult => {
+                console.log('update', updateResult.nModified);
+                return { response: true };
+              })
+              .catch(updateError => {
+                console.log('update error', updateError);
+                return { response: false };
+              });
+            return updateReadedItem;
+          }
+          console.log('update가 불필요합니다.');
+          return { response: false };
+        })
+        .catch(err => {
+          console.log('find 오류', err);
+          return { response: false };
+        });
+
+      return result;
+    },
+
+    readFeedItem: async (parent, { feedId, itemId }, { userModel, user }) => {
       const result = await userModel
         .findOne(
           {
@@ -41,7 +91,7 @@ export default {
         )
         .then(async data => {
           if (data) {
-            console.log('update가 필요합니다.', data);
+            console.log('update가 필요합니다.');
             const { readedItem } = data.feedList[0];
             if (readedItem.length >= 50) readedItem.shift();
             readedItem.push(itemId);
@@ -56,11 +106,11 @@ export default {
                 }
               )
               .then(updateResult => {
-                console.log('update함', updateResult.nModified);
+                console.log('update', updateResult.nModified);
                 return { response: true };
               })
               .catch(updateError => {
-                console.log('update 오류', updateError);
+                console.log('update error', updateError);
                 return { response: false };
               });
             return updateReadedItem;
@@ -73,8 +123,7 @@ export default {
           return { response: false };
         });
 
-      // console.log(result);
-      return { response: true };
+      return result;
     },
     changeFeedTitle: async (parent, { feedId, title }, { userModel, user }) => {
       console.log(feedId, title);

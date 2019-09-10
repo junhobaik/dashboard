@@ -31,5 +31,6 @@ export default gql`
     deleteCategory(category: String): response
     changeFeedTitle(feedId: String, title: String): response
     readFeedItem(feedId: String, itemId: String): response
+    unreadFeedItem(feedId: String, itemId: String): response
   }
 `;
