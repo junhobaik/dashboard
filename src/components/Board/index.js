@@ -337,7 +337,7 @@ export default class User extends Component {
                     </div>
                   </div>
                 </div>
-                ;
+
                 {isAddFeedModal ? (
                   <AddFeedModal
                     close={this.closeAddFeedModal}
@@ -345,6 +345,7 @@ export default class User extends Component {
                     categoryList={categoryList}
                   />
                 ) : null}
+
                 {isSetFeedModal ? (
                   <SetFeedModal close={this.closeSetFeedModal} refetch={refetch} />
                 ) : null}
