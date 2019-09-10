@@ -26,6 +26,41 @@ export default {
   },
 
   Mutation: {
+    readFeedItem: async (parent, { feedId, itemId }, { userModel, user }) => {
+      console.log(feedId, itemId);
+      // > db.searchArrayDemo.find({EmployeeDetails:{$elemMatch:{EmployeePerformanceArea : "C++", Year : 1998}}}).pretty();
+      userModel.findOne(
+        {
+          googleId: user.id
+        },
+        {
+          feedList: { $elemMatch: { feedId, readedItem: { $nin: [itemId] } } },
+          'feedList.readedItem': true
+        },
+        (err, data) => {
+          if (data) {
+            const { readedItem } = data.feedList[0];
+            if (readedItem.length >= 50) readedItem.shift();
+            readedItem.push(feedId);
+
+            userModel.updateOne(
+              { googleId: user.id, 'feedList.feedId': feedId },
+              {
+                $set: {
+                  'feedList.$.readedItem': readedItem
+                }
+              },
+              (_err, _data) => {
+                if (_err) console.log(_err);
+                // console.log(`${_data.nModified}개 업데이트`);
+              }
+            );
+          }
+        }
+      );
+
+      return { response: true };
+    },
     changeFeedTitle: async (parent, { feedId, title }, { userModel, user }) => {
       console.log(feedId, title);
 
