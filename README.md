@@ -14,3 +14,11 @@
 - GraphQL
 - MongoDB
   - mongoose
+- etc.
+  - SASS (SCSS)
+  - FontAwesome
+  - GoogleFonts
+  - prettier
+  - babel
+  - moment
+  - ~~Google Analytics~~ (추가 예정)
