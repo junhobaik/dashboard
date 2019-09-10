@@ -11,6 +11,7 @@ export default gql`
     googleId: String
     name: String
     picture: String
+    hideCategoryList: [String]
     feedList: [feedListItem] # user schema
   }
 
@@ -32,5 +33,6 @@ export default gql`
     changeFeedTitle(feedId: String, title: String): response
     readFeedItem(feedId: String, itemId: String): response
     unreadFeedItem(feedId: String, itemId: String): response
+    toggleHideCategory(category: String, isHide: Boolean): response
   }
 `;
