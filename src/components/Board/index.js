@@ -12,6 +12,10 @@ import {
   faBookOpen,
   faBook
 } from '@fortawesome/free-solid-svg-icons';
+import {
+  faEye as faEyeRegular,
+  faEyeSlash as faEyeSlashRegular
+} from '@fortawesome/free-regular-svg-icons';
 import moment from 'moment';
 import gql from 'graphql-tag';
 
@@ -32,6 +36,14 @@ const READ_FEED_ITEM = gql`
 const UNREAD_FEED_ITEM = gql`
   mutation UnreadFeedItem($feedId: String!, $itemId: String!) {
     unreadFeedItem(feedId: $feedId, itemId: $itemId) {
+      response
+    }
+  }
+`;
+
+const TOGGLE_HIDE_CATEGORY = gql`
+  mutation ToggleHideCategory($category: String!, $isHide: Boolean) {
+    toggleHideCategory(category: $category, isHide: $isHide) {
       response
     }
   }
@@ -97,6 +109,7 @@ export default class User extends Component {
               transition: `${loadingTransition}ms`,
               opacity: 1
             };
+            let hideCategories;
 
             if (!loading) {
               loadingStyle.opacity = 0;
@@ -109,7 +122,8 @@ export default class User extends Component {
             if (error) return <span>Error..!</span>;
 
             if (data && data.user) {
-              const { feedList } = data.user;
+              const { feedList, hideCategoryList } = data.user;
+              hideCategories = hideCategoryList;
 
               feedList.sort((a, b) => {
                 return a.title.toLowerCase().localeCompare(b.title.toLowerCase());
@@ -117,6 +131,7 @@ export default class User extends Component {
 
               feedList.map(feed => {
                 categoryList.add(feed.category);
+                const ishideCategory = hideCategoryList.indexOf(feed.category) > -1;
 
                 feedListEl.push(
                   <li className="feed" key={feed.link} category={feed.category}>
@@ -130,38 +145,43 @@ export default class User extends Component {
                         {feed.title}
                       </button>
                     </a>
+                    {!ishideCategory ? (
+                      <Mutation mutation={TOGGLE_HIDE_FEED_ITEMS}>
+                        {(toggleHideFeedItems, { loading, data, error }) => {
+                          // console.log('Board <Mutation />', loading, data);
 
-                    <Mutation mutation={TOGGLE_HIDE_FEED_ITEMS}>
-                      {(toggleHideFeedItems, { loading, data, error }) => {
-                        // console.log('Board <Mutation />', loading, data);
+                          let feedEyeIcon = feed.isHideItems ? faEyeSlashRegular : faEyeRegular;
 
-                        let feedEyeIcon = feed.isHideItems ? faEyeSlash : faEye;
+                          if (loading) feedEyeIcon = faSpinner;
+                          if (data) {
+                            feedEyeIcon = data.toggleHideFeedItems.response
+                              ? faEyeSlashRegular
+                              : faEyeRegular;
+                          }
 
-                        if (loading) feedEyeIcon = faSpinner;
-                        if (data) {
-                          feedEyeIcon = data.toggleHideFeedItems.response ? faEyeSlash : faEye;
-                        }
-
-                        return (
-                          <button type="button" className="feed-visible-toggle-btn">
-                            <Fa
-                              icon={feedEyeIcon}
-                              onClick={() => {
-                                toggleHideFeedItems({
-                                  variables: { feedId: feed.feedId, isHide: !feed.isHideItems }
-                                }).then(() => {
-                                  refetch();
-                                });
-                              }}
-                            />
-                          </button>
-                        );
-                      }}
-                    </Mutation>
+                          return (
+                            <div className="feed-visible-toggle-btn-wrap">
+                              <button type="button" className="feed-visible-toggle-btn">
+                                <Fa
+                                  icon={feedEyeIcon}
+                                  onClick={() => {
+                                    toggleHideFeedItems({
+                                      variables: { feedId: feed.feedId, isHide: !feed.isHideItems }
+                                    }).then(() => {
+                                      refetch();
+                                    });
+                                  }}
+                                />
+                              </button>
+                            </div>
+                          );
+                        }}
+                      </Mutation>
+                    ) : null}
                   </li>
                 );
 
-                if (!feed.isHideItems) {
+                if (!feed.isHideItems && !ishideCategory) {
                   feed.items.map(item => {
                     const isReaded = feed.readedItem.indexOf(item._id) > -1;
                     const unixDate = `${item.isoDate.slice(0, 10)}.${item.isoDate.slice(9, 12)}`;
@@ -262,9 +282,42 @@ export default class User extends Component {
             categoryList = sortCategory(Array.from(categoryList));
 
             const categoryEl = categoryList.map(c => {
+              const categoryName = c === 'root' ? 'No Category' : c;
+              let isHideCategory = false;
+              let icon;
+
+              if (hideCategories && hideCategories.length) {
+                isHideCategory = hideCategories.indexOf(c) > -1;
+              }
+              icon = isHideCategory ? faEyeSlash : faEye;
+
               return (
                 <ul className="category" key={c}>
-                  {c === 'root' ? null : <h2>{`${c}`}</h2>}
+                  {/* {c === 'root' ? null : <h2>{`${c}`}</h2>} */}
+                  <div className="category-header">
+                    <Mutation mutation={TOGGLE_HIDE_CATEGORY}>
+                      {(toggleHideCategory, { loading, data, error }) => {
+                        if (loading) icon = faSpinner;
+                        return (
+                          <React.Fragment>
+                            <h2>{`${categoryName}`}</h2>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                toggleHideCategory({
+                                  variables: { category: c, isHide: !isHideCategory }
+                                }).then(res => {
+                                  if (res.data.toggleHideCategory.response) refetch();
+                                });
+                              }}
+                            >
+                              <Fa icon={icon} />
+                            </button>
+                          </React.Fragment>
+                        );
+                      }}
+                    </Mutation>
+                  </div>
                   {feedListEl.filter(v => {
                     return v.props.category === c;
                   })}
