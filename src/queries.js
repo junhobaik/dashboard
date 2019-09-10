@@ -26,7 +26,9 @@ export const FEED_DATA = gql`
         title
         link
         category
+        readedItem
         items {
+          _id
           title
           link
           contentSnippet
