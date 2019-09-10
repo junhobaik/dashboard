@@ -21,6 +21,7 @@ export const FEED_DATA = gql`
   {
     user {
       name
+      hideCategoryList
       feedList {
         feedId
         title
