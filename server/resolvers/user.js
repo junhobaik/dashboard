@@ -1,5 +1,56 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable consistent-return */
+const toggleFeedItem = async (isRead, feedId, itemId, userId, userModel) => {
+  const readedItemQuery = isRead ? { $nin: [itemId] } : { $in: [itemId] };
+
+  const result = await userModel
+    .findOne(
+      {
+        googleId: userId,
+        feedList: { $elemMatch: { feedId, readedItem: readedItemQuery } }
+      },
+      {
+        feedList: { $elemMatch: { feedId, readedItem: readedItemQuery } },
+        'feedList.readedItem': true
+      }
+    )
+    .then(async data => {
+      if (data) {
+        const { readedItem } = data.feedList[0];
+
+        if (isRead) {
+          if (readedItem.length >= 50) readedItem.shift();
+          readedItem.push(itemId);
+        } else {
+          readedItem.splice(readedItem.indexOf(itemId), 1);
+        }
+
+        const updateReadedItem = await userModel
+          .updateOne(
+            { googleId: userId, 'feedList.feedId': feedId },
+            {
+              $set: {
+                'feedList.$.readedItem': readedItem
+              }
+            }
+          )
+          .then(updateResult => {
+            return { response: true };
+          })
+          .catch(updateError => {
+            return { response: false };
+          });
+        return updateReadedItem;
+      }
+      return { response: false };
+    })
+    .catch(err => {
+      return { response: false };
+    });
+
+  return result;
+};
+
 export default {
   Query: {
     users: async (parent, args, { userModel }) => {
@@ -27,103 +78,11 @@ export default {
 
   Mutation: {
     unreadFeedItem: async (parent, { feedId, itemId }, { userModel, user }) => {
-      console.log(feedId, itemId);
-
-      const result = await userModel
-        .findOne(
-          {
-            googleId: user.id,
-            feedList: { $elemMatch: { feedId, readedItem: { $in: [itemId] } } }
-          },
-          {
-            feedList: { $elemMatch: { feedId, readedItem: { $in: [itemId] } } },
-            'feedList.readedItem': true
-          }
-        )
-        .then(async data => {
-          if (data) {
-            console.log('update가 필요합니다.');
-            const { readedItem } = data.feedList[0];
-
-            readedItem.splice(readedItem.indexOf(itemId), 1);
-
-            const updateReadedItem = await userModel
-              .updateOne(
-                { googleId: user.id, 'feedList.feedId': feedId },
-                {
-                  $set: {
-                    'feedList.$.readedItem': readedItem
-                  }
-                }
-              )
-              .then(updateResult => {
-                console.log('update', updateResult.nModified);
-                return { response: true };
-              })
-              .catch(updateError => {
-                console.log('update error', updateError);
-                return { response: false };
-              });
-            return updateReadedItem;
-          }
-          console.log('update가 불필요합니다.');
-          return { response: false };
-        })
-        .catch(err => {
-          console.log('find 오류', err);
-          return { response: false };
-        });
-
-      return result;
+      return await toggleFeedItem(false, feedId, itemId, user.id, userModel);
     },
 
     readFeedItem: async (parent, { feedId, itemId }, { userModel, user }) => {
-      const result = await userModel
-        .findOne(
-          {
-            googleId: user.id,
-            feedList: { $elemMatch: { feedId, readedItem: { $nin: [itemId] } } }
-          },
-          {
-            feedList: { $elemMatch: { feedId, readedItem: { $nin: [itemId] } } },
-            'feedList.readedItem': true
-          }
-        )
-        .then(async data => {
-          if (data) {
-            console.log('update가 필요합니다.');
-            const { readedItem } = data.feedList[0];
-            if (readedItem.length >= 50) readedItem.shift();
-            readedItem.push(itemId);
-
-            const updateReadedItem = await userModel
-              .updateOne(
-                { googleId: user.id, 'feedList.feedId': feedId },
-                {
-                  $set: {
-                    'feedList.$.readedItem': readedItem
-                  }
-                }
-              )
-              .then(updateResult => {
-                console.log('update', updateResult.nModified);
-                return { response: true };
-              })
-              .catch(updateError => {
-                console.log('update error', updateError);
-                return { response: false };
-              });
-            return updateReadedItem;
-          }
-          console.log('update가 불필요합니다.');
-          return { response: false };
-        })
-        .catch(err => {
-          console.log('find 오류', err);
-          return { response: false };
-        });
-
-      return result;
+      return await toggleFeedItem(true, feedId, itemId, user.id, userModel);
     },
     changeFeedTitle: async (parent, { feedId, title }, { userModel, user }) => {
       console.log(feedId, title);
