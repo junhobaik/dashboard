@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
 import { Query, Mutation } from 'react-apollo';
@@ -131,7 +132,6 @@ export default class User extends Component {
                     </a>
 
                     <Mutation mutation={TOGGLE_HIDE_FEED_ITEMS}>
-                      {/* eslint-disable-next-line no-shadow */}
                       {(toggleHideFeedItems, { loading, data, error }) => {
                         // console.log('Board <Mutation />', loading, data);
 
@@ -176,7 +176,6 @@ export default class User extends Component {
                         <div className="item-header">
                           <h3 className="item-title">
                             <Mutation mutation={READ_FEED_ITEM}>
-                              {/* eslint-disable-next-line no-shadow */}
                               {(readFeedItem, { loading, data, error }) => {
                                 return (
                                   <a
@@ -200,50 +199,38 @@ export default class User extends Component {
                             </Mutation>
                           </h3>
                           <div className="item-readed-toggle">
-                            {isReaded ? (
-                              <Mutation mutation={UNREAD_FEED_ITEM}>
-                                {/* eslint-disable-next-line no-shadow */}
-                                {(unreadFeedItem, { loading, data, error }) => {
-                                  return (
-                                    <button
-                                      className="item-readed-button"
-                                      type="button"
-                                      onClick={() => {
-                                        unreadFeedItem({
-                                          variables: { feedId: feed.feedId, itemId: item._id }
-                                        }).then(res => {
-                                          if (res.data.unreadFeedItem.response) refetch();
-                                        });
-                                      }}
-                                    >
-                                      <Fa icon={faBookOpen} />
-                                    </button>
-                                  );
-                                }}
-                              </Mutation>
-                            ) : (
-                              <Mutation mutation={READ_FEED_ITEM}>
-                                {/* eslint-disable-next-line no-shadow */}
-                                {(readFeedItem, { loading, data, error }) => {
-                                  return (
-                                    <button
-                                      className="item-readed-button"
-                                      type="button"
-                                      onClick={() => {
-                                        readFeedItem({
-                                          variables: { feedId: feed.feedId, itemId: item._id }
-                                        }).then(res => {
-                                          if (res.data.readFeedItem.response) refetch();
-                                        });
-                                      }}
-                                    >
-                                      <Fa icon={faBook} />
-                                    </button>
-                                  );
-                                }}
-                              </Mutation>
-                            )}
-                            {/* <Fa icon={isReaded ? faBookOpen : faBook} /> */}
+                            <Mutation mutation={isReaded ? UNREAD_FEED_ITEM : READ_FEED_ITEM}>
+                              {(toggleFeedItem, { loading, data, error }) => {
+                                let icon;
+                                let dataKey;
+
+                                if (isReaded) {
+                                  icon = faBookOpen;
+                                  dataKey = 'unreadFeedItem';
+                                } else {
+                                  icon = faBook;
+                                  dataKey = 'readFeedItem';
+                                }
+
+                                if (loading) icon = faSpinner;
+
+                                return (
+                                  <button
+                                    className="item-readed-button"
+                                    type="button"
+                                    onClick={() => {
+                                      toggleFeedItem({
+                                        variables: { feedId: feed.feedId, itemId: item._id }
+                                      }).then(res => {
+                                        if (res.data[dataKey].response) refetch();
+                                      });
+                                    }}
+                                  >
+                                    <Fa icon={icon} />
+                                  </button>
+                                );
+                              }}
+                            </Mutation>
                           </div>
                         </div>
                         <div className="item-feed-info">
