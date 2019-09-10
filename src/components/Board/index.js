@@ -35,7 +35,8 @@ export default class User extends Component {
     super(props);
     this.state = {
       isAddFeedModal: false,
-      isSetFeedModal: false
+      isSetFeedModal: false,
+      searchValue: ''
     };
   }
 
@@ -74,7 +75,7 @@ export default class User extends Component {
   };
 
   render() {
-    const { isAddFeedModal, isSetFeedModal } = this.state;
+    const { isAddFeedModal, isSetFeedModal, searchValue } = this.state;
 
     return (
       <div id="Board">
@@ -164,91 +165,105 @@ export default class User extends Component {
 
                 if (!feed.isHideItems && !ishideCategory) {
                   feed.items.map(item => {
-                    const isReaded = feed.readedItem.indexOf(item._id) > -1;
-                    const unixDate = `${item.isoDate.slice(0, 10)}.${item.isoDate.slice(9, 12)}`;
-                    const date = moment.unix(unixDate);
+                    const createItem = () => {
+                      const isReaded = feed.readedItem.indexOf(item._id) > -1;
+                      const unixDate = `${item.isoDate.slice(0, 10)}.${item.isoDate.slice(9, 12)}`;
+                      const date = moment.unix(unixDate);
 
-                    itemListEl.push(
-                      <li
-                        className={`item ${isReaded ? 'readed-item' : null}`}
-                        key={item.link}
-                        date={item.isoDate}
-                      >
-                        <div className="item-header">
-                          <h3 className="item-title">
-                            <Mutation mutation={READ_FEED_ITEM}>
-                              {(readFeedItem, { loading, data, error }) => {
-                                return (
-                                  <a
-                                    href={item.link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    onClick={e => {
-                                      e.preventDefault();
-                                      readFeedItem({
-                                        variables: { feedId: feed.feedId, itemId: item._id }
-                                      }).then(res => {
-                                        if (res.data.readFeedItem.response) refetch();
-                                      });
-                                      window.open(item.link, '_blank');
-                                    }}
-                                  >
-                                    {item.title}
-                                  </a>
-                                );
-                              }}
-                            </Mutation>
-                          </h3>
-                          <div className="item-readed-toggle">
-                            <Mutation mutation={isReaded ? UNREAD_FEED_ITEM : READ_FEED_ITEM}>
-                              {(toggleFeedItem, { loading, data, error }) => {
-                                let icon;
-                                let dataKey;
+                      itemListEl.push(
+                        <li
+                          className={`item ${isReaded ? 'readed-item' : null}`}
+                          key={item.link}
+                          date={item.isoDate}
+                        >
+                          <div className="item-header">
+                            <h3 className="item-title">
+                              <Mutation mutation={READ_FEED_ITEM}>
+                                {(readFeedItem, { loading, data, error }) => {
+                                  return (
+                                    <a
+                                      href={item.link}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      onClick={e => {
+                                        e.preventDefault();
+                                        readFeedItem({
+                                          variables: { feedId: feed.feedId, itemId: item._id }
+                                        }).then(res => {
+                                          if (res.data.readFeedItem.response) refetch();
+                                        });
+                                        window.open(item.link, '_blank');
+                                      }}
+                                    >
+                                      {item.title}
+                                    </a>
+                                  );
+                                }}
+                              </Mutation>
+                            </h3>
+                            <div className="item-readed-toggle">
+                              <Mutation mutation={isReaded ? UNREAD_FEED_ITEM : READ_FEED_ITEM}>
+                                {(toggleFeedItem, { loading, data, error }) => {
+                                  let icon;
+                                  let dataKey;
 
-                                if (isReaded) {
-                                  icon = faBookOpen;
-                                  dataKey = 'unreadFeedItem';
-                                } else {
-                                  icon = faBook;
-                                  dataKey = 'readFeedItem';
-                                }
+                                  if (isReaded) {
+                                    icon = faBookOpen;
+                                    dataKey = 'unreadFeedItem';
+                                  } else {
+                                    icon = faBook;
+                                    dataKey = 'readFeedItem';
+                                  }
 
-                                if (loading) icon = faSpinner;
+                                  if (loading) icon = faSpinner;
 
-                                return (
-                                  <button
-                                    className="item-readed-button"
-                                    type="button"
-                                    onClick={() => {
-                                      toggleFeedItem({
-                                        variables: { feedId: feed.feedId, itemId: item._id }
-                                      }).then(res => {
-                                        if (res.data[dataKey].response) refetch();
-                                      });
-                                    }}
-                                  >
-                                    <Fa icon={icon} />
-                                  </button>
-                                );
-                              }}
-                            </Mutation>
+                                  return (
+                                    <button
+                                      className="item-readed-button"
+                                      type="button"
+                                      onClick={() => {
+                                        toggleFeedItem({
+                                          variables: { feedId: feed.feedId, itemId: item._id }
+                                        }).then(res => {
+                                          if (res.data[dataKey].response) refetch();
+                                        });
+                                      }}
+                                    >
+                                      <Fa icon={icon} />
+                                    </button>
+                                  );
+                                }}
+                              </Mutation>
+                            </div>
                           </div>
-                        </div>
-                        <div className="item-feed-info">
-                          <span className="item-feed-link">
-                            <a href={feed.link} target="_blank" rel="noopener noreferrer">
-                              {feed.title}
-                            </a>
-                          </span>
-                          <span className="item-date">
-                            {`${date.format('YYYY-MM-DD')} (${date.fromNow()})`}
-                          </span>
-                        </div>
-                        <div className="item-content-snippet">
-                          <span>{`${item.contentSnippet.slice(0, 120)}...`}</span>
-                        </div>
-                      </li>
-                    );
+                          <div className="item-feed-info">
+                            <span className="item-feed-link">
+                              <a href={feed.link} target="_blank" rel="noopener noreferrer">
+                                {feed.title}
+                              </a>
+                            </span>
+                            <span className="item-date">
+                              {`${date.format('YYYY-MM-DD')} (${date.fromNow()})`}
+                            </span>
+                          </div>
+                          <div className="item-content-snippet">
+                            <span>{`${item.contentSnippet.slice(0, 120)}...`}</span>
+                          </div>
+                        </li>
+                      );
+                      return null;
+                    };
+
+                    if (searchValue === '') {
+                      return createItem();
+                    }
+
+                    if (
+                      feed.title.indexOf(searchValue) !== -1 ||
+                      item.title.indexOf(searchValue) !== -1
+                    ) {
+                      return createItem();
+                    }
                     return null;
                   });
                 }
@@ -272,9 +287,12 @@ export default class User extends Component {
               }
               icon = isHideCategory ? faEyeSlash : faEye;
 
-              return (
+              const feedInCategory = feedListEl.filter(v => {
+                return v.props.category === c;
+              });
+
+              return feedInCategory.length ? (
                 <ul className="category" key={c}>
-                  {/* {c === 'root' ? null : <h2>{`${c}`}</h2>} */}
                   <div className="category-header">
                     <Mutation mutation={TOGGLE_HIDE_CATEGORY}>
                       {(toggleHideCategory, { loading, data, error }) => {
@@ -302,11 +320,9 @@ export default class User extends Component {
                       }}
                     </Mutation>
                   </div>
-                  {feedListEl.filter(v => {
-                    return v.props.category === c;
-                  })}
+                  {feedInCategory}
                 </ul>
-              );
+              ) : null;
             });
 
             return (
@@ -330,7 +346,15 @@ export default class User extends Component {
                   </div>
                   <div className="right">
                     <div className="header">
-                      <input type="text" id="searchItem" placeholder="Search item" />
+                      <input
+                        type="text"
+                        id="searchItem"
+                        placeholder="Search item"
+                        value={searchValue}
+                        onChange={e => {
+                          this.setState({ searchValue: e.target.value });
+                        }}
+                      />
                     </div>
                     <div className="content">
                       <ul className="item-list">{itemListEl}</ul>
