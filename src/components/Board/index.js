@@ -4,12 +4,21 @@ import { Query, Mutation } from 'react-apollo';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faCog, faPlus, faEye, faEyeSlash, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import moment from 'moment';
+import gql from 'graphql-tag';
 
 import './index.scss';
 import { sortCategory } from '../../utils';
 import { FEED_DATA, TOGGLE_HIDE_FEED_ITEMS } from '../../queries';
 import AddFeedModal from './AddFeedModal';
 import SetFeedModal from './SetFeedModal';
+
+const READ_FEED_ITEM = gql`
+  mutation ReadFeedItem($feedId: String!, $itemId: String!) {
+    readFeedItem(feedId: $feedId, itemId: $itemId) {
+      response
+    }
+  }
+`;
 
 export default class User extends Component {
   constructor(props) {
@@ -94,8 +103,12 @@ export default class User extends Component {
 
                 feedListEl.push(
                   <li className="feed" key={feed.link} category={feed.category}>
-
-                    <a className="feed-title-btn-wrap-a" href={feed.link} target="_blank" rel="noopener noreferrer">
+                    <a
+                      className="feed-title-btn-wrap-a"
+                      href={feed.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <button type="button" className="feed-title-btn">
                         {feed.title}
                       </button>
@@ -134,15 +147,40 @@ export default class User extends Component {
 
                 if (!feed.isHideItems) {
                   feed.items.map(item => {
+                    const isReaded = feed.readedItem.indexOf(item._id) > -1;
                     const unixDate = `${item.isoDate.slice(0, 10)}.${item.isoDate.slice(9, 12)}`;
                     const date = moment.unix(unixDate);
 
                     itemListEl.push(
-                      <li className="item" key={item.link} date={item.isoDate}>
+                      <li
+                        className={`item ${isReaded ? 'readed-item' : null}`}
+                        key={item.link}
+                        date={item.isoDate}
+                      >
                         <h3 className="item-title">
-                          <a href={item.link} target="_blank" rel="noopener noreferrer">
-                            {item.title}
-                          </a>
+                          <Mutation mutation={READ_FEED_ITEM}>
+                            {/* eslint-disable-next-line no-shadow */}
+                            {(readFeedItem, { loading, data, error }) => {
+                              return (
+                                <a
+                                  href={item.link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  onClick={e => {
+                                    e.preventDefault();
+                                    readFeedItem({
+                                      variables: { feedId: feed.feedId, itemId: item._id }
+                                    }).then(() => {
+                                      refetch();
+                                    });
+                                    window.open(item.link, '_blank');
+                                  }}
+                                >
+                                  {item.title}
+                                </a>
+                              );
+                            }}
+                          </Mutation>
                         </h3>
                         <div className="item-feed-info">
                           <span className="item-feed-link">
