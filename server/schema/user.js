@@ -30,5 +30,6 @@ export default gql`
     changeFeedCategory(feedId: String, category: String): response
     deleteCategory(category: String): response
     changeFeedTitle(feedId: String, title: String): response
+    readFeedItem(feedId: String, itemId: String): response
   }
 `;
