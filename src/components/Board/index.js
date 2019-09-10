@@ -17,37 +17,18 @@ import {
   faEyeSlash as faEyeSlashRegular
 } from '@fortawesome/free-regular-svg-icons';
 import moment from 'moment';
-import gql from 'graphql-tag';
 
 import './index.scss';
 import { sortCategory } from '../../utils';
-import { FEED_DATA, TOGGLE_HIDE_FEED_ITEMS } from '../../queries';
+import {
+  FEED_DATA,
+  TOGGLE_HIDE_FEED_ITEMS,
+  READ_FEED_ITEM,
+  UNREAD_FEED_ITEM,
+  TOGGLE_HIDE_CATEGORY
+} from '../../queries';
 import AddFeedModal from './AddFeedModal';
 import SetFeedModal from './SetFeedModal';
-
-const READ_FEED_ITEM = gql`
-  mutation ReadFeedItem($feedId: String!, $itemId: String!) {
-    readFeedItem(feedId: $feedId, itemId: $itemId) {
-      response
-    }
-  }
-`;
-
-const UNREAD_FEED_ITEM = gql`
-  mutation UnreadFeedItem($feedId: String!, $itemId: String!) {
-    unreadFeedItem(feedId: $feedId, itemId: $itemId) {
-      response
-    }
-  }
-`;
-
-const TOGGLE_HIDE_CATEGORY = gql`
-  mutation ToggleHideCategory($category: String!, $isHide: Boolean) {
-    toggleHideCategory(category: $category, isHide: $isHide) {
-      response
-    }
-  }
-`;
 
 export default class User extends Component {
   constructor(props) {

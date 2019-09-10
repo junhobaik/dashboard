@@ -56,3 +56,27 @@ export const TOGGLE_HIDE_FEED_ITEMS = gql`
     }
   }
 `;
+
+export const READ_FEED_ITEM = gql`
+  mutation ReadFeedItem($feedId: String!, $itemId: String!) {
+    readFeedItem(feedId: $feedId, itemId: $itemId) {
+      response
+    }
+  }
+`;
+
+export const UNREAD_FEED_ITEM = gql`
+  mutation UnreadFeedItem($feedId: String!, $itemId: String!) {
+    unreadFeedItem(feedId: $feedId, itemId: $itemId) {
+      response
+    }
+  }
+`;
+
+export const TOGGLE_HIDE_CATEGORY = gql`
+  mutation ToggleHideCategory($category: String!, $isHide: Boolean) {
+    toggleHideCategory(category: $category, isHide: $isHide) {
+      response
+    }
+  }
+`;
