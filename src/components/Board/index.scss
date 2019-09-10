@@ -74,20 +74,44 @@ $right-background-color: #eeeeee;
           ul.category {
             padding: 0;
 
-            h2 {
-              font-size: 1.2rem;
-              color: #333;
+            .category-header {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              margin-bottom: 0.5rem;
+
+              h2 {
+                margin: 0;
+                font-size: 1.2rem;
+                color: #333;
+              }
+
+              button {
+                all: unset;
+                cursor: pointer;
+                opacity: 0.4;
+                margin-left: 0.5rem;
+                transition: 0.3s;
+                width: 1rem;
+
+                svg {
+                  font-size: 0.75rem;
+                }
+
+                &:hover {
+                  opacity: 0.8;
+                }
+              }
             }
 
             li.feed {
-              margin-left: 0.5rem;
               list-style: none;
               margin-bottom: 0.75rem;
               display: flex;
+              // justify-content: space-between;
 
               a.feed-title-btn-wrap-a {
-                // word-break: keep-all;
-                max-width: 90%;
+                word-break: break-all;
                 opacity: 0.8;
                 border-radius: 3px;
                 color: white;
@@ -95,7 +119,7 @@ $right-background-color: #eeeeee;
                 padding: 0.25rem 0.5rem;
                 flex-grow: 1;
                 transition: 0.3s;
-
+                margin-left: 0.5rem;
                 &:hover {
                   opacity: 1;
                 }
@@ -104,20 +128,24 @@ $right-background-color: #eeeeee;
                   all: unset;
                 }
               }
+              .feed-visible-toggle-btn-wrap {
+                width: 1rem;
 
-              .feed-visible-toggle-btn {
-                all: unset;
-                cursor: pointer;
-                opacity: 0.2;
-                margin-left: 0.5rem;
-                transition: 0.3s;
+                .feed-visible-toggle-btn {
+                  all: unset;
+                  cursor: pointer;
+                  opacity: 0.2;
+                  margin-left: 0.5rem;
+                  transition: 0.3s;
+                  width: 1rem;
 
-                svg {
-                  font-size: 0.75rem;
-                }
+                  svg {
+                    font-size: 0.75rem;
+                  }
 
-                &:hover {
-                  opacity: 0.5;
+                  &:hover {
+                    opacity: 0.5;
+                  }
                 }
               }
             }
