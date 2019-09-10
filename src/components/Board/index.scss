@@ -1,5 +1,24 @@
 $left-background-color: #dddddd;
 $right-background-color: #eeeeee;
+@mixin eye-button-wrap-style {
+  min-width: 2rem;
+  button {
+    all: unset;
+    cursor: pointer;
+    opacity: 0.2;
+    margin-left: 0.5rem;
+    transition: 0.3s;
+    width: 1rem;
+
+    svg {
+      font-size: 0.75rem;
+    }
+
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+}
 
 #Board {
   height: 100vh;
@@ -66,7 +85,8 @@ $right-background-color: #eeeeee;
       }
 
       .content {
-        padding: 1rem;
+        padding: 1rem 0.5rem;
+        padding-right: 0;
 
         ul.feed-list {
           padding: 0;
@@ -86,21 +106,8 @@ $right-background-color: #eeeeee;
                 color: #333;
               }
 
-              button {
-                all: unset;
-                cursor: pointer;
-                opacity: 0.4;
-                margin-left: 0.5rem;
-                transition: 0.3s;
-                width: 1rem;
-
-                svg {
-                  font-size: 0.75rem;
-                }
-
-                &:hover {
-                  opacity: 0.8;
-                }
+              .toggle-hide-category-button-wrap {
+                @include eye-button-wrap-style;
               }
             }
 
@@ -129,24 +136,7 @@ $right-background-color: #eeeeee;
                 }
               }
               .feed-visible-toggle-btn-wrap {
-                width: 1rem;
-
-                .feed-visible-toggle-btn {
-                  all: unset;
-                  cursor: pointer;
-                  opacity: 0.2;
-                  margin-left: 0.5rem;
-                  transition: 0.3s;
-                  width: 1rem;
-
-                  svg {
-                    font-size: 0.75rem;
-                  }
-
-                  &:hover {
-                    opacity: 0.5;
-                  }
-                }
+                @include eye-button-wrap-style;
               }
             }
           }

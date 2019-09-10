@@ -126,22 +126,22 @@ export default class User extends Component {
                         {feed.title}
                       </button>
                     </a>
-                    {!ishideCategory ? (
-                      <Mutation mutation={TOGGLE_HIDE_FEED_ITEMS}>
-                        {(toggleHideFeedItems, { loading, data, error }) => {
-                          // console.log('Board <Mutation />', loading, data);
+                    <div className="feed-visible-toggle-btn-wrap">
+                      {!ishideCategory ? (
+                        <Mutation mutation={TOGGLE_HIDE_FEED_ITEMS}>
+                          {(toggleHideFeedItems, { loading, data, error }) => {
+                            // console.log('Board <Mutation />', loading, data);
 
-                          let feedEyeIcon = feed.isHideItems ? faEyeSlashRegular : faEyeRegular;
+                            let feedEyeIcon = feed.isHideItems ? faEyeSlashRegular : faEyeRegular;
 
-                          if (loading) feedEyeIcon = faSpinner;
-                          if (data) {
-                            feedEyeIcon = data.toggleHideFeedItems.response
-                              ? faEyeSlashRegular
-                              : faEyeRegular;
-                          }
+                            if (loading) feedEyeIcon = faSpinner;
+                            if (data) {
+                              feedEyeIcon = data.toggleHideFeedItems.response
+                                ? faEyeSlashRegular
+                                : faEyeRegular;
+                            }
 
-                          return (
-                            <div className="feed-visible-toggle-btn-wrap">
+                            return (
                               <button type="button" className="feed-visible-toggle-btn">
                                 <Fa
                                   icon={feedEyeIcon}
@@ -154,11 +154,11 @@ export default class User extends Component {
                                   }}
                                 />
                               </button>
-                            </div>
-                          );
-                        }}
-                      </Mutation>
-                    ) : null}
+                            );
+                          }}
+                        </Mutation>
+                      ) : null}
+                    </div>
                   </li>
                 );
 
@@ -282,18 +282,21 @@ export default class User extends Component {
                         return (
                           <React.Fragment>
                             <h2>{`${categoryName}`}</h2>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                toggleHideCategory({
-                                  variables: { category: c, isHide: !isHideCategory }
-                                }).then(res => {
-                                  if (res.data.toggleHideCategory.response) refetch();
-                                });
-                              }}
-                            >
-                              <Fa icon={icon} />
-                            </button>
+                            <div className="toggle-hide-category-button-wrap">
+                              <button
+                                type="button"
+                                className="toggle-hide-category-button"
+                                onClick={() => {
+                                  toggleHideCategory({
+                                    variables: { category: c, isHide: !isHideCategory }
+                                  }).then(res => {
+                                    if (res.data.toggleHideCategory.response) refetch();
+                                  });
+                                }}
+                              >
+                                <Fa icon={icon} />
+                              </button>
+                            </div>
                           </React.Fragment>
                         );
                       }}
