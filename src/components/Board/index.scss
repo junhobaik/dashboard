@@ -85,21 +85,23 @@ $right-background-color: #eeeeee;
               margin-bottom: 0.75rem;
               display: flex;
 
-              .feed-title-btn {
-                all: unset;
+              a.feed-title-btn-wrap-a {
+                // word-break: keep-all;
+                max-width: 90%;
+                opacity: 0.8;
+                border-radius: 3px;
+                color: white;
+                background-color: #888;
+                padding: 0.25rem 0.5rem;
                 flex-grow: 1;
+                transition: 0.3s;
 
-                a {
-                  max-width: 90%;
-                  opacity: 0.9;
-                  border-radius: 3px;
-                  color: white;
-                  background-color: #888;
-                  padding: 0.25rem 0.5rem;
+                &:hover {
+                  opacity: 1;
+                }
 
-                  &:hover {
-                    opacity: 1;
-                  }
+                .feed-title-btn {
+                  all: unset;
                 }
               }
 
@@ -107,6 +109,8 @@ $right-background-color: #eeeeee;
                 all: unset;
                 cursor: pointer;
                 opacity: 0.2;
+                margin-left: 0.5rem;
+                transition: 0.3s;
 
                 svg {
                   font-size: 0.75rem;

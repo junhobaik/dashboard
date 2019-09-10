@@ -94,11 +94,12 @@ export default class User extends Component {
 
                 feedListEl.push(
                   <li className="feed" key={feed.link} category={feed.category}>
-                    <button type="button" className="feed-title-btn">
-                      <a href={feed.link} target="_blank" rel="noopener noreferrer">
+
+                    <a className="feed-title-btn-wrap-a" href={feed.link} target="_blank" rel="noopener noreferrer">
+                      <button type="button" className="feed-title-btn">
                         {feed.title}
-                      </a>
-                    </button>
+                      </button>
+                    </a>
 
                     <Mutation mutation={TOGGLE_HIDE_FEED_ITEMS}>
                       {/* eslint-disable-next-line no-shadow */}
