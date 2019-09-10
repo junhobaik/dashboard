@@ -2,7 +2,15 @@
 import React, { Component } from 'react';
 import { Query, Mutation } from 'react-apollo';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
-import { faCog, faPlus, faEye, faEyeSlash, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCog,
+  faPlus,
+  faEye,
+  faEyeSlash,
+  faSpinner,
+  faBookOpen,
+  faBook
+} from '@fortawesome/free-solid-svg-icons';
 import moment from 'moment';
 import gql from 'graphql-tag';
 
@@ -15,6 +23,14 @@ import SetFeedModal from './SetFeedModal';
 const READ_FEED_ITEM = gql`
   mutation ReadFeedItem($feedId: String!, $itemId: String!) {
     readFeedItem(feedId: $feedId, itemId: $itemId) {
+      response
+    }
+  }
+`;
+
+const UNREAD_FEED_ITEM = gql`
+  mutation UnreadFeedItem($feedId: String!, $itemId: String!) {
+    unreadFeedItem(feedId: $feedId, itemId: $itemId) {
       response
     }
   }
@@ -157,31 +173,79 @@ export default class User extends Component {
                         key={item.link}
                         date={item.isoDate}
                       >
-                        <h3 className="item-title">
-                          <Mutation mutation={READ_FEED_ITEM}>
-                            {/* eslint-disable-next-line no-shadow */}
-                            {(readFeedItem, { loading, data, error }) => {
-                              return (
-                                <a
-                                  href={item.link}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  onClick={e => {
-                                    e.preventDefault();
-                                    readFeedItem({
-                                      variables: { feedId: feed.feedId, itemId: item._id }
-                                    }).then(() => {
-                                      refetch();
-                                    });
-                                    window.open(item.link, '_blank');
-                                  }}
-                                >
-                                  {item.title}
-                                </a>
-                              );
-                            }}
-                          </Mutation>
-                        </h3>
+                        <div className="item-header">
+                          <h3 className="item-title">
+                            <Mutation mutation={READ_FEED_ITEM}>
+                              {/* eslint-disable-next-line no-shadow */}
+                              {(readFeedItem, { loading, data, error }) => {
+                                return (
+                                  <a
+                                    href={item.link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={e => {
+                                      e.preventDefault();
+                                      readFeedItem({
+                                        variables: { feedId: feed.feedId, itemId: item._id }
+                                      }).then(res => {
+                                        if (res.data.readFeedItem.response) refetch();
+                                      });
+                                      window.open(item.link, '_blank');
+                                    }}
+                                  >
+                                    {item.title}
+                                  </a>
+                                );
+                              }}
+                            </Mutation>
+                          </h3>
+                          <div className="item-readed-toggle">
+                            {isReaded ? (
+                              <Mutation mutation={UNREAD_FEED_ITEM}>
+                                {/* eslint-disable-next-line no-shadow */}
+                                {(unreadFeedItem, { loading, data, error }) => {
+                                  return (
+                                    <button
+                                      className="item-readed-button"
+                                      type="button"
+                                      onClick={() => {
+                                        unreadFeedItem({
+                                          variables: { feedId: feed.feedId, itemId: item._id }
+                                        }).then(res => {
+                                          if (res.data.unreadFeedItem.response) refetch();
+                                        });
+                                      }}
+                                    >
+                                      <Fa icon={faBookOpen} />
+                                    </button>
+                                  );
+                                }}
+                              </Mutation>
+                            ) : (
+                              <Mutation mutation={READ_FEED_ITEM}>
+                                {/* eslint-disable-next-line no-shadow */}
+                                {(readFeedItem, { loading, data, error }) => {
+                                  return (
+                                    <button
+                                      className="item-readed-button"
+                                      type="button"
+                                      onClick={() => {
+                                        readFeedItem({
+                                          variables: { feedId: feed.feedId, itemId: item._id }
+                                        }).then(res => {
+                                          if (res.data.readFeedItem.response) refetch();
+                                        });
+                                      }}
+                                    >
+                                      <Fa icon={faBook} />
+                                    </button>
+                                  );
+                                }}
+                              </Mutation>
+                            )}
+                            {/* <Fa icon={isReaded ? faBookOpen : faBook} /> */}
+                          </div>
+                        </div>
                         <div className="item-feed-info">
                           <span className="item-feed-link">
                             <a href={feed.link} target="_blank" rel="noopener noreferrer">
