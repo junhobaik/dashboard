@@ -1,0 +1,63 @@
+@import '../modalStyle.scss';
+
+#AddFeedModal {
+  .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+
+    h1 {
+      margin: 0;
+      flex-grow: 1;
+      font-size: 1.5rem;
+    }
+  }
+
+  .content {
+    flex-grow: 1;
+    h2 {
+      font-size: 1.1rem;
+    }
+
+    .feed-link {
+      input {
+        margin-bottom: 0.5rem;
+        width: 100%;
+        border: 0;
+        border-bottom: 1px solid lightgray;
+      }
+    }
+
+    .feed-category {
+      .category-select {
+        display: flex;
+        align-items: center;
+
+        select,
+        input {
+          width: 10rem;
+          height: 2rem;
+          border: 1px solid lightgray;
+        }
+
+        .add-category-icon {
+          width: 2rem;
+          text-align: center;
+
+          svg {
+            opacity: 0.6;
+            cursor: pointer;
+
+            &:hover {
+              opacity: 0.9;
+            }
+          }
+        }
+      }
+    }
+  }
+  .submit {
+    margin-top: 2rem;
+    text-align: right;
+  }
+}

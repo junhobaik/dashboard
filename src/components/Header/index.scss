@@ -1,16 +1,46 @@
-.header-inner {
+#Header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 4rem;
+  background-color: #24292e;
+  color: #fff;
   display: flex;
-  padding: 0rem 0.5rem;
+}
+
+.header-inner {
+  width: 100%;
+  display: flex;
   align-items: center;
-  border-bottom: 1px solid gray;
+  border-bottom: 1px solid #222222;
   padding: 0.5rem 1rem;
+
+  a {
+    color: #fff;
+    &:hover {
+      color: #ddd;
+      text-decoration: none;
+    }
+  }
 
   .title {
     flex-grow: 1;
-
-    & > h1 {
+    user-select: none;
+    // cursor: pointer;
+    & h1 {
+      display: inline-block;
       margin: 0;
       font-size: 1.2rem;
+    }
+  }
+
+  .user-info {
+    a {
+      img {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 100%;
+      }
     }
   }
 }

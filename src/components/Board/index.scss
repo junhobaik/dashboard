@@ -1,0 +1,248 @@
+$left-background-color: #dddddd;
+$right-background-color: #eeeeee;
+@mixin eye-button-wrap-style {
+  min-width: 2rem;
+  button {
+    all: unset;
+    cursor: pointer;
+    opacity: 0.2;
+    margin-left: 0.5rem;
+    transition: 0.3s;
+    width: 1rem;
+
+    svg {
+      font-size: 0.75rem;
+    }
+
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+}
+
+#Board {
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+
+  .loading {
+    z-index: 99;
+    margin-top: 4rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+
+    .loading-icon {
+      position: relative;
+      top: 25%;
+      left: 50%;
+    }
+  }
+
+  .user-inner {
+    display: flex;
+    padding-top: 4rem;
+    width: 100%;
+
+    .left,
+    .right {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: auto;
+
+      .header {
+        display: flex;
+        position: sticky;
+        top: 0;
+        min-height: 2.5rem;
+      }
+    }
+
+    .left {
+      min-width: 15rem;
+      max-width: 20rem;
+      background-color: $left-background-color;
+
+      .header {
+        padding: 0 5% 0 1rem;
+        justify-content: space-between;
+        align-items: center;
+        background-color: $left-background-color;
+
+        svg {
+          cursor: pointer;
+          opacity: 0.6;
+          font-size: 1.5rem;
+
+          &:hover {
+            opacity: 0.9;
+          }
+        }
+      }
+
+      .content {
+        padding: 1rem 0.5rem;
+        padding-right: 0;
+
+        ul.feed-list {
+          padding: 0;
+
+          ul.category {
+            padding: 0;
+
+            .category-header {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              margin-bottom: 0.5rem;
+
+              h2 {
+                margin: 0;
+                font-size: 1.2rem;
+                color: #333;
+              }
+
+              .toggle-hide-category-button-wrap {
+                @include eye-button-wrap-style;
+              }
+            }
+
+            li.feed {
+              list-style: none;
+              margin-bottom: 0.75rem;
+              display: flex;
+              // justify-content: space-between;
+
+              a.feed-title-btn-wrap-a {
+                word-break: break-all;
+                opacity: 0.8;
+                border-radius: 3px;
+                color: white;
+                background-color: #888;
+                padding: 0.25rem 0.5rem;
+                flex-grow: 1;
+                transition: 0.3s;
+                margin-left: 0.5rem;
+                &:hover {
+                  opacity: 1;
+                }
+
+                .feed-title-btn {
+                  all: unset;
+                }
+              }
+              .feed-visible-toggle-btn-wrap {
+                @include eye-button-wrap-style;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .right {
+      background-color: $right-background-color;
+      flex-grow: 1;
+
+      .header {
+        z-index: 1;
+        background-color: $right-background-color;
+        display: flex;
+        padding: 0.5rem 2rem;
+
+        #searchItem {
+          all: unset;
+          flex-grow: 1;
+          background-color: transparent;
+          border: 0;
+          border-bottom: 1px solid lightgray;
+
+          &::placeholder {
+            color: lightgray;
+          }
+        }
+      }
+
+      .content {
+        padding: 1rem 2rem;
+
+        ul.item-list {
+          padding: 0;
+
+          li.item {
+            background-color: rgba(255, 255, 255, 0.9);
+            list-style: none;
+            border-radius: 3px;
+            padding: 1rem;
+            margin: 0 auto;
+            margin-bottom: 1.5rem;
+            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+
+            &.readed-item {
+              opacity: 0.5;
+              .item-content-snippet {
+                display: none;
+              }
+            }
+
+            .item-header {
+              display: flex;
+              justify-content: space-between;
+              h3.item-title {
+                font-size: 1.2rem;
+                margin-bottom: 1rem;
+              }
+              .item-readed-toggle {
+                .item-readed-button {
+                  all: unset;
+                  cursor: pointer;
+                  opacity: 0.3;
+                  transition: 0.3s;
+                  &:hover {
+                    opacity: 0.8;
+                  }
+                }
+              }
+            }
+
+            span {
+              color: #888;
+              font-size: 0.9rem;
+            }
+
+            .item-feed-info {
+              display: flex;
+              align-items: flex-end;
+
+              span.item-feed-link {
+                opacity: 0.7;
+                font-size: 0.8rem;
+                background-color: #888;
+                border-radius: 3px;
+                padding: 0.05rem 0.25rem;
+                margin-right: 0.5rem;
+                transition: 0.3s;
+
+                a {
+                  color: white;
+                }
+
+                &:hover {
+                  opacity: 1;
+                }
+              }
+            }
+
+            .item-content-snippet {
+              margin-top: 0.5rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}

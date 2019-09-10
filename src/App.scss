@@ -1,9 +1,24 @@
+html,
 body {
-  font-size: 14px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 16px;
   padding: 0;
   margin: 0;
+  height: 100%;
+}
+
+#root {
+  * {
+    overscroll-behavior: none;
+  }
   
-  &>div>:nth-child(2){
-    padding: 1rem;
+  & > :nth-child(2) {
+    a {
+      color: #222222;
+      text-decoration: none;
+      &:hover {
+        color: #000000;
+      }
+    }
   }
 }

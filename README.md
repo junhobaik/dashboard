@@ -1,9 +1,24 @@
 # DashBoard (가제)
 
-## Tech stack
+## Tech Stack
+
+주요 기술 스택
 
 - React
-- TypeScript
+  - create-react-app
+  - react-router
+- express
 - Apollo
+  - Apollo-client
+  - Apollo-express-server
 - GraphQL
-- Express
+- MongoDB
+  - mongoose
+- etc.
+  - SASS (SCSS)
+  - FontAwesome
+  - GoogleFonts
+  - prettier
+  - babel
+  - moment
+  - ~~Google Analytics~~ (추가 예정)
