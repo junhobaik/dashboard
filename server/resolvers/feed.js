@@ -95,11 +95,19 @@ export default {
 
           if (!feedData) {
             getFeed(url).then(feed => {
-              const { items, title, pubDate, link } = feed;
+              const { items, title, pubDate, lastBuildDate, link } = feed;
 
-              feedModel.create({ feedUrl: url, title, items, pubDate, link }).then(created => {
-                userUpdate(created._id, title, category);
-              });
+              feedModel
+                .create({
+                  feedUrl: url,
+                  title,
+                  items,
+                  pubDate: pubDate || lastBuildDate,
+                  link
+                })
+                .then(created => {
+                  userUpdate(created._id, title, category);
+                });
             });
           }
         })
