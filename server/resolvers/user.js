@@ -84,6 +84,29 @@ export default {
     readFeedItem: async (parent, { feedId, itemId }, { userModel, user }) => {
       return await toggleFeedItem(true, feedId, itemId, user.id, userModel);
     },
+
+    toggleHideCategory: async (parent, { category, isHide }, { userModel, user }) => {
+      let updateQuery;
+      if (!isHide) {
+        updateQuery = { $pull: { hideCategoryList: category } };
+      } else {
+        updateQuery = { $push: { hideCategoryList: category } };
+      }
+
+      const result = await userModel
+        .updateOne({ googleId: user.id }, updateQuery, (error, update) => {
+          // if (update) console.log(`${update.nModified}개 수정`);
+        })
+        .then(res => {
+          return { response: true };
+        })
+        .catch(err => {
+          return { response: false };
+        });
+
+      return result;
+    },
+
     changeFeedTitle: async (parent, { feedId, title }, { userModel, user }) => {
       console.log(feedId, title);
 
@@ -96,7 +119,7 @@ export default {
             }
           },
           (error, update) => {
-            // if (update.nModifed) console.log(`${update.nModifed}개 수정`)
+            // if (update) console.log(`${update.nModified}개 수정`)
           }
         )
         .then(res => {
@@ -161,7 +184,7 @@ export default {
             }
           },
           (error, update) => {
-            // if (update.nModifed) console.log(`${update.nModifed}개 수정`)
+            // if (update) console.log(`${update.nModified}개 수정`)
           }
         )
         .then(res => {
