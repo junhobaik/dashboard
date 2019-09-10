@@ -26,6 +26,8 @@ const getFeed = async url => {
 router.get('/getfeed', (req, res, next) => {
   const { url } = req.query;
 
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
   getFeed(url)
     .then(feed => {
       res.sendStatus(200);
