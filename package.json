@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "start": "react-scripts start",
+    "start:production": "START_MODE=production react-scripts start",
     "server": "NODE_ENV=development cd server && npm start",
+    "server:production": "NODE_ENV=production cd server && npm start",
     "build": "react-scripts build",
     "eject": "react-scripts eject"
   },
@@ -58,6 +60,7 @@
     "apollo-link-error": "^1.1.12",
     "apollo-link-http": "^1.5.15",
     "bootstrap": "^4.3.1",
+    "dotenv": "^8.1.0",
     "graphql": "^14.4.2",
     "graphql-tag": "^2.10.1",
     "http-proxy-middleware": "^0.19.1",
