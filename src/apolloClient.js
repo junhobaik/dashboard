@@ -4,7 +4,8 @@ import { HttpLink } from 'apollo-link-http';
 import { onError } from 'apollo-link-error';
 import { ApolloLink } from 'apollo-link';
 
-require('dotenv').config();
+let uri = 'https://dashboard-baik.netlify.com/graphql';
+if (process.env.NODE_ENV === 'development') uri = 'http://localhost:3000/graphql';
 
 const client = new ApolloClient({
   link: ApolloLink.from([
@@ -16,7 +17,7 @@ const client = new ApolloClient({
       if (networkError) console.log(`[Network error]: ${networkError}`);
     }),
     new HttpLink({
-      uri: 'http://localhost:3000/graphql',
+      uri,
       credentials: 'include'
     })
   ]),
