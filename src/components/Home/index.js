@@ -19,7 +19,7 @@ const Home = () => {
             return <Redirect to="/board" />;
           }
 
-          return <span>Home</span>;
+          return <span>소개 페이지 미구현</span>;
         }}
       </Query>
     </div>
