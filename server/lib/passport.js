@@ -1,9 +1,6 @@
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 
-const callbackURL =
-  process.env.NODE_ENV === 'development'
-    ? 'http://localhost:4000/auth/google/callback'
-    : process.env.AWS_PUBLIC_DNS;
+const callbackURL = 'http://localhost:4000/auth/google/callback';
 
 module.exports = passport => {
   passport.serializeUser((user, done) => {
