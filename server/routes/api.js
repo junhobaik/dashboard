@@ -26,7 +26,7 @@ const getFeed = async url => {
 router.get('/getfeed', (req, res, next) => {
   const { url } = req.query;
 
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
   getFeed(url)
     .then(feed => {
@@ -96,6 +96,6 @@ const updateFeed = () => {
 // updateFeed();
 const interval = setInterval(() => {
   updateFeed();
-}, 10 * 60 * 1000);
+}, 1000 * 60 * 60 * 1); // 1시간
 
 export default router;

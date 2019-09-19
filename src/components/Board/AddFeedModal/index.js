@@ -140,7 +140,7 @@ class AddFeedModal extends React.Component {
         <div
           className="modal-layout"
           onClick={() => {
-            // refetch();
+            refetch();
             close();
           }}
           role="button"
@@ -153,7 +153,7 @@ class AddFeedModal extends React.Component {
               type="button"
               className="close"
               onClick={() => {
-                // refetch();
+                refetch();
                 close();
               }}
             >
