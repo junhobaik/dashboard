@@ -64,7 +64,7 @@
     "graphql": "^14.4.2",
     "graphql-tag": "^2.10.1",
     "http-proxy-middleware": "^0.19.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "moment": "^2.24.0",
     "mongodb": "^3.3.2",
     "node-sass": "^4.12.0",
